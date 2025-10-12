@@ -58,7 +58,11 @@ main {
     line-height: 1.4;
 }
 
-.info-button:hover + .attribution {
+.attribution.show {
     opacity: 1;
     visibility: visible;
+}
+
+.attribution A {
+    color: #CCC;
 }
