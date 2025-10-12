@@ -13,7 +13,7 @@ https://www.pattvira.com/
 
 let molds = []; let num = 4000;
 let d;
-let LONG_TEXT = 'long-reach problems: slow thinking about problems with deep consequences';
+let LONG_TEXT = 'long-reach solutions: slow thinking about problems with deep consequences';
 let left_margin = 48;
 let top_margin = 48;
 let startTime;
@@ -75,13 +75,13 @@ function draw() {
   textSize(24);
   fill(brightness);
   textAlign(LEFT, TOP);
-  text('short-reach problems: snap judgement based on quick feedback', left_margin, sub1_top);
+  text('short-reach solutions: snap judgement based on quick feedback', left_margin, sub1_top);
 
   // Draw black rectangle behind LONG_TEXT if background ramp is active
   if (backgroundAlpha > 0) {
     fill(0, backgroundAlpha);
     noStroke();
-    rect(left_margin - 10, sub2_top - 5, textWidth(LONG_TEXT) + 20, 30, 3);
+    rect(left_margin - 10, sub2_top - 5, textWidth(LONG_TEXT) + 20, 40, 5);
   }
 
   // Draw LONG_TEXT on top
