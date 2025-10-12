@@ -13,6 +13,7 @@ https://www.pattvira.com/
 
 let molds = []; let num = 4000;
 let d;
+let SHORT_TEXT = 'short-reach solutions: snap judgements with low attention to truth or consequences';
 let LONG_TEXT = 'long-reach solutions: slow thinking about problems with deep consequences';
 let left_margin = 48;
 let top_margin = 48;
@@ -75,7 +76,7 @@ function draw() {
   textSize(24);
   fill(brightness);
   textAlign(LEFT, TOP);
-  text('short-reach solutions: snap judgement based on quick feedback', left_margin, sub1_top);
+  text(SHORT_TEXT, left_margin, sub1_top);
 
   // Draw black rectangle behind LONG_TEXT if background ramp is active
   if (backgroundAlpha > 0) {
