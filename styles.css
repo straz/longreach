@@ -20,13 +20,13 @@ main {
     position: absolute;
     bottom: 10px;
     left: 10px;
-    width: 30px;
-    height: 30px;
+    width: 44px;
+    height: 44px;
     background: #666;
     color: white;
     border: none;
     border-radius: 50%;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     cursor: pointer;
     z-index: 10;
@@ -34,10 +34,30 @@ main {
     align-items: center;
     justify-content: center;
     transition: background-color 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .info-button:hover {
     background: #888;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    .info-button {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+        bottom: 15px;
+        left: 15px;
+    }
+
+    .attribution {
+        bottom: 70px;
+        left: 15px;
+        font-size: 14px;
+        max-width: calc(100vw - 30px);
+    }
 }
 
 .attribution {
