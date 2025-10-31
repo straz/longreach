@@ -10,7 +10,7 @@ Connect with Patt: @pattvira
 https://www.pattvira.com/
 ----------------------------------------
 */
-
+let geistFont;
 let molds = []; let num = 4000;
 let d;
 let SHORT_TEXT = 'short-reach solutions: snap judgements with low attention to truth or consequences';
@@ -22,6 +22,9 @@ let rampDuration = 5000; // 5 seconds in milliseconds
 let backgroundRampStart = 5000; // Start background ramp at 5 seconds
 let backgroundRampDuration = 5000; // Background ramp duration (5-10 seconds)
 
+function preload(){
+  geistFont = loadFont('Geist/static/Geist-Regular.ttf');
+}
 
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight);
@@ -38,7 +41,6 @@ function setup() {
   for (let i = 0; i < num; i++) {
     molds[i] = new Mold();
   }
-  describe(LONG_TEXT, LABEL);
 }
 
 function draw() {
@@ -64,7 +66,7 @@ function draw() {
   let backgroundAlpha = lerp(0, 255, backgroundProgress);
 
   // Redraw the title text to keep it visible
-  textFont('Helvetica');
+  textFont(geistFont);
   textSize(48);
   fill(brightness);
   textAlign(LEFT, TOP);
@@ -82,7 +84,7 @@ function draw() {
   if (backgroundAlpha > 0) {
     fill(0, backgroundAlpha);
     noStroke();
-    rect(left_margin - 10, sub2_top - 5, textWidth(LONG_TEXT) + 20, 40, 5);
+    rect(left_margin - 10, sub2_top - 5, textWidth(LONG_TEXT) + 30, 40, 5);
   }
 
   // Draw LONG_TEXT on top
