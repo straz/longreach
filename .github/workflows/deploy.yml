@@ -50,8 +50,8 @@ jobs:
 
       - name: Copy Vite build to _site
         run: |
-          rm -rf _site/cards
-          cp -r cards/dist _site/cards
+          sudo rm -rf _site/cards
+          sudo cp -r cards/dist/. _site/cards
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
