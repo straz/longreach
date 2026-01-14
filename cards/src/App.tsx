@@ -156,7 +156,10 @@ function App() {
   return (
     <div className={styles.app}>
       <header className={styles.header}>
-        <h1>AI Pathologies</h1>
+        <div className={styles.titleGroup}>
+          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Longreach logo" className={styles.logo} />
+          <h1>AI Pathologies</h1>
+        </div>
         <Search cards={allCards} onSelectCard={handleSearchSelect} />
         <button className={styles.newGameButton} onClick={startNewGame}>
           New Game

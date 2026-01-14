@@ -12,6 +12,17 @@
   border-bottom: 1px solid #4a5568;
 }
 
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: 28px;
+  height: 28px;
+}
+
 .header h1 {
   font-size: 24px;
   font-weight: 700;

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Card as CardType } from '../../data/cards';
 import { Card } from '../Card/Card';
 import styles from './Hand.module.css';
@@ -9,9 +10,24 @@ interface HandProps {
 }
 
 export function Hand({ cards, selectedCardId, onCardClick }: HandProps) {
+  const navigate = useNavigate();
+
+  const handleGetReport = () => {
+    navigate('/request', { state: { cards } });
+  };
+
   return (
     <div className={styles.hand}>
-      <div className={styles.label}>Your Hand ({cards.length})</div>
+      <div className={styles.header}>
+        <div className={styles.label}>Your Hand ({cards.length})</div>
+        <button
+          className={styles.reportButton}
+          disabled={cards.length === 0}
+          onClick={handleGetReport}
+        >
+          Get a report
+        </button>
+      </div>
       <div className={styles.cards}>
         {cards.length > 0 ? (
           cards.map((card) => (
