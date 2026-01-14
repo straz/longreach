@@ -1,0 +1,36 @@
+.currentCardSlot {
+  width: 150px;
+  height: 210px;
+  position: relative;
+}
+
+.cardWrapper {
+  position: relative;
+}
+
+.slideIn {
+  animation: slideFromDeck 0.4s ease-out;
+}
+
+@keyframes slideFromDeck {
+  from {
+    transform: translateX(-180px);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.empty {
+  width: 150px;
+  height: 210px;
+  border: 2px dashed #4a5568;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4a5568;
+  font-size: 14px;
+}

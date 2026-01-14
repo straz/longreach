@@ -1,0 +1,71 @@
+.searchContainer {
+  position: relative;
+  width: 300px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #4a5568;
+  border-radius: 6px;
+  background: #2d3748;
+  color: #f7fafc;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.searchInput::placeholder {
+  color: #718096;
+}
+
+.searchInput:focus {
+  border-color: #63b3ed;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+  background: #2d3748;
+  border: 1px solid #4a5568;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+
+.dropdownItem {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #4a5568;
+  transition: background 0.15s ease;
+}
+
+.dropdownItem:last-child {
+  border-bottom: none;
+}
+
+.dropdownItem:hover {
+  background: #4a5568;
+}
+
+.cardName {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f7fafc;
+  margin-bottom: 4px;
+}
+
+.matchContext {
+  font-size: 12px;
+  color: #a0aec0;
+}
+
+.matchContext strong {
+  color: #ffd700;
+  font-weight: 600;
+}

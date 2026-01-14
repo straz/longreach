@@ -1,0 +1,53 @@
+.discardPile {
+  position: relative;
+  width: 150px;
+  height: 210px;
+}
+
+.stackedCard {
+  position: absolute;
+  width: 150px;
+  height: 210px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+  border: 2px solid #4a5568;
+}
+
+.stack2 {
+  top: -2px;
+  left: 2px;
+}
+
+.stack3 {
+  top: -4px;
+  left: 4px;
+}
+
+.count {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  background: #718096;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+.empty {
+  width: 150px;
+  height: 210px;
+  border: 2px dashed #4a5568;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4a5568;
+  font-size: 14px;
+}

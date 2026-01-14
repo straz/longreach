@@ -1,0 +1,8 @@
+exclude:
+  - cards/node_modules
+  - cards/src
+  - cards/package.json
+  - cards/pnpm-lock.yaml
+  - cards/tsconfig*.json
+  - cards/vite.config.ts
+  - "*.md"
