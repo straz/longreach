@@ -189,6 +189,13 @@
   border-color: #63b3ed;
 }
 
+.cardIntro {
+  font-size: 14px;
+  color: #a0aec0;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+
 .cardList {
   display: flex;
   flex-wrap: wrap;

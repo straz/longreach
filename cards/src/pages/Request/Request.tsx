@@ -87,7 +87,11 @@ export function Request() {
 
       <form className={styles.form}>
         <div className={styles.section}>
-          <h2>Selected Cards ({cards.length})</h2>
+          {cards.length > 0 && (
+            <p className={styles.cardIntro}>
+              I selected {cards.length === 1 ? 'this card' : 'these cards'} because I found {cards.length === 1 ? 'it' : 'them'} interesting. Please send me my free analysis, focusing on {cards.length === 1 ? 'this potential risk' : 'these potential risks'}.
+            </p>
+          )}
           <div className={styles.cardList}>
             {cards.length > 0 ? (
               cards.map(card => (
