@@ -7,7 +7,7 @@ interface AboutBoxProps {
 
 export function AboutBox({ card }: AboutBoxProps) {
   return (
-    <div className={styles.aboutBox}>
+    <div className={`${styles.aboutBox} ${card ? styles.hasCard : ''}`}>
       <div className={styles.content}>
         {card ? (
           <>

@@ -25,7 +25,7 @@ export function Hand({ cards, selectedCardId, onCardClick }: HandProps) {
           disabled={cards.length === 0}
           onClick={handleGetReport}
         >
-          Get a report
+          Get a free report
         </button>
       </div>
       <div className={styles.cards}>

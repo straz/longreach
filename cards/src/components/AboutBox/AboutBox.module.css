@@ -7,6 +7,11 @@
   background: rgba(0, 0, 0, 0.3);
   border-radius: 12px;
   border: 1px solid #4a5568;
+  transition: box-shadow 0.2s ease;
+}
+
+.hasCard {
+  box-shadow: 0 0 0 3px #ffd700;
 }
 
 .content {

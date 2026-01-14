@@ -162,7 +162,7 @@ function App() {
         </div>
         <Search cards={allCards} onSelectCard={handleSearchSelect} />
         <button className={styles.newGameButton} onClick={startNewGame}>
-          New Game
+          New game
         </button>
       </header>
 
