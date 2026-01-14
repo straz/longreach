@@ -7,9 +7,11 @@ interface CurrentCardProps {
   selected: boolean;
   onClick: () => void;
   isAnimating?: boolean;
+  deckHasCards?: boolean;
+  onDrawCard?: () => void;
 }
 
-export function CurrentCard({ card, selected, onClick, isAnimating = false }: CurrentCardProps) {
+export function CurrentCard({ card, selected, onClick, isAnimating = false, deckHasCards = false, onDrawCard }: CurrentCardProps) {
   return (
     <div className={styles.currentCardSlot}>
       {card ? (
@@ -21,9 +23,13 @@ export function CurrentCard({ card, selected, onClick, isAnimating = false }: Cu
             onClick={onClick}
           />
         </div>
+      ) : deckHasCards ? (
+        <div className={`${styles.empty} ${styles.clickable}`} onClick={onDrawCard}>
+          <span>draw a card</span>
+        </div>
       ) : (
         <div className={styles.empty}>
-          <span>No card</span>
+          <span>No cards</span>
         </div>
       )}
     </div>

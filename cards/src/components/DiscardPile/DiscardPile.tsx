@@ -25,7 +25,6 @@ export function DiscardPile({ count, topCard, isTopCardSelected = false, onClick
         </>
       ) : (
         <div className={styles.empty}>
-          <span>Discard</span>
         </div>
       )}
     </div>

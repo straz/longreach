@@ -24,17 +24,13 @@ function App() {
 
   const startNewGame = useCallback(() => {
     const shuffledDeck = shuffle(allCards);
-    const [firstCard, ...remainingDeck] = shuffledDeck;
 
-    setDeck(remainingDeck);
-    setCurrentCard(firstCard);
+    setDeck(shuffledDeck);
+    setCurrentCard(null);
     setDiscardPile([]);
     setHand([]);
-    setSelectedCard(firstCard);
-    setIsAnimating(true);
-
-    // Clear animation flag after animation completes
-    setTimeout(() => setIsAnimating(false), 400);
+    setSelectedCard(null);
+    setIsAnimating(false);
   }, []);
 
   const drawNextCard = useCallback(() => {
@@ -180,6 +176,8 @@ function App() {
                 selected={isCurrentCardSelected}
                 onClick={handleCurrentCardClick}
                 isAnimating={isAnimating}
+                deckHasCards={deck.length > 0}
+                onDrawCard={drawNextCard}
               />
               <button
                 className={styles.keepButton}

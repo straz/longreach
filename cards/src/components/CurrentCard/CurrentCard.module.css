@@ -34,3 +34,17 @@
   color: #4a5568;
   font-size: 14px;
 }
+
+.clickable {
+  cursor: pointer;
+  border-color: #667eea;
+  color: #667eea;
+  font-weight: 500;
+  transition: border-color 0.2s, color 0.2s, transform 0.15s ease;
+}
+
+.clickable:hover {
+  border-color: #5a67d8;
+  color: #5a67d8;
+  transform: scale(1.02);
+}
