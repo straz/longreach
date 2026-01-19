@@ -1,4 +1,4 @@
-import { Card as CardType } from '../../data/cards';
+import { Card as CardType, categoryColors } from '../../data/cards';
 import styles from './Card.module.css';
 
 interface CardProps {
@@ -18,6 +18,8 @@ export function Card({
   className = '',
   style,
 }: CardProps) {
+  const categoryColor = card ? categoryColors[card.category] || '#666' : '#666';
+
   return (
     <div
       className={`${styles.card} ${faceUp ? styles.faceUp : styles.faceDown} ${selected ? styles.selected : ''} ${className}`}
@@ -26,8 +28,15 @@ export function Card({
     >
       {faceUp && card ? (
         <div className={styles.cardFront}>
-          <div className={styles.cardCategory}>{card.category}</div>
-          <div className={styles.cardName}>{card.name}</div>
+          <div
+            className={styles.categoryBand}
+            style={{ backgroundColor: categoryColor }}
+          >
+            {card.category}
+          </div>
+          <div className={styles.cardContent}>
+            <div className={styles.cardName}>{card.name}</div>
+          </div>
         </div>
       ) : (
         <div className={styles.cardBack}>

@@ -7,6 +7,7 @@ import { DiscardPile } from './components/DiscardPile/DiscardPile';
 import { AboutBox } from './components/AboutBox/AboutBox';
 import { Hand } from './components/Hand/Hand';
 import { Search } from './components/Search/Search';
+import { Filter } from './components/Filter/Filter';
 import styles from './App.module.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
   const [hand, setHand] = useState<CardType[]>([]);
   const [selectedCard, setSelectedCard] = useState<CardType | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
 
   // Initialize game
   useEffect(() => {
@@ -31,22 +33,36 @@ function App() {
     setHand([]);
     setSelectedCard(null);
     setIsAnimating(false);
+    setCategoryFilter(null);
   }, []);
 
-  const drawNextCard = useCallback(() => {
+  const drawNextCard = useCallback((filter: string | null = categoryFilter) => {
     if (deck.length === 0) {
       setCurrentCard(null);
       setSelectedCard(null);
       return;
     }
 
-    const [nextCard, ...remainingDeck] = deck;
+    // Find the first card that matches the filter (or any card if no filter)
+    let cardIndex = 0;
+    if (filter) {
+      cardIndex = deck.findIndex(card => card.category === filter);
+      if (cardIndex === -1) {
+        // No matching cards in deck
+        setCurrentCard(null);
+        setSelectedCard(null);
+        return;
+      }
+    }
+
+    const nextCard = deck[cardIndex];
+    const remainingDeck = [...deck.slice(0, cardIndex), ...deck.slice(cardIndex + 1)];
     setDeck(remainingDeck);
     setCurrentCard(nextCard);
     setSelectedCard(nextCard);
     setIsAnimating(true);
     setTimeout(() => setIsAnimating(false), 400);
-  }, [deck]);
+  }, [deck, categoryFilter]);
 
   const handleKeep = useCallback(() => {
     if (!currentCard) return;
@@ -147,6 +163,50 @@ function App() {
     }
   }, [hand, currentCard, deck, discardPile]);
 
+  const handleCategoryChange = useCallback((newCategory: string | null) => {
+    setCategoryFilter(newCategory);
+
+    // Return all face-down cards from discard pile to deck (shuffled in randomly)
+    // Face-down means all cards except the top card which is face-up
+    const faceDownDiscardCards = discardPile.slice(0, -1);
+    const topDiscardCardFromPile = discardPile.length > 0 ? discardPile[discardPile.length - 1] : null;
+
+    // Compute the new deck with face-down discard cards shuffled back in
+    let newDeck = faceDownDiscardCards.length > 0
+      ? shuffle([...deck, ...faceDownDiscardCards])
+      : [...deck];
+
+    // Compute new discard pile (only keep top card if any)
+    let newDiscardPile = topDiscardCardFromPile ? [topDiscardCardFromPile] : [];
+
+    // Track what the new current card should be
+    let newCurrentCard = currentCard;
+    let newSelectedCard = selectedCard;
+
+    // If current card doesn't match the new filter, discard it and draw next matching card
+    if (newCategory && currentCard && currentCard.category !== newCategory) {
+      // Add current card to discard pile
+      newDiscardPile = [...newDiscardPile, currentCard];
+
+      // Find next matching card in the new deck
+      const matchingIndex = newDeck.findIndex(card => card.category === newCategory);
+      if (matchingIndex !== -1) {
+        newCurrentCard = newDeck[matchingIndex];
+        newSelectedCard = newCurrentCard;
+        newDeck = [...newDeck.slice(0, matchingIndex), ...newDeck.slice(matchingIndex + 1)];
+      } else {
+        newCurrentCard = null;
+        newSelectedCard = null;
+      }
+    }
+
+    // Apply all state updates
+    setDeck(newDeck);
+    setDiscardPile(newDiscardPile);
+    setCurrentCard(newCurrentCard);
+    setSelectedCard(newSelectedCard);
+  }, [deck, discardPile, currentCard, selectedCard]);
+
   const isCurrentCardSelected = selectedCard?.id === currentCard?.id;
   const isHandCardSelected = selectedCard ? hand.some(card => card.id === selectedCard.id) : false;
   const topDiscardCard = discardPile.length > 0 ? discardPile[discardPile.length - 1] : null;
@@ -160,7 +220,10 @@ function App() {
           <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Longreach logo" className={styles.logo} />
           <h1>AI Pathologies</h1>
         </div>
-        <Search cards={allCards} onSelectCard={handleSearchSelect} />
+        <div className={styles.headerControls}>
+          <Search cards={allCards} onSelectCard={handleSearchSelect} />
+          <Filter selectedCategory={categoryFilter} onCategoryChange={handleCategoryChange} />
+        </div>
         <button className={styles.newGameButton} onClick={startNewGame}>
           New game
         </button>
@@ -179,32 +242,36 @@ function App() {
                 selected={isCurrentCardSelected}
                 onClick={handleCurrentCardClick}
                 isAnimating={isAnimating}
-                deckHasCards={deck.length > 0}
-                onDrawCard={drawNextCard}
+                deckHasCards={categoryFilter
+                  ? deck.some(card => card.category === categoryFilter)
+                  : deck.length > 0}
+                onDrawCard={() => drawNextCard()}
               />
-              <button
-                className={styles.keepButton}
-                onClick={handleKeep}
-                disabled={!isCurrentCardSelected || !currentCard}
-                title="Keep card (add to hand)"
-              >
-                <span>Keep</span>
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M12 16l-6-6h12z" />
-                </svg>
-              </button>
+              <div className={styles.buttonRow}>
+                <button
+                  className={styles.keepButton}
+                  onClick={handleKeep}
+                  disabled={!isCurrentCardSelected || !currentCard}
+                  title="Keep card (add to hand)"
+                >
+                  <span>Keep</span>
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M12 16l-6-6h12z" />
+                  </svg>
+                </button>
+                <button
+                  className={styles.discardButton}
+                  onClick={handleDiscard}
+                  disabled={!canDiscard}
+                  title="Discard card"
+                >
+                  <span>Discard</span>
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M10 6l6 6-6 6z" />
+                  </svg>
+                </button>
+              </div>
             </div>
-            <button
-              className={styles.discardButton}
-              onClick={handleDiscard}
-              disabled={!canDiscard}
-              title="Discard card"
-            >
-              <span>Discard</span>
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                <path d="M10 6l6 6-6 6z" />
-              </svg>
-            </button>
             <DiscardPile
               count={discardPile.length}
               topCard={topDiscardCard}

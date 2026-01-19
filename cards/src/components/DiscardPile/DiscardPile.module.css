@@ -1,16 +1,37 @@
 .discardPile {
+  --card-width: 150px;
+  --card-height: 210px;
   position: relative;
-  width: 150px;
-  height: 210px;
+  width: var(--card-width);
+  height: var(--card-height);
 }
 
 .stackedCard {
   position: absolute;
-  width: 150px;
-  height: 210px;
+  width: var(--card-width);
+  height: var(--card-height);
   border-radius: 8px;
   background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
   border: 2px solid #4a5568;
+}
+
+@media (max-width: 480px) {
+  .discardPile {
+    --card-width: clamp(85px, 28vw, 110px);
+    --card-height: clamp(119px, 39.2vw, 154px);
+  }
+
+  .count {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    bottom: -6px;
+    right: -6px;
+  }
+
+  .empty {
+    font-size: clamp(10px, 3vw, 12px);
+  }
 }
 
 .stack2 {
@@ -41,8 +62,8 @@
 }
 
 .empty {
-  width: 150px;
-  height: 210px;
+  width: var(--card-width);
+  height: var(--card-height);
   border: 2px dashed #4a5568;
   border-radius: 8px;
   display: flex;

@@ -69,3 +69,22 @@
   color: #ffd700;
   font-weight: 600;
 }
+
+/* Mobile styles */
+@media (max-width: 480px) {
+  .searchContainer {
+    width: 100%;
+  }
+
+  .searchInput {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .dropdown {
+    max-height: 250px;
+  }
+
+  .dropdownItem {
+    padding: 12px;
+  }
+}

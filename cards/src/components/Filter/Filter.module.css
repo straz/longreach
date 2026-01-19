@@ -1,0 +1,106 @@
+.filterContainer {
+  position: relative;
+}
+
+.filterButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #2d3748;
+  color: #f7fafc;
+  border: 1px solid #4a5568;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: border-color 0.15s ease;
+}
+
+.filterButton:hover {
+  border-color: #63b3ed;
+}
+
+.filterLabel {
+  color: #a0aec0;
+}
+
+.filterValue {
+  font-weight: 500;
+}
+
+.chevron {
+  transition: transform 0.15s ease;
+  color: #a0aec0;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  margin-top: 4px;
+  max-height: 400px;
+  overflow-y: auto;
+  background: #2d3748;
+  border: 1px solid #4a5568;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #f7fafc;
+  border-bottom: 1px solid #4a5568;
+  transition: background 0.15s ease;
+}
+
+.dropdownItem:last-child {
+  border-bottom: none;
+}
+
+.dropdownItem:hover {
+  background: #4a5568;
+}
+
+.dropdownItem.selected {
+  background: #4a5568;
+}
+
+.colorDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Mobile styles */
+@media (max-width: 480px) {
+  .filterContainer {
+    width: 100%;
+  }
+
+  .filterButton {
+    width: 100%;
+    justify-content: space-between;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .dropdown {
+    min-width: 100%;
+    max-height: 300px;
+  }
+
+  .dropdownItem {
+    padding: 12px;
+  }
+}

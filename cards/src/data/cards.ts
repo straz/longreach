@@ -8,6 +8,18 @@ export interface Card {
   category: string;
 }
 
+export const categoryColors: Record<string, string> = {
+  'Congenital & Genetic': '#8B0000',      // Dark red
+  'Nutritional & Metabolic': '#D2691E',   // Chocolate orange
+  'Infectious & Parasitic': '#228B22',    // Forest green
+  'Perceptual & Recognition': '#6A0DAD',  // Purple
+  'Psychological & Behavioral': '#4169E1', // Royal blue
+  'Degenerative & Resource': '#8B4513',   // Saddle brown
+  'Governance & Autoimmune': '#DAA520',   // Goldenrod
+  'Operational & Control': '#708090',     // Slate gray
+  'Human-System Interface': '#008B8B',    // Dark cyan
+};
+
 interface Disease {
   name: string;
   description: string;

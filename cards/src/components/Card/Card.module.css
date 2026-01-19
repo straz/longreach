@@ -1,11 +1,34 @@
 .card {
-  width: 150px;
-  height: 210px;
+  --card-width: 150px;
+  --card-height: 210px;
+  width: var(--card-width);
+  height: var(--card-height);
   border-radius: 8px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   position: relative;
   flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .card {
+    /* Adaptive sizing: min 85px, max 110px, scales with viewport */
+    --card-width: clamp(85px, 28vw, 110px);
+    --card-height: clamp(119px, 39.2vw, 154px);
+  }
+
+  .categoryBand {
+    padding: clamp(3px, 1vw, 5px) clamp(4px, 1.5vw, 6px);
+    font-size: clamp(6px, 2vw, 8px);
+  }
+
+  .cardName {
+    font-size: clamp(9px, 3vw, 12px);
+  }
+
+  .cardContent {
+    padding: clamp(6px, 2vw, 10px);
+  }
 }
 
 .card:hover {
@@ -32,20 +55,30 @@
 .cardFront {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   height: 100%;
-  padding: 12px;
-  text-align: center;
+  overflow: hidden;
+  border-radius: 6px;
 }
 
-.cardCategory {
+.categoryBand {
+  padding: 6px 8px;
   font-size: 9px;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #666;
-  margin-bottom: 8px;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.cardContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  text-align: center;
 }
 
 .cardName {

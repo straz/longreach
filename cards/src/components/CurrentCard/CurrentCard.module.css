@@ -1,7 +1,20 @@
 .currentCardSlot {
-  width: 150px;
-  height: 210px;
+  --card-width: 150px;
+  --card-height: 210px;
+  width: var(--card-width);
+  height: var(--card-height);
   position: relative;
+}
+
+@media (max-width: 480px) {
+  .currentCardSlot {
+    --card-width: clamp(85px, 28vw, 110px);
+    --card-height: clamp(119px, 39.2vw, 154px);
+  }
+
+  .empty {
+    font-size: clamp(10px, 3vw, 12px);
+  }
 }
 
 .cardWrapper {
@@ -24,8 +37,8 @@
 }
 
 .empty {
-  width: 150px;
-  height: 210px;
+  width: var(--card-width);
+  height: var(--card-height);
   border: 2px dashed #4a5568;
   border-radius: 8px;
   display: flex;

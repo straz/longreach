@@ -45,3 +45,30 @@
   font-size: 14px;
   font-style: italic;
 }
+
+/* Tablet styles */
+@media (max-width: 768px) {
+  .aboutBox {
+    width: 100%;
+    order: 2;
+  }
+}
+
+/* Mobile phone styles */
+@media (max-width: 480px) {
+  .aboutBox {
+    padding: 12px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .description {
+    font-size: 13px;
+  }
+
+  .category {
+    font-size: 10px;
+  }
+}
