@@ -90,6 +90,14 @@
   margin-top: 93px;
 }
 
+.mobileOnly.discardButton {
+  display: none;
+}
+
+.desktopOnly.discardButton {
+  display: flex;
+}
+
 .discardButton {
   display: flex;
   align-items: center;
@@ -103,6 +111,10 @@
   font-size: 14px;
   font-weight: 500;
   transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.discardButton.desktopOnly {
+  margin-top: 85px;
 }
 
 .discardButton:hover {
@@ -239,6 +251,14 @@
   }
 
   .arrow {
+    display: none;
+  }
+
+  .mobileOnly.discardButton {
+    display: flex;
+  }
+
+  .desktopOnly.discardButton {
     display: none;
   }
 

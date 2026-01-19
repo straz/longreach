@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { cards as allCards, Card as CardType } from './data/cards';
+import { cards as allCards, Card as CardType, categoryColors } from './data/cards';
 import { shuffle } from './utils/shuffle';
 import { Deck } from './components/Deck/Deck';
 import { CurrentCard } from './components/CurrentCard/CurrentCard';
@@ -234,7 +234,11 @@ function App() {
         <AboutBox card={selectedCard} />
         <div className={styles.rightColumn}>
           <div className={styles.cardArea}>
-            <Deck count={deck.length} />
+            <Deck
+              count={deck.length}
+              filteredCount={categoryFilter ? deck.filter(c => c.category === categoryFilter).length : undefined}
+              categoryColor={categoryFilter ? categoryColors[categoryFilter] : undefined}
+            />
             <div className={styles.arrow}>→</div>
             <div className={styles.currentCardColumn}>
               <CurrentCard
@@ -260,7 +264,7 @@ function App() {
                   </svg>
                 </button>
                 <button
-                  className={styles.discardButton}
+                  className={`${styles.discardButton} ${styles.mobileOnly}`}
                   onClick={handleDiscard}
                   disabled={!canDiscard}
                   title="Discard card"
@@ -272,6 +276,17 @@ function App() {
                 </button>
               </div>
             </div>
+            <button
+              className={`${styles.discardButton} ${styles.desktopOnly}`}
+              onClick={handleDiscard}
+              disabled={!canDiscard}
+              title="Discard card"
+            >
+              <span>Discard</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M10 6l6 6-6 6z" />
+              </svg>
+            </button>
             <DiscardPile
               count={discardPile.length}
               topCard={topDiscardCard}

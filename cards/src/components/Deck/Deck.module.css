@@ -22,11 +22,17 @@
   }
 
   .count {
-    width: 20px;
-    height: 20px;
-    font-size: 10px;
-    bottom: -6px;
-    right: -6px;
+    width: 18px;
+    height: 18px;
+    font-size: 9px;
+    bottom: -5px;
+    right: -5px;
+  }
+
+  .countGroup {
+    bottom: -5px;
+    right: -5px;
+    gap: 2px;
   }
 }
 
@@ -55,6 +61,24 @@
   align-items: center;
   justify-content: center;
   border: 2px solid white;
+}
+
+.countGroup {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  display: flex;
+  gap: 4px;
+}
+
+.countGroup .count {
+  position: relative;
+  bottom: auto;
+  right: auto;
+}
+
+.countSecondary {
+  background: #718090;
 }
 
 .empty {
