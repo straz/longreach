@@ -208,7 +208,7 @@ export function Request() {
         </div>
 
         <div className={styles.section}>
-          <h2>My AI is...</h2>
+          <h2>We're using AI that is...</h2>
           <div className={styles.checkboxGroup}>
             {AI_CHARACTERISTICS.map(option => (
               <label key={option} className={styles.checkboxLabel}>
