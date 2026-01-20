@@ -219,13 +219,44 @@
 
 .submitButton {
   padding: 14px 28px;
-  background: #4a5568;
-  color: #a0aec0;
+  background: #3182ce;
+  color: #ffffff;
   border: none;
   border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.2s;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #2c5282;
+}
+
+.submitButton:disabled {
+  background: #4a5568;
+  color: #a0aec0;
   cursor: not-allowed;
   opacity: 0.7;
-  align-self: flex-start;
+}
+
+.successMessage {
+  padding: 16px 24px;
+  background: rgba(72, 187, 120, 0.15);
+  border: 1px solid #48bb78;
+  border-radius: 8px;
+  color: #48bb78;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.errorMessage {
+  padding: 12px 16px;
+  background: rgba(245, 101, 101, 0.15);
+  border: 1px solid #f56565;
+  border-radius: 8px;
+  color: #f56565;
+  font-size: 14px;
+  margin-bottom: 12px;
 }

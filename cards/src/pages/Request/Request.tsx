@@ -1,6 +1,8 @@
 import { useLocation, Link } from 'react-router-dom';
 import { useState } from 'react';
 import { Card } from '../../data/cards';
+import { submitLead } from '../../lib/api';
+import { supabase } from '../../lib/supabaseClient';
 import styles from './Request.module.css';
 
 const AI_CHARACTERISTICS = [
@@ -58,6 +60,46 @@ export function Request() {
     whoConcernedOther: '',
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const isFormValid = formData.name && formData.email && formData.title && formData.organization;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isFormValid || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    setSubmitError(null);
+
+    const result = await submitLead({
+      name: formData.name,
+      email: formData.email,
+      title: formData.title || undefined,
+      organization: formData.organization || undefined,
+      comments: formData.comments || undefined,
+      selected_cards: cards.map(c => ({ id: c.id, name: c.name })),
+      ai_characteristics: formData.aiCharacteristics.length > 0 ? formData.aiCharacteristics : undefined,
+      ai_characteristics_other: formData.aiCharacteristicsOther || undefined,
+      ai_providers: formData.aiProviders.length > 0 ? formData.aiProviders : undefined,
+      ai_providers_other: formData.aiProvidersOther || undefined,
+      concern_level: formData.concernLevel || undefined,
+      who_concerned: formData.whoConcerned.length > 0 ? formData.whoConcerned : undefined,
+      who_concerned_other: formData.whoConcernedOther || undefined,
+    });
+
+    setIsSubmitting(false);
+
+    if (result.success) {
+      setSubmitStatus('success');
+    } else {
+      setSubmitStatus('error');
+      setSubmitError(result.error || 'An error occurred');
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -85,7 +127,7 @@ export function Request() {
         </p>
       </header>
 
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.section}>
           {cards.length > 0 && (
             <p className={styles.cardIntro}>
@@ -299,9 +341,27 @@ export function Request() {
           </div>
         </div>
 
-        <button type="submit" className={styles.submitButton} disabled>
-          Request report (coming soon)
-        </button>
+        {submitStatus === 'success' ? (
+          <div className={styles.successMessage}>
+		Thank you! Your request has been submitted. (Under construction: report is not available yet).
+          </div>
+        ) : (
+          <>
+            {submitStatus === 'error' && (
+              <div className={styles.errorMessage}>
+                {submitError || 'An error occurred. Please try again.'}
+              </div>
+            )}
+            <button
+              type="submit"
+              className={styles.submitButton}
+              disabled={!supabase || !isFormValid || isSubmitting}
+            >
+              {!supabase ? 'Form submission unavailable' :
+		  isSubmitting ? 'Submitting...' : 'Request report (Under construction: no report available)'}
+            </button>
+          </>
+        )}
       </form>
     </div>
   );
