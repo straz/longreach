@@ -1,0 +1,10 @@
+To: {{ name }} <{{ email }}>
+
+Hi {{ name.split()[0] }}, thanks for visiting longreach.ai and trying us out!
+
+Your cards are:
+{% for card in selected_cards -%}
+  • {{ card.name }}
+{% endfor %}
+
+

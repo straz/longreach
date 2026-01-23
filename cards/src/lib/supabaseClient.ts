@@ -13,6 +13,7 @@ export const supabase = supabaseUrl && supabaseAnonKey
 
 export interface Lead {
   id?: string;
+  lid?: string;  // 10-char nanoid, generated client-side
   created_at?: string;
   updated_at?: string;
   name: string;
