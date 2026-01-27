@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Markdown from 'react-markdown';
 import './Report.css';
 
 const MODAL_API_URL = 'https://longreach--report-output-fastapi-app.modal.run';
@@ -18,7 +19,12 @@ export function Report() {
     }
 
     fetch(`${MODAL_API_URL}/report/${lid}`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Server error: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
         if (data.success) {
           setReport(data.report);
@@ -28,7 +34,7 @@ export function Report() {
       })
       .catch((err) => {
         console.error('Failed to fetch report:', err);
-        setError('Failed to load report');
+        setError('Failed to load report. Please try again later.');
       })
       .finally(() => setLoading(false));
   }, [lid]);
@@ -47,6 +53,9 @@ export function Report() {
         <div className="report-error">
           <h1>Report Not Found</h1>
           <p>{error}</p>
+          <p className="report-error-hint">
+            Please check the link in your email or contact support.
+          </p>
         </div>
       </div>
     );
@@ -54,7 +63,9 @@ export function Report() {
 
   return (
     <div className="report-container">
-      <div className="report-content" dangerouslySetInnerHTML={{ __html: report || '' }} />
+      <div className="report-content">
+        <Markdown>{report}</Markdown>
+      </div>
     </div>
   );
 }

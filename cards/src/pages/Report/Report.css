@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   min-height: 100vh;
+  background: #f5f5f5;
 }
 
 .report-loading {
@@ -26,8 +27,15 @@
   color: #666;
 }
 
+.report-error-hint {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #888;
+}
+
 .report-content {
   background: white;
+  color: #333;
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -37,6 +45,7 @@
 .report-content h1,
 .report-content h2,
 .report-content h3 {
+  color: #222;
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
 }
@@ -57,4 +66,27 @@
 
 .report-content li {
   margin-bottom: 0.5rem;
+}
+
+.report-content a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.report-content a:hover {
+  text-decoration: underline;
+}
+
+.report-content hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 1.5rem 0;
+}
+
+.report-content strong {
+  font-weight: 600;
+}
+
+.report-content em {
+  color: #666;
 }

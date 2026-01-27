@@ -11,7 +11,7 @@ app = modal.App("report-output")
 image = (
     modal.Image.debian_slim()
     .pip_install("supabase", "fastapi", "jinja2", "mailjet-rest", "email-validator")
-    .add_local_file("template.txt", remote_path="/root/template.txt")
+    .add_local_file("report_template.md", remote_path="/root/report_template.md")
     .add_local_file("email_template.txt", remote_path="/root/email_template.txt")
     .add_local_file("email_template.html", remote_path="/root/email_template.html")
 )
@@ -30,7 +30,7 @@ web_app.add_middleware(
     allow_headers=["*"],
 )
 
-TEMPLATE_PATH = Path("/root/template.txt")
+REPORT_TEMPLATE_PATH = Path("/root/report_template.md")
 EMAIL_TEXT_PATH = Path("/root/email_template.txt")
 EMAIL_HTML_PATH = Path("/root/email_template.html")
 
@@ -113,12 +113,7 @@ def send_confirmation(
 
 
 @web_app.get("/report/{lid}")
-def get_report(lid: str):
-    print(f"get_report({lid})")
-    return get_lead(lid)
-
-
-def get_lead(lid: str) -> dict:
+def get_report(lid: str) -> dict:
     from supabase import create_client
 
     supabase_url = os.environ["SUPABASE_URL"]
@@ -130,7 +125,7 @@ def get_lead(lid: str) -> dict:
     if not response or not response.data:
         return {"success": False, "error": "Lead not found"}
 
-    template = Template(TEMPLATE_PATH.read_text())
+    template = Template(REPORT_TEMPLATE_PATH.read_text())
     return {"success": True, "report": template.render(response.data)}
 
 
