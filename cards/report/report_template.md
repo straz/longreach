@@ -4,6 +4,10 @@
 
 ---
 
+<div style="border: 1px solid #ffcc00; padding: 10px; background-color: #fff8e1; border-radius: 5px;">
+  <b>Warning:</b> This site is under construction. This is a mock report - stay tuned, we're working on generating a better one for you!
+</div>
+
 ## Your Selected Risk Cards
 
 Thank you for completing the AI Risk Assessment survey. Based on your selections, here are the AI-related risks you identified:

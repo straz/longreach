@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Markdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 import './Report.css';
 
 const MODAL_API_URL = 'https://longreach--report-output-fastapi-app.modal.run';
@@ -64,7 +65,7 @@ export function Report() {
   return (
     <div className="report-container">
       <div className="report-content">
-        <Markdown>{report}</Markdown>
+        <Markdown rehypePlugins={[rehypeRaw]}>{report}</Markdown>
       </div>
     </div>
   );
