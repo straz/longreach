@@ -1,0 +1,14 @@
+Dear {{ name }},
+
+Thank you for completing the AI Risk Assessment survey.
+
+Your personalized report is ready. Click the link below to view your results:
+
+{{ report_url }}
+
+This report summarizes the AI-related risks and concerns you identified, along with recommended next steps.
+
+If you have any questions, please reply to this email.
+
+Best regards,
+The Longreach AI Team
