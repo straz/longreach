@@ -55,6 +55,7 @@ jobs:
         run: |
           sudo rm -rf _site/cards
           sudo cp -r cards/dist/. _site/cards
+          sudo cp cards/dist/404.html _site/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
