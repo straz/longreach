@@ -1,7 +1,8 @@
 import modal
 import os
 from pathlib import Path
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
 from jinja2 import Template
 
@@ -9,12 +10,25 @@ from jinja2 import Template
 app = modal.App("report-output")
 image = (
     modal.Image.debian_slim()
-    .pip_install("supabase", "fastapi", "jinja2", "mailjet-rest")
+    .pip_install("supabase", "fastapi", "jinja2", "mailjet-rest", "email-validator")
     .add_local_file("template.txt", remote_path="/root/template.txt")
     .add_local_file("email_template.txt", remote_path="/root/email_template.txt")
     .add_local_file("email_template.html", remote_path="/root/email_template.html")
 )
 web_app = FastAPI()
+
+web_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "https://longreach.ai",
+        "https://www.longreach.ai",
+    ],
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
 
 TEMPLATE_PATH = Path("/root/template.txt")
 EMAIL_TEXT_PATH = Path("/root/email_template.txt")
@@ -43,11 +57,19 @@ class SupabaseWebhookPayload(BaseModel):
 
 
 @web_app.post("/send-confirmation")
-def send_confirmation(payload: SupabaseWebhookPayload):
+def send_confirmation(
+    payload: SupabaseWebhookPayload,
+    x_webhook_secret: str = Header(..., alias="X-Webhook-Secret"),
+):
     """Send confirmation email with personalized report link.
 
     Triggered by Supabase database webhook on INSERT to leads table.
+    Requires X-Webhook-Secret header to match WEBHOOK_SECRET env var.
     """
+    expected_secret = os.environ.get("WEBHOOK_SECRET")
+    if not expected_secret or x_webhook_secret != expected_secret:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
     from mailjet_rest import Client
 
     record = payload.record
@@ -117,6 +139,7 @@ def get_lead(lid: str) -> dict:
     secrets=[
         modal.Secret.from_name("supabase-credentials"),
         modal.Secret.from_name("mailjet-credentials"),
+        modal.Secret.from_name("webhook-credentials"),
     ],
 )
 @modal.asgi_app()
