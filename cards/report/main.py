@@ -10,7 +10,8 @@ from jinja2 import Template
 app = modal.App("report-output")
 image = (
     modal.Image.debian_slim()
-    .pip_install("supabase", "fastapi", "jinja2", "mailjet-rest", "email-validator")
+    .run_commands("echo 'image-v1'")
+    .pip_install("email-validator", "supabase", "fastapi", "jinja2", "mailjet-rest")
     .add_local_file("report_template.md", remote_path="/root/report_template.md")
     .add_local_file("email_template.txt", remote_path="/root/email_template.txt")
     .add_local_file("email_template.html", remote_path="/root/email_template.html")
@@ -76,6 +77,7 @@ def send_confirmation(
 
     api_key = os.environ["MAILJET_API_KEY"]
     api_secret = os.environ["MAILJET_API_SECRET"]
+    print(f"Using Mailjet API key: {api_key[:8]}...")
     mailjet = Client(auth=(api_key, api_secret), version='v3.1')
 
     report_url = f"https://longreach.ai/cards/report/{record.lid}"
@@ -106,10 +108,19 @@ def send_confirmation(
 
     result = mailjet.send.create(data=data)
 
-    if result.status_code != 200:
-        raise HTTPException(status_code=500, detail="Failed to send email")
+    print(f"Mailjet response: status={result.status_code}, body={result.json()}")
 
-    return {"success": True}
+    if result.status_code != 200:
+        raise HTTPException(status_code=500, detail=f"Failed to send email: {result.json()}")
+
+    # Check for errors in the response body
+    response_data = result.json()
+    if "Messages" in response_data:
+        for msg in response_data["Messages"]:
+            if msg.get("Status") == "error":
+                raise HTTPException(status_code=500, detail=f"Mailjet error: {msg.get('Errors')}")
+
+    return {"success": True, "mailjet_response": response_data, "api_key_prefix": api_key[:8]}
 
 
 @web_app.get("/report/{lid}")

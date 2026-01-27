@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+      // Store the attempted path and redirect to the app root
+      // GitHub Pages serves this 404.html for any unknown path
+      var pathSegmentsToKeep = 1; // Keep '/cards' prefix
+      var repo = '/cards';
+
+      var path = window.location.pathname;
+      // Remove the repo prefix to get the route
+      if (path.startsWith(repo)) {
+        path = path.slice(repo.length);
+      }
+
+      // Store path and query string in sessionStorage
+      sessionStorage.setItem('spa-redirect', JSON.stringify({
+        path: path || '/',
+        query: window.location.search,
+        hash: window.location.hash
+      }));
+
+      // Redirect to app root
+      window.location.replace(repo + '/');
+    </script>
+  </head>
+  <body>
+    Redirecting...
+  </body>
+</html>

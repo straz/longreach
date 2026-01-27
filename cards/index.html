@@ -7,6 +7,18 @@
     <title>AI Pathologies</title>
   </head>
   <body>
+    <!-- SPA redirect restoration for GitHub Pages -->
+    <script>
+      (function() {
+        var redirect = sessionStorage.getItem('spa-redirect');
+        if (redirect) {
+          sessionStorage.removeItem('spa-redirect');
+          var data = JSON.parse(redirect);
+          var url = '/cards' + data.path + data.query + data.hash;
+          history.replaceState(null, '', url);
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
