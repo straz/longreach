@@ -1,8 +1,9 @@
 import { useLocation, Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '../../data/cards';
 import { submitLead } from '../../lib/api';
 import { supabase } from '../../lib/supabaseClient';
+import { getCampaign } from '../../lib/campaign';
 import styles from './Request.module.css';
 
 const AI_CHARACTERISTICS = [
@@ -44,6 +45,12 @@ const WHO_CONCERNED = [
 export function Request() {
   const location = useLocation();
   const cards = (location.state?.cards || []) as Card[];
+  const [campaign, setCampaign] = useState<string | null>(null);
+
+  // Read campaign from cookie on mount
+  useEffect(() => {
+    setCampaign(getCampaign());
+  }, []);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -88,6 +95,7 @@ export function Request() {
       concern_level: formData.concernLevel || undefined,
       who_concerned: formData.whoConcerned.length > 0 ? formData.whoConcerned : undefined,
       who_concerned_other: formData.whoConcernedOther || undefined,
+      campaign: campaign || undefined,
     });
 
     setIsSubmitting(false);

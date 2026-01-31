@@ -14,6 +14,7 @@ createRoot(document.getElementById('root')!).render(
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<App />} />
+          <Route path="/:campaign" element={<App />} />
           <Route path="/request" element={<Request />} />
           <Route path="/report/:lid" element={<Report />} />
         </Routes>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import { cards as allCards, Card as CardType, categoryColors } from './data/cards';
 import { shuffle } from './utils/shuffle';
 import { Deck } from './components/Deck/Deck';
@@ -8,9 +9,11 @@ import { AboutBox } from './components/AboutBox/AboutBox';
 import { Hand } from './components/Hand/Hand';
 import { Search } from './components/Search/Search';
 import { Filter } from './components/Filter/Filter';
+import { captureCampaignFromPath } from './lib/campaign';
 import styles from './App.module.css';
 
 function App() {
+  const { campaign } = useParams<{ campaign?: string }>();
   const [deck, setDeck] = useState<CardType[]>([]);
   const [currentCard, setCurrentCard] = useState<CardType | null>(null);
   const [discardPile, setDiscardPile] = useState<CardType[]>([]);
@@ -18,6 +21,11 @@ function App() {
   const [selectedCard, setSelectedCard] = useState<CardType | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+
+  // Capture campaign from URL and save to cookie
+  useEffect(() => {
+    captureCampaignFromPath(campaign);
+  }, [campaign]);
 
   // Initialize game
   useEffect(() => {

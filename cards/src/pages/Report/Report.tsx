@@ -53,9 +53,8 @@ export function Report() {
       <div className="report-container">
         <div className="report-error">
           <h1>Report Not Found</h1>
-          <p>{error}</p>
           <p className="report-error-hint">
-            Please check the link in your email or contact support.
+            Please check the link in your email.
           </p>
         </div>
       </div>
