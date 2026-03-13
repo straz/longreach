@@ -6,6 +6,8 @@ import { supabase } from '../../lib/supabaseClient';
 import { getCampaign } from '../../lib/campaign';
 import styles from './Request.module.css';
 
+const MAX_CARDS = 5;
+
 const AI_CHARACTERISTICS = [
   'generative',
   'a classifier',
@@ -140,6 +142,9 @@ export function Request() {
           {cards.length > 0 && (
             <p className={styles.cardIntro}>
               I selected {cards.length === 1 ? 'this card' : 'these cards'} because I found {cards.length === 1 ? 'it' : 'them'} interesting. Please send me my free analysis, focusing on {cards.length === 1 ? 'this potential risk' : 'these potential risks'}.
+              {cards.length > MAX_CARDS && (
+                <>Your analysis will be based on the first {MAX_CARDS} cards that you selected.</>
+              )}
             </p>
           )}
           <div className={styles.cardList}>

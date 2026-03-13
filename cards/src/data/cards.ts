@@ -6,54 +6,44 @@ export interface Card {
   name: string;
   description: string;
   category: string;
+  image: string;
 }
 
 export const categoryColors: Record<string, string> = {
-  'Congenital & Genetic': '#8B0000',      // Dark red
-  'Nutritional & Metabolic': '#D2691E',   // Chocolate orange
-  'Infectious & Parasitic': '#228B22',    // Forest green
-  'Perceptual & Recognition': '#6A0DAD',  // Purple
-  'Psychological & Behavioral': '#4169E1', // Royal blue
-  'Degenerative & Resource': '#8B4513',   // Saddle brown
-  'Governance & Autoimmune': '#DAA520',   // Goldenrod
-  'Operational & Control': '#708090',     // Slate gray
-  'Human-System Interface': '#008B8B',    // Dark cyan
+  'Congenital':    '#8B0000',  // Dark red
+  'Malnutrition':  '#D2691E',  // Chocolate orange
+  'Parasites':     '#228B22',  // Forest green
+  'Recognition':   '#6A0DAD',  // Purple
+  'Behavioral':    '#4169E1',  // Royal blue
+  'Degenerative':  '#8B4513',  // Saddle brown
+  'Governance':    '#DAA520',  // Goldenrod
+  'Control':       '#708090',  // Slate gray
+  'Human Impact':  '#008B8B',  // Dark cyan
 };
 
-interface Disease {
+interface Condition {
+  code: string;
   name: string;
-  description: string;
-  infection_vectors?: string[];
-  subtypes?: Disease[];
-}
-
-interface Category {
-  name: string;
-  description: string;
-  diseases: Disease[];
+  category: string;
+  short_description: string;
+  full_description: string;
+  vectors?: string[];
+  image?: string;
 }
 
 interface Taxonomy {
   taxonomy_name: string;
-  categories: Category[];
+  conditions: Condition[];
 }
 
 function extractCards(taxonomy: Taxonomy): Card[] {
-  const cards: Card[] = [];
-  let id = 1;
-
-  for (const category of taxonomy.categories) {
-    for (const disease of category.diseases) {
-      cards.push({
-        id: `card-${String(id++).padStart(2, '0')}`,
-        name: disease.name,
-        description: disease.description,
-        category: category.name,
-      });
-    }
-  }
-
-  return cards;
+  return taxonomy.conditions.map((condition, i) => ({
+    id: `card-${String(i + 1).padStart(2, '0')}`,
+    name: condition.name,
+    description: condition.short_description,
+    category: condition.category,
+    image: condition.image ?? '',
+  }));
 }
 
 const taxonomy = parse(taxonomyYaml) as Taxonomy;

@@ -13,8 +13,16 @@
 Thank you for completing the AI Risk Assessment survey. Based on your selections, here are the AI-related risks you identified:
 
 {% if selected_cards and selected_cards|length > 0 -%}
+{% if selected_cards|length > MAX_CARDS %}
+Your analysis will be based on the first {{ MAX_CARDS }} cards that you selected.
+
+{% endif %}
 {% for card in selected_cards -%}
+{% if loop.index <= MAX_CARDS -%}
 - **{{ card.name }}**
+{% else -%}
+- *{{ card.name }}*
+{% endif %}
 {% endfor %}
 {% else -%}
 *No cards were selected.*

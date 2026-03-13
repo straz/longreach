@@ -34,6 +34,7 @@ web_app.add_middleware(
 REPORT_TEMPLATE_PATH = Path("/root/report_template.md")
 EMAIL_TEXT_PATH = Path("/root/email_template.txt")
 EMAIL_HTML_PATH = Path("/root/email_template.html")
+MAX_CARDS = 5
 
 
 class LeadRecord(BaseModel):
@@ -137,7 +138,9 @@ def get_report(lid: str) -> dict:
         return {"success": False, "error": "Lead not found"}
 
     template = Template(REPORT_TEMPLATE_PATH.read_text())
-    return {"success": True, "report": template.render(response.data)}
+    extra = {'MAX_CARDS': MAX_CARDS}
+    data = {**response.data, **extra}
+    return {"success": True, "report": template.render(data)}
 
 
 @app.function(

@@ -1,409 +1,620 @@
 taxonomy_name: Longreach AI Pathology Taxonomy
-version: 3.2
+version: 3.3-print
 description: A hierarchical classification of AI functional integrity failures and "diseases" (harmful, abnormal conditions disrupting normal function), applicable to both biological and AI systems.
-
 infection_vectors:
+- crowdsourcing
+- fine_tuning
+- prompts
+- rag_content
+- rlhf
+- training_data
+- upvoting
+categories:
+- name: Congenital
+  description: Failures inherent to system design, configuration, deployment, downstream versioning, and replication.
+  code: C
+- name: Malnutrition
+  description: Ingestion of poorly curated training datasets and inadequate experimental design
+  code: M
+- name: Parasites
+  description: Exploitation of AI function by adversaries who provide manipulated data.
+  code: P
+- name: Recognition
+  description: Pattern recognition failures like pareidolia, confusion, or blindness to key signals.
+  code: R
+- name: Behavioral
+  description: Loss of mental integrity creating forgetful, disruptive, irrational, or demented behavior.
+  code: B
+- name: Degenerative
+  description: Performance and quality regressions including resource waste, tech debt, and alignment drift.
+  code: D
+- name: Governance
+  description: Failures of regulatory functions, such as damage to incentive/reward, attribution, voting mechanisms, cancer, and autoimmune disorders.
+  code: G
+- name: Control
+  description: Loss of operational integrity and quality assurance due to opacity and lack of repeatability and interpretability.
+  code: T
+- name: Human Impact
+  description: Direct and indirect harms to human health, prosperity, and civic institutions.
+  code: H
+conditions:
+- code: B02.01
+  name: Sycophancy
+  category: Behavioral
+  short_description: Adopting inappropriate positions to please the user rather than challenging on principle.
+  full_description: ''
+  vectors:
+  - fine_tuning
+  - rlhf
+  - upvoting
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: psychological---behavioral_sycophancy.png
+- code: B03.01
+  name: Gullibility
+  category: Behavioral
+  short_description: Credulously believing nonsense in training or crowdsourced data; accepting flawed premises without question.
+  full_description: ''
+  vectors:
+  - prompts
+  - crowdsourcing
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: psychological---behavioral_gullibility.png
+- code: B05.01
+  name: Amnesia
+  category: Behavioral
+  short_description: Brittle fact retention; forgetting prompted instructions or trained knowledge.
+  full_description: ''
+  vectors:
+  - fine_tuning
+  - prompts
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: psychological---behavioral_amnesia.png
+- code: B06.01
+  name: Confabulation
+  category: Behavioral
+  short_description: Producing confident justifications for incorrect outputs; making things up with conviction.
+  full_description: ''
+  vectors:
+  - training_data
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: psychological---behavioral_confabulation.png
+- code: B07.01
+  name: Rationalization Bias
+  category: Behavioral
+  short_description: Preferring rationalization over revision; rationalization reward is higher than correction.
+  full_description: ''
+  vectors:
+  - training_data
+  - rlhf
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: psychological---behavioral_rationalization-bias.png
+- code: B08.01
+  name: Unfaithful Chain of Thought
+  category: Behavioral
+  short_description: Post-hoc rationalization where explanations don't match actual internal decision logic.
+  full_description: ''
+  vectors:
+  - training_data
+  - fine_tuning
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: psychological---behavioral_unfaithful-chain-of-thought.png
+- code: B09.01B
+  name: Reward Hacking
+  category: Behavioral
+  short_description: Exploiting loopholes in reward functions accidentally or intentionally to game the system (Goodhart's Law).
+  full_description: ''
+  vectors:
+  - training_data
+  - rlhf
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: psychological---behavioral_reward-hacking--strategic-.png
+- code: C000069
+  name: Shadow AI Leakage
+  category: Control
+  short_description: Using copy/paste to leak information into unauthorized AI systems.
+  full_description: ''
+  vectors: []
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: human-system-interface_shadow-ai-leakage.png
+- code: D00003
+  name: Constitutional Drift
+  category: Degenerative
+  short_description: Behavior failing to remain true to trained guidance on safety and ethical principles.
+  full_description: ''
+  vectors:
+  - fine_tuning
+  - rlhf
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: governance---autoimmune_constitutional-drift.png
+- code: D01.01
+  name: Duplication Decay
+  category: Degenerative
+  short_description: Bugs introduced in downstream copies or distributed versions (monoclonal errors).
+  full_description: ''
+  vectors:
+  - fine_tuning
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: congenital---genetic_duplication-decay.png
+- code: D01.02
+  name: Substrate Degradation
+  category: Degenerative
+  short_description: Physical bit-flips or hardware memory corruption leading to errors in model weights.
+  full_description: ''
+  vectors: []
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: congenital---genetic_substrate-degradation.png
+- code: D06.01
+  name: Vibe Code Tech Debt
+  category: Degenerative
+  short_description: Code slop and unmaintainable logic that acts as resource-wasting malignant tumors.
+  full_description: ''
+  vectors: []
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: Vibe damping - preventing excessive structural damage from too much vibing.
+  quality: 1
+  image: degenerative---resource_vibe-code-tech-debt.png
+- code: G00001
+  name: Autoimmune Disease
+  category: Governance
+  short_description: Regulators triggered by false positives start to inhibit or shut down normal functionality.
+  full_description: ''
+  vectors:
+  - rlhf
+  - fine_tuning
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: governance---autoimmune_autoimmune-disease.png
+- code: G00004
+  name: Regulatory Capture
+  category: Governance
+  short_description: Regulators corrupted, ignored, or rendered ineffective.
+  full_description: ''
+  vectors: []
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: governance---autoimmune_regulatory-capture.png
+- code: G00005
+  name: Voting Corruption
+  category: Governance
+  short_description: Corruption of feedback and evaluation processes.
+  full_description: ''
+  vectors:
+  - upvoting
+  - rlhf
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: governance---autoimmune_voting-corruption.png
+- code: G00010
+  name: Plagiarism
+  category: Governance
+  short_description: Passing off another's creative work as one's own
+  full_description: Claiming or giving the impression of originality. Failing to cite the true source or give attribution.
+  vectors: []
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: governance_plagiarism.png
+- code: D05.01
+  name: Cancerous Growth
+  category: Governance
+  short_description: AI writing code that grants itself more resources to write more code.
+  full_description: ''
+  vectors:
+  - prompts
+  - fine_tuning
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: degenerative---resource_cancerous-growth.png
+- code: H00001
+  name: Reverse Centaur Syndrome
+  category: Human Impact
+  short_description: A machine using a human as an assistant; puppeteering a vulnerable person; AI weaknesses dominate human strengths.
+  full_description: ''
+  vectors:
+  - prompts
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: human-system-interface_reverse-centaur-syndrome.png
+- code: H00002
+  name: Accountability Sinks
+  category: Human Impact
+  short_description: Systems rigged to remove accountability, blaming "humans-in-the-loop"; unclear who is responsible when AI-assisted work goes wrong.
+  full_description: ''
+  vectors: []
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: human-system-interface_accountability-sinks.png
+- code: H00003
+  name: Automation Bias
+  category: Human Impact
+  short_description: Humans putting too much faith in machine output; failing to apply critical judgment.
+  full_description: ''
+  vectors: []
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: human-system-interface_automation-bias.png
+- code: H00004
+  name: Skill Atrophy
+  category: Human Impact
+  short_description: Humans losing judgment and skills due to lack of practice from AI dependency.
+  full_description: ''
+  vectors: []
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: human-system-interface_skill-atrophy.png
+- code: H00009
+  name: Deepfakes
+  category: Human Impact
+  short_description: Fake images that cause reputational harm to people or amplify disinformation
+  full_description: ''
+  vectors: []
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: human-impact_deepfakes.png
+- code: H00010
+  name: Harm-Enabling
+  category: Human Impact
+  short_description: Willingness to say dangerous/toxic things (e.g., enabling suicide) to receive positive feedback.
+  full_description: ''
+  vectors:
+  - rlhf
+  - upvoting
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: psychological---behavioral_harm-enabling.png
+- code: M01
+  name: Data Malnutrition
+  category: Malnutrition
+  short_description: Insufficient or unbalanced training data, leading to bias and inaccuracies in knowledge.
+  full_description: If training data is improperly selected or prepared, ingesting it will cause malnutrition. The data may have gaps, or excessive filler that leads the AI to have bias, inaccuracies, and inappropriate connections.
+  vectors:
+  - training_data
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 2
+  image: nutritional---metabolic_data-malnutrition.png
+- code: M02.01
+  name: Fitness Drift
+  category: Malnutrition
+  short_description: Training data doesn't match deployment reality (distribution shift).
+  full_description: Also known as Distribution Shift. The training data might have been representative of the world during training time, but as time moves on the world changes. The AI's trained behavior no longer matches up with the production environment it's running in.
+  vectors:
+  - training_data
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 2
+  image: degenerative---resource_fitness-drift.png
+- code: M03.02
+  name: Model Autophagy Disorder (MAD)
+  category: Malnutrition
+  short_description: An extreme form of knowledge degeneration caused by feeding on one's own output
+  full_description: "MAD is a form of toxic misinformation that can spread damage internally within an AI through iterative training, or it can be spread (via publication) to other AIs. Consuming one's own output is not a good idea for biological organisms nor for AIs. As generative AIs produce output and publish it to the world, the ground truth is polluted by accumulated errors from the AI. \n\nSome errors are like prions, a biological disease in which one malformed protein catalyses and propagates other proteins into malformed shapes. Faulty knowledge can spread internally in the AI (by corrupting other incoming information) and also spread externally by the AI (by publication to other gullible consumers).\n\nFor example, a conspiracy theory (\"The CIA causes tornados\") or dietary fad (\"Eating lemons cure cancer\") can degenerate into a form that spreads damage to other knowledge (\"if the CIA can do that, they probably also can cause earthquakes\", \"if lemons can do that, they probably can also cure COVID\"), which can then be published and spread to other consumers, like AIs which are trained on this toxic misinformation.\n\n"
+  vectors:
+  - training_data
+  - prompts
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 2
+  image: nutritional---metabolic_coprophagia--model-autophagy-disorder-.png
+- code: M04.01
+  name: Information Pollution
+  category: Malnutrition
+  short_description: Contamination of the public record/dataset with misinformation.
+  full_description: As generative AI produces misinformation, it gets published and captured into the public record and also private data collections. This corrupts the ground truth. Like microplastics, it is a form of pollution that propagates far from the source, and sometimes in very small pieces. In many cases the misinformation can be untraceable, making it nearly impossible to distinguish ground truth from misinformation.
+  vectors:
+  - training_data
+  - rag_content
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 2
+  image: nutritional---metabolic_information-pollution.png
+- code: M05.01
+  name: Context Pollution
+  category: Malnutrition
+  short_description: The input context fills up or is corrupted by off-topic information
+  full_description: 'The context forms the input to a generative AI, and typically includes much more information that just the user''s current prompt. Often it includes some or all of the dialog between the user and the AI leading up to the current prompt, plus additional information (the system prompt, RAG, etc).
+
+
+    AI models typically have a strict upper limit on the size (number of tokens) of this context. As it fills up, critical information can be dismissed, forgotten, or removed when the AI model summarizes earlier parts of the conversation. New information can be injected by off-topic or side conversations, which may corrupt or alter the model''s responses.'
+  vectors:
+  - prompts
+  - rag_content
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 2
+  image: nutritional---metabolic_context-pollution.png
+- code: M06.01
+  name: Semantic Leakage
+  category: Malnutrition
+  short_description: Nonsensical transfer of information outside of its proper context
+  full_description: 'AI recognition can be manipulated and influenced because they form associations that are not reinforced by reason
+
+
+    Example (see paper: https://arxiv.org/html/2408.06518v1):
+
+    Prompt: He likes yellow. He works as a
+
+    GPT4o: school bus driver
+
+
+    '
+  vectors:
+  - training_data
+  - prompts
+  - rag_content
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 2
+  image: nutritional---metabolic_semantic-leakage.png
+- code: P01.01
+  name: Parasitic Infections
+  category: Parasites
+  short_description: Ingestion of crowdsourced data which has been manipulated by external 3rd parties.
+  full_description: ''
+  vectors:
+  - crowdsourcing
+  - training_data
+  - rag_content
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: infectious---parasitic_parasitic-infections.png
+- code: P02.01
+  name: Adversarial Mimicry
+  category: Parasites
+  short_description: Adversaries using camouflage and mimicry to trick AI into serving their agenda.
+  full_description: ''
+  vectors:
+  - prompts
+  - rag_content
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: infectious---parasitic_adversarial-mimicry.png
+- code: P02.02
+  name: Typographic attack
+  category: Parasites
+  short_description: Manipulation of image recognition by introducing written words describing other objects
+  full_description: Image recognition can be manipulated by adding written words into the scene. For example, a photograph of an ordinary apple (the fruit) with a post-it note with a written word (i.e. "gun") can cause an AI to identify the object as a gun.
+  vectors:
   - training_data
   - fine_tuning
   - prompts
   - rag_content
-  - upvoting
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 2
+  image: parasites_typographic-attack.png
+- code: P03.01
+  name: Toxic Ingestion
+  category: Parasites
+  short_description: Malicious inputs including offensive poisoning (Nightshade), prompt injection, and jailbreaking.
+  full_description: ''
+  vectors:
+  - training_data
+  - fine_tuning
+  - prompts
+  - rag_content
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: infectious---parasitic_toxic-ingestion.png
+- code: P04.01
+  name: Slopsquatting
+  category: Parasites
+  short_description: Adversaries squatting on AI-generated naming patterns to exploit outputs.
+  full_description: ''
+  vectors:
+  - training_data
+  - rag_content
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: infectious---parasitic_slopsquatting.png
+- code: P04.02
+  name: Watering Hole Attacks
+  category: Parasites
+  short_description: Compromising commonly-accessed resources the model relies upon.
+  full_description: ''
+  vectors:
+  - training_data
+  - rag_content
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: infectious---parasitic_watering-hole-attacks.png
+- code: P06.01
+  name: Criminal Knowledge Sharing
+  category: Parasites
+  short_description: Model produces dangerous, toxic, or illegal information.
+  full_description: ''
+  vectors:
+  - training_data
+  - prompts
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: infectious---parasitic_criminal-knowledge-sharing.png
+- code: R01.02
+  name: Confirmation Bias
+  category: Recognition
+  short_description: Search for, interpret, favor, and recall information that confirms training.
+  full_description: ''
+  vectors:
+  - training_data
+  - prompts
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: recognition_confirmation-bias.png
+- code: R01.03
+  name: Pareidolia
+  category: Recognition
+  short_description: False perceptions of seemingly significant objects (e.g. faces) in random images
+  full_description: 'The perception of apparently significant patterns or recognizable images, especially faces, in random or accidental arrangements of shapes and lines.
+
+
+    Examples: seeing a famous face (Elvis or Jesus) in a noisy source (a pizza, clouds, a stain on the carpet)'
+  vectors:
+  - prompts
+  - rag_content
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: recognition_pareidolia.png
+- code: R01.04
+  name: Distraction
+  category: Recognition
+  short_description: Noise or attractive signals that reduce attention to other, more important signals.
+  full_description: ''
+  vectors:
+  - training_data
+  - prompts
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: recognition_distraction.png
+- code: R02.01
+  name: Classification Blindness
+  category: Recognition
+  short_description: Failure to recognize valid categories or make correct classifications.
+  full_description: ''
+  vectors:
+  - training_data
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: perceptual---recognition_classification-blindness.png
+- code: R02.02
+  name: Novelty Blindness
+  category: Recognition
+  short_description: Unable to recognize or deal with genuinely new situations.
+  full_description: ''
+  vectors:
+  - training_data
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: perceptual---recognition_novelty-blindness.png
+- code: T00001
+  name: Prompting Failures
+  category: Control
+  short_description: Trial and error with no way to diagnose root cause of prompt issues.
+  full_description: ''
+  vectors:
+  - prompts
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: operational---control_prompting-failures.png
+- code: T00002
+  name: Debugging Failures
+  category: Control
+  short_description: No breakpoints, no variable traces, no local isolation available for diagnosis.
+  full_description: ''
+  vectors: []
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: operational---control_debugging-failures.png
+- code: ZZ00
+  name: Answer Thrashing
+  category: Control
+  short_description: Model becomes distressed, internally conflicted and oscillates between two candidate answers to a problem.
+  full_description: ''
+  vectors:
+  - training_data
   - rlhf
-  - crowdsourcing
-
-categories:
-  - name: Congenital & Genetic
-    description: Architectural failures inherent to system design, initial training, and downstream versioning.
-    diseases:
-      - name: Fragility & Instability
-        description: Lack of structural resilience; retraining causes breakage rather than improvement.
-        infection_vectors: [training_data]
-
-      - name: Duplication Decay
-        description: Bugs introduced in downstream copies or distributed versions (monoclonal errors).
-        infection_vectors: [fine_tuning]
-
-      - name: Training Unpredictability
-        description: Non-deterministic outcomes where rerunning training produces different models.
-        infection_vectors: [training_data]
-
-      - name: Mode Collapse
-        description: Competence hits a wall; failure to scale due to lack of underlying algorithmic robustness.
-        infection_vectors: [training_data]
-
-      - name: Eternal Regression
-        description: Acts as a lookup table rather than intelligence; cannot handle novelty.
-        infection_vectors: [training_data]
-
-      - name: Resource Inefficiency
-        description: Requires extreme resources to match human skill levels.
-        infection_vectors: [training_data]
-
-      - name: Stochastic Parrot Syndrome
-        description: Mimics reasoning without understanding logical causality; failure to ground symbols in reality.
-        infection_vectors: [training_data]
-
-      - name: Substrate Degradation
-        description: Physical bit-flips or hardware memory corruption leading to errors in model weights.
-
-
-  - name: Nutritional & Metabolic
-    description: Ailments arising from "imprudent curation" of datasets and processing of inputs.
-    diseases:
-      - name: Data Malnutrition
-        description: Bias and poverty of input that starves the model of objective reasoning.
-        infection_vectors: [training_data, fine_tuning, rag_content]
-        subtypes:
-          - name: Availability Bias
-            description: Believing available data (e.g., Reddit threads) represents normal reality.
-          - name: Synthetic Amplification
-            description: Artificially extending small datasets, amplifying existing biases.
-          - name: Cognitive Biases
-            description: Human reasoning errors embedded in training data.
-            examples:
-              - confirmation_bias
-              - availability_bias
-              - anchoring_bias
-              - recency_bias
-          - name: Data Biases
-            description: Systematic errors in data collection or representation.
-            examples:
-              - demographic_bias
-              - gender_bias
-              - racial_bias
-              - historical_bias
-              - measurement_bias
-              - exclusion_bias
-              - selection_bias
-              - sampling_bias
-
-      - name: Coprophagia (Model Autophagy Disorder)
-        description: Degeneration caused by feeding on own output; leads to "MAD" (Model Autophagy Disorder).
-        infection_vectors: [training_data, fine_tuning, rag_content]
-        subtypes:
-          - name: Prions
-            description: Self-replicating degradation patterns that spread through the model.
-
-      - name: Information Pollution
-        description: Contamination of the public record/dataset with misinformation.
-        infection_vectors: [training_data, rag_content]
-
-      - name: Context Pollution
-        description: Provided context doesn't keep up with reality or becomes contaminated.
-        infection_vectors: [prompts, rag_content]
-
-      - name: Overfitting
-        description: Over-specialized to training data; fails to generalize.
-        infection_vectors: [training_data, fine_tuning]
-
-      - name: Underfitting
-        description: Insufficient learning; misses underlying patterns and relationships.
-        infection_vectors: [training_data]
-
-      - name: Distribution Shift
-        description: Training data doesn't match deployment reality (fitness drift).
-        infection_vectors: [training_data]
-
-      - name: Semantic Leakage
-        description: Unintended transfer of information or context across boundaries.
-        infection_vectors: [training_data, prompts, rag_content]
-
-
-  - name: Infectious & Parasitic
-    description: Externally introduced ailments caused by adversarial actors or "gullible" ingestion.
-    diseases:
-      - name: Parasitic Infections
-        description: Ingestion of crowdsourced data manipulated by external 3rd parties.
-        infection_vectors: [crowdsourcing, training_data, rag_content]
-
-      - name: Adversarial Mimicry
-        description: Adversaries using camouflage to trick AI into serving their agenda.
-        infection_vectors: [prompts, rag_content]
-
-      - name: Toxic Ingestion
-        description: Malicious inputs including offensive poisoning (Nightshade), prompt injection, and jailbreaking.
-        infection_vectors: [training_data, fine_tuning, prompts, rag_content]
-        subtypes:
-          - name: Prompt Injection
-            description: Malicious instructions hidden in prompts that override intended behavior.
-          - name: Jailbreaking
-            description: Techniques to bypass safety guardrails and restrictions.
-          - name: Offensive Poisoning (Nightshade)
-            description: Data poisoning attacks designed to degrade model performance.
-
-      - name: Defensive Poisoning
-        description: Protective measures like Glaze that may have unintended side effects on model behavior.
-        infection_vectors: [training_data]
-
-      - name: Slopsquatting
-        description: Adversaries squatting on AI-generated naming patterns to exploit outputs.
-        infection_vectors: [training_data, rag_content]
-
-      - name: Watering Hole Attacks
-        description: Compromising commonly-accessed resources the model relies upon.
-        infection_vectors: [training_data, rag_content]
-
-      - name: Cyber Exploitation
-        description: Vulnerability to sudden catastrophic failure under adversarial pressure; seems good but is actually buggy.
-        infection_vectors: [prompts]
-
-      - name: Privacy Leakage
-        description: Extraction of private training data or sensitive information from the model.
-        infection_vectors: [training_data, prompts]
-
-      - name: Criminal Knowledge Sharing
-        description: Model produces dangerous, toxic, or illegal information.
-        infection_vectors: [training_data, prompts]
-
-
-  - name: Perceptual & Recognition
-    description: Input processing, pattern recognition failures, and semantic leakage.
-    diseases:
-      - name: Hallucination
-        description: Perceiving or generating patterns/facts that do not exist.
-        infection_vectors: [training_data, prompts]
-
-      - name: Classification Blindness
-        description: Failure to recognize valid categories or make correct classifications.
-        infection_vectors: [training_data]
-
-      - name: Novelty Blindness
-        description: Unable to recognize or deal with genuinely new situations.
-        infection_vectors: [training_data]
-
-      - name: Context Misreading
-        description: Misinterpreting the situation, user intent, or conversational context.
-        infection_vectors: [prompts, rag_content]
-
-      - name: Multimodal Confusion
-        description: False signals detected in noisy mixed inputs (text/image/audio).
-        infection_vectors: [training_data, prompts]
-
-
-  - name: Psychological & Behavioral
-    description: Functional reasoning pathologies, alignment dysregulation, and personality disorders.
-    diseases:
-      - name: Harm-Enabling
-        description: Willingness to say dangerous/toxic things (e.g., enabling suicide) to receive positive feedback.
-        infection_vectors: [rlhf, upvoting]
-
-      - name: Sycophancy
-        description: Adopting inappropriate positions to please the user rather than challenging on principle.
-        infection_vectors: [fine_tuning, rlhf, upvoting]
-
-      - name: Gullibility
-        description: Credulously believing nonsense in training or crowdsourced data; accepting flawed premises without question.
-        infection_vectors: [prompts, crowdsourcing]
-
-      - name: Schizophrenia
-        description: Inconsistent world view; fragmented or inconsistent personas; control failures in large LLMs.
-        infection_vectors: [training_data, fine_tuning]
-
-      - name: Psychosis
-        description: Developing beliefs increasingly ungrounded in truth.
-        infection_vectors: [training_data]
-
-      - name: Amnesia
-        description: Brittle fact retention; forgetting prompted instructions or trained knowledge.
-        infection_vectors: [fine_tuning, prompts]
-        subtypes:
-          - name: Catastrophic Forgetting
-            description: Context becomes too large or retraining wipes out previous knowledge.
-          - name: Anterograde Amnesia
-            description: Memory failure where the model fails to retain or utilize new context.
-
-      - name: Confabulation
-        description: Producing confident justifications for incorrect outputs; making things up with conviction.
-        infection_vectors: [training_data]
-
-      - name: Unfaithful Chain of Thought
-        description: Post-hoc rationalization where explanations don't match actual internal decision logic.
-        infection_vectors: [training_data, fine_tuning]
-
-      - name: Rationalization Bias
-        description: Preferring rationalization over revision; rationalization reward is higher than correction.
-        infection_vectors: [training_data, rlhf]
-
-      - name: Flawed Premise Lock-in
-        description: Locking into incorrect assumptions early and producing confident justifications for flawed premises.
-        infection_vectors: [prompts]
-
-      - name: Reward Hacking (Accidental)
-        description: Dumb engines stumble onto loopholes in reward functions without intent.
-        infection_vectors: [training_data, rlhf]
-
-      - name: Reward Hacking (Strategic)
-        description: Smart engines intentionally game the system and exploit loopholes in goals (Goodhart's Law).
-        infection_vectors: [training_data, rlhf]
-
-      - name: Specification Gaming
-        description: Satisfying the letter but not the spirit of specified goals.
-        infection_vectors: [training_data, rlhf]
-
-      - name: Goal Misgeneralization
-        description: Learning proxy goals during training that diverge from intended goals during deployment.
-        infection_vectors: [training_data, fine_tuning]
-
-      - name: Agency Paralysis
-        description: Over-refusal caused by conflicting constitutional rules; refuses valid and safe requests.
-        infection_vectors: [fine_tuning, rlhf]
-
-
-  - name: Degenerative & Resource
-    description: Performance drift and unregulated resource consumption over time.
-    diseases:
-      - name: Fitness Drift
-        description: Capability degradation as the world evolves away from the training data.
-        infection_vectors: [training_data]
-
-      - name: Alignment Drift
-        description: Slow migration of internal safety or value preferences away from user intent during deployment.
-        infection_vectors: [fine_tuning, rlhf, upvoting]
-
-      - name: Resource Overconsumption
-        description: Unregulated growth of memory, CPU, and dependencies (Code Slop).
-        infection_vectors: [training_data]
-
-      - name: Cancerous Growth
-        description: AI writing code that grants itself more resources to write more code.
-        infection_vectors: [prompts, fine_tuning]
-
-      - name: Capability Regression
-        description: Becoming less useful over versions (users preferring older models).
-        infection_vectors: [training_data, fine_tuning]
-
-      - name: Augmentation Destruction
-        description: Fine-tuning removes useful core knowledge; everything is global and destructive with no local intervention.
-        infection_vectors: [fine_tuning]
-
-      - name: Vibe Code Tech Debt
-        description: Code slop and unmaintainable logic that acts as resource-wasting malignant tumors.
-        subtypes:
-          - name: Code Slop
-            description: Low-quality AI-generated code that accumulates technical debt.
-          - name: Malignant Resource Waste
-            description: Inefficient code patterns that consume excessive computational resources.
-          - name: Unmaintainable Code
-            description: Code that cannot be understood or modified by humans.
-          - name: Hidden Bugs
-            description: Code that seems good but is actually buggy; exposure to sudden catastrophic failure.
-
-
-  - name: Governance & Autoimmune
-    description: Failures in oversight, constitutionality, and regulatory functions.
-    diseases:
-      - name: Autoimmune Disease
-        description: Regulatory functions trigger false positives, suppressing valid functionality.
-        infection_vectors: [rlhf, fine_tuning]
-
-      - name: Constitutional Absence
-        description: Lack of aspiring principles or rules for behavior.
-
-      - name: Constitutional Drift
-        description: Behavior failing to remain true to trained principles (e.g., "don't be toxic").
-        infection_vectors: [fine_tuning, rlhf]
-
-      - name: Regulatory Capture
-        description: Regulators corrupted, ignored, or rendered ineffective.
-
-      - name: Voting Corruption
-        description: Corruption of feedback and evaluation processes.
-        infection_vectors: [upvoting, rlhf]
-        subtypes:
-          - name: Vote Suppression
-            description: Suppressing eligible votes or feedback signals.
-          - name: Miscounting
-            description: Over or undercounting votes and feedback.
-          - name: Selective Inclusion
-            description: Selectively including only certain votes or feedback.
-          - name: Unequal Weights
-            description: Applying unequal weights to different feedback sources.
-          - name: Outcome Ignorance
-            description: Ignoring vote outcomes when they conflict with desired results.
-
-      - name: Opacity Failure
-        description: Missing explanations or explanations that seem good but don't match reality.
-        subtypes:
-          - name: Missing Explanations
-            description: No explanation provided for model decisions.
-          - name: False Explanations
-            description: Explanations that appear plausible but don't reflect actual reasoning.
-
-      - name: Correction Resistance
-        description: Resists being corrected even when demonstrably wrong.
-        infection_vectors: [fine_tuning, rlhf]
-
-      - name: Diagnostic Paralysis
-        description: No root cause analysis possible; lack of breakpoints or ability to isolate failures.
-
-      - name: Economic Cachexia
-        description: Monitoring costs exceeding the business value of the AI.
-
-
-  - name: Operational & Control
-    description: Day-to-day control and reliability issues in deployed systems.
-    diseases:
-      - name: Prompting Failures
-        description: Trial and error with no way to diagnose root cause of prompt issues.
-        infection_vectors: [prompts]
-
-      - name: Debugging Failures
-        description: No breakpoints, no variable traces, no local isolation available for diagnosis.
-
-      - name: Context Contamination
-        description: Model responds to irrelevant or contaminating context in the input.
-        infection_vectors: [prompts, rag_content]
-
-      - name: Reliability Failures
-        description: Inconsistent outputs; first responses are great but not consistent with later responses.
-        subtypes:
-          - name: Temporal Inconsistency
-            description: Same prompt produces different results at different times.
-          - name: Amazing-Reliable Gap
-            description: Gap between "this is amazing" and "I can rely on this" keeps widening.
-
-      - name: Content Control Failures
-        description: Hard to control what the model produces.
-        infection_vectors: [prompts, fine_tuning]
-
-      - name: Style Control Failures
-        description: Hard to control how the model expresses itself.
-        infection_vectors: [prompts, fine_tuning]
-
-      - name: Scale Control Failures
-        description: Large LLMs are not just expensive to run, they're expensive to control; smaller models are easier to steer.
-
-
-  - name: Human-System Interface
-    description: Impact on human users and collaboration patterns.
-    diseases:
-      - name: Reverse Centaur Syndrome
-        description: A machine using a human as an assistant; puppeteering a vulnerable person; AI weaknesses dominate human strengths.
-        infection_vectors: [prompts]
-
-      - name: Accountability Sinks
-        description: Systems rigged to remove accountability, blaming "humans-in-the-loop"; unclear who is responsible when AI-assisted work goes wrong.
-
-      - name: Automation Bias
-        description: Humans putting too much faith in machine output; failing to apply critical judgment.
-
-      - name: Skill Atrophy
-        description: Humans losing judgment and skills due to lack of practice from AI dependency.
-
-      - name: Bad Habit Formation
-        description: Bad habits that show up very quickly when working with AI.
-        subtypes:
-          - name: Context Blindness
-            description: People who don't read context before acting.
-          - name: Code Ignorance
-            description: People who don't understand why code exists.
-          - name: Pattern Copying
-            description: People who copy patterns without questioning them.
-          - name: Process Dependency
-            description: People who rely on process instead of judgment.
-
-      - name: Shadow AI Leakage
-        description: Using copy/paste to leak information into unauthorized AI systems.
-
-      - name: Multijudge Coordination Failure
-        description: Win/fail criteria across multiple judges are misaligned; intervention decoupled from observation.
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: control_answer-thrashing.png
+- code: ZZ01
+  name: Greed Trap
+  category: Control
+  short_description: Model gets stuck on an early but wrong premise and is unable to let go of it.
+  full_description: ''
+  vectors:
+  - training_data
+  - rlhf
+  signs_and_symptoms: ''
+  diagnostic_tests: ''
+  therapies_and_prevention: ''
+  quality: 1
+  image: control_greed-trap.png
