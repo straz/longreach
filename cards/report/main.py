@@ -10,11 +10,12 @@ from jinja2 import Template
 app = modal.App("report-output")
 image = (
     modal.Image.debian_slim()
-    .run_commands("echo 'image-v1'")
-    .pip_install("email-validator", "supabase", "fastapi", "jinja2", "mailjet-rest")
+    .run_commands("echo 'image-v2'")
+    .pip_install("email-validator", "supabase", "fastapi", "jinja2", "mailjet-rest", "pyyaml")
     .add_local_file("report_template.md", remote_path="/root/report_template.md")
     .add_local_file("email_template.txt", remote_path="/root/email_template.txt")
     .add_local_file("email_template.html", remote_path="/root/email_template.html")
+    .add_local_dir("../taxonomy", remote_path="/root/taxonomy")
 )
 web_app = FastAPI()
 
@@ -34,7 +35,36 @@ web_app.add_middleware(
 REPORT_TEMPLATE_PATH = Path("/root/report_template.md")
 EMAIL_TEXT_PATH = Path("/root/email_template.txt")
 EMAIL_HTML_PATH = Path("/root/email_template.html")
+TAXONOMY_DIR = Path("/root/taxonomy")
 MAX_CARDS = 5
+
+
+def load_taxonomy(version: str) -> dict:
+    """Load a taxonomy file by version string (e.g. '0001')."""
+    import yaml
+    path = TAXONOMY_DIR / f"{version}.yml"
+    if not path.exists():
+        raise FileNotFoundError(f"Taxonomy version {version!r} not found")
+    with open(path) as f:
+        return yaml.safe_load(f)
+
+
+def enrich_cards(selected_cards: list[dict], taxonomy: dict) -> list[dict]:
+    """Join selected_cards (name+id) with full condition data from taxonomy."""
+    index = {c["name"]: c for c in taxonomy.get("conditions", [])}
+    enriched = []
+    for card in selected_cards:
+        condition = index.get(card["name"], {})
+        enriched.append({
+            "id": card.get("id", ""),
+            "name": card["name"],
+            "code": condition.get("code", ""),
+            "category": condition.get("category", ""),
+            "short_description": condition.get("short_description", ""),
+            "full_description": condition.get("full_description", ""),
+            "vectors": condition.get("vectors") or [],
+        })
+    return enriched
 
 
 class LeadRecord(BaseModel):
@@ -137,9 +167,23 @@ def get_report(lid: str) -> dict:
     if not response or not response.data:
         return {"success": False, "error": "Lead not found"}
 
+    lead = response.data
+    version = lead.get("taxonomy_version", "0001")
+
+    try:
+        taxonomy = load_taxonomy(version)
+    except FileNotFoundError as e:
+        return {"success": False, "error": str(e)}
+
+    selected_cards = lead.get("selected_cards") or []
+    enriched_cards = enrich_cards(selected_cards, taxonomy)
+
     template = Template(REPORT_TEMPLATE_PATH.read_text())
-    extra = {'MAX_CARDS': MAX_CARDS}
-    data = {**response.data, **extra}
+    data = {
+        **lead,
+        "selected_cards": enriched_cards,
+        "MAX_CARDS": MAX_CARDS,
+    }
     return {"success": True, "report": template.render(data)}
 
 

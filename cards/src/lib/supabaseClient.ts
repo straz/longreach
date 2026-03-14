@@ -31,4 +31,5 @@ export interface Lead {
   who_concerned_other?: string;
   status?: 'new' | 'contacted' | 'qualified' | 'converted' | 'archived';
   campaign?: string;  // Campaign tracking parameter from URL
+  taxonomy_version?: string;
 }

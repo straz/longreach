@@ -19,9 +19,16 @@ Your analysis will be based on the first {{ MAX_CARDS }} cards that you selected
 {% endif %}
 {% for card in selected_cards -%}
 {% if loop.index <= MAX_CARDS -%}
-- **{{ card.name }}**
+### {{ card.name }}{% if card.code %} <small>({{ card.code }})</small>{% endif %}
+
+{% if card.category %}**Category:** {{ card.category }}{% endif %}
+
+{% if card.short_description %}{{ card.short_description }}{% endif %}
+
+{% if card.vectors and card.vectors|length > 0 %}**Infection vectors:** {{ card.vectors | join(', ') }}{% endif %}
+
 {% else -%}
-- *{{ card.name }}*
+- *{{ card.name }}* *(not included in analysis)*
 {% endif %}
 {% endfor %}
 {% else -%}

@@ -48,3 +48,4 @@ function extractCards(taxonomy: Taxonomy): Card[] {
 
 const taxonomy = parse(taxonomyYaml) as Taxonomy;
 export const cards: Card[] = extractCards(taxonomy);
+export const TAXONOMY_VERSION = '0001';

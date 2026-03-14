@@ -1,6 +1,6 @@
 import { useLocation, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Card } from "../../data/cards";
+import { Card, TAXONOMY_VERSION } from "../../data/cards";
 import { submitLead } from "../../lib/api";
 import { supabase } from "../../lib/supabaseClient";
 import { getCampaign } from "../../lib/campaign";
@@ -106,6 +106,7 @@ export function Request() {
         formData.whoConcerned.length > 0 ? formData.whoConcerned : undefined,
       who_concerned_other: formData.whoConcernedOther || undefined,
       campaign: campaign || undefined,
+      taxonomy_version: TAXONOMY_VERSION,
     });
 
     setIsSubmitting(false);
@@ -145,7 +146,6 @@ export function Request() {
   const iSelected = `I selected ${cards.length === 1 ? "this card" : "these cards"} because I found
   ${cards.length === 1 ? "it" : "them"} interesting. Please send me my free analysis,
   focusing on ${cards.length === 1 ? "this potential risk" : "these potential risks"}. ${extra}`;
-
 
   return (
     <div className={styles.page}>
