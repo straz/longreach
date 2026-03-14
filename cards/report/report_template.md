@@ -23,7 +23,10 @@ Your analysis will be based on the first {{ MAX_CARDS }} cards that you selected
 
 {% if card.category %}**Category:** {{ card.category }}{% endif %}
 
-{% if card.short_description %}{{ card.short_description }}{% endif %}
+{% if card.full_description %}{{ card.full_description }}
+{% else -%}
+   {% if card.short_description %}{{ card.short_description }}{% endif %}
+{% endif %}
 
 {% if card.vectors and card.vectors|length > 0 %}**Infection vectors:** {{ card.vectors | join(', ') }}{% endif %}
 
