@@ -1,47 +1,47 @@
-import { useLocation, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { Card } from '../../data/cards';
-import { submitLead } from '../../lib/api';
-import { supabase } from '../../lib/supabaseClient';
-import { getCampaign } from '../../lib/campaign';
-import styles from './Request.module.css';
+import { useLocation, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Card } from "../../data/cards";
+import { submitLead } from "../../lib/api";
+import { supabase } from "../../lib/supabaseClient";
+import { getCampaign } from "../../lib/campaign";
+import styles from "./Request.module.css";
 
 const MAX_CARDS = 5;
 
 const AI_CHARACTERISTICS = [
-  'generative',
-  'a classifier',
-  'writes code',
-  'trained on public data',
-  'prompted by public users',
-  'uses RAG',
-  'always truthful',
-  'transparent',
-  'explainable', 
-  'unbiased',
-  'a commercial model',
-  'our own model',
+  "generative",
+  "a classifier",
+  "writes code",
+  "trained on public data",
+  "prompted by public users",
+  "uses RAG",
+  "always truthful",
+  "transparent",
+  "explainable",
+  "unbiased",
+  "a commercial model",
+  "our own model",
 ];
 
 const AI_PROVIDERS = [
-  'OpenAI',
-  'Anthropic',
-  'Gemini',
-  'Amazon',
-  'xAI',
-  'open source',
+  "OpenAI",
+  "Anthropic",
+  "Gemini",
+  "Amazon",
+  "xAI",
+  "open source",
 ];
 
 const WHO_CONCERNED = [
-  'me',
-  'coworkers',
-  'my boss',
-  'our CEO',
-  'our board',
-  'customers',
-  'partners',
-  'regulators',
-  'general public',
+  "me",
+  "coworkers",
+  "my boss",
+  "our CEO",
+  "our board",
+  "customers",
+  "partners",
+  "regulators",
+  "general public",
 ];
 
 export function Request() {
@@ -55,32 +55,35 @@ export function Request() {
   }, []);
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    title: '',
-    organization: '',
-    comments: '',
+    name: "",
+    email: "",
+    title: "",
+    organization: "",
+    comments: "",
     aiCharacteristics: [] as string[],
-    aiCharacteristicsOther: '',
+    aiCharacteristicsOther: "",
     aiProviders: [] as string[],
-    aiProvidersOther: '',
+    aiProvidersOther: "",
     concernLevel: null as number | null,
     whoConcerned: [] as string[],
-    whoConcernedOther: '',
+    whoConcernedOther: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const isFormValid = formData.name && formData.email && formData.title && formData.organization;
+  const isFormValid =
+    formData.name && formData.email && formData.title && formData.organization;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid || isSubmitting) return;
 
     setIsSubmitting(true);
-    setSubmitStatus('idle');
+    setSubmitStatus("idle");
     setSubmitError(null);
 
     const result = await submitLead({
@@ -89,13 +92,18 @@ export function Request() {
       title: formData.title || undefined,
       organization: formData.organization || undefined,
       comments: formData.comments || undefined,
-      selected_cards: cards.map(c => ({ id: c.id, name: c.name })),
-      ai_characteristics: formData.aiCharacteristics.length > 0 ? formData.aiCharacteristics : undefined,
+      selected_cards: cards.map((c) => ({ id: c.id, name: c.name })),
+      ai_characteristics:
+        formData.aiCharacteristics.length > 0
+          ? formData.aiCharacteristics
+          : undefined,
       ai_characteristics_other: formData.aiCharacteristicsOther || undefined,
-      ai_providers: formData.aiProviders.length > 0 ? formData.aiProviders : undefined,
+      ai_providers:
+        formData.aiProviders.length > 0 ? formData.aiProviders : undefined,
       ai_providers_other: formData.aiProvidersOther || undefined,
       concern_level: formData.concernLevel || undefined,
-      who_concerned: formData.whoConcerned.length > 0 ? formData.whoConcerned : undefined,
+      who_concerned:
+        formData.whoConcerned.length > 0 ? formData.whoConcerned : undefined,
       who_concerned_other: formData.whoConcernedOther || undefined,
       campaign: campaign || undefined,
     });
@@ -103,53 +111,70 @@ export function Request() {
     setIsSubmitting(false);
 
     if (result.success) {
-      setSubmitStatus('success');
+      setSubmitStatus("success");
     } else {
-      setSubmitStatus('error');
-      setSubmitError(result.error || 'An error occurred');
+      setSubmitStatus("error");
+      setSubmitError(result.error || "An error occurred");
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleCheckboxChange = (field: 'aiCharacteristics' | 'aiProviders' | 'whoConcerned', value: string) => {
-    setFormData(prev => ({
+  const handleCheckboxChange = (
+    field: "aiCharacteristics" | "aiProviders" | "whoConcerned",
+    value: string,
+  ) => {
+    setFormData((prev) => ({
       ...prev,
       [field]: prev[field].includes(value)
-        ? prev[field].filter(v => v !== value)
+        ? prev[field].filter((v) => v !== value)
         : [...prev[field], value],
     }));
   };
 
+  let extra = "";
+  if (cards.length > MAX_CARDS) {
+    extra = `My analysis will be based on the first ${MAX_CARDS} cards that I selected.`;
+  }
+
+  const iSelected = `I selected ${cards.length === 1 ? "this card" : "these cards"} because I found
+  ${cards.length === 1 ? "it" : "them"} interesting. Please send me my free analysis,
+  focusing on ${cards.length === 1 ? "this potential risk" : "these potential risks"}. ${extra}`;
+
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <Link to="/" className={styles.backLink}>← Back to Cards</Link>
+        <Link to="/" className={styles.backLink}>
+          ← Back to Cards
+        </Link>
         <div className={styles.branding}>
-          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Longreach logo" className={styles.logo} />
+          <img
+            src={`${import.meta.env.BASE_URL}logo.png`}
+            alt="Longreach logo"
+            className={styles.logo}
+          />
           <h1>Longreach: quick risk analysis</h1>
         </div>
         <p className={styles.intro}>
-          Thank you for your interest. We are developing a rich set of tools to diagnose, explain, prevent, and treat many kinds of pathologies that affect AIs. For a free and simple risk analysis, fill out the form below (coming soon).
+          Thank you for your interest. We are developing a rich set of tools to
+          diagnose, explain, prevent, and treat many kinds of pathologies that
+          affect AIs. For a free and simple risk analysis, fill out the form
+          below (coming soon).
         </p>
       </header>
 
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.section}>
-          {cards.length > 0 && (
-            <p className={styles.cardIntro}>
-              I selected {cards.length === 1 ? 'this card' : 'these cards'} because I found {cards.length === 1 ? 'it' : 'them'} interesting. Please send me my free analysis, focusing on {cards.length === 1 ? 'this potential risk' : 'these potential risks'}.
-              {cards.length > MAX_CARDS && (
-                <>Your analysis will be based on the first {MAX_CARDS} cards that you selected.</>
-              )}
-            </p>
-          )}
+          {cards.length > 0 && <p className={styles.cardIntro}>{iSelected}</p>}
           <div className={styles.cardList}>
             {cards.length > 0 ? (
-              cards.map(card => (
+              cards.map((card) => (
                 <div key={card.id} className={styles.cardItem}>
                   {card.name}
                 </div>
@@ -223,12 +248,14 @@ export function Request() {
         <div className={styles.section}>
           <h2>We're using AI that is...</h2>
           <div className={styles.checkboxGroup}>
-            {AI_CHARACTERISTICS.map(option => (
+            {AI_CHARACTERISTICS.map((option) => (
               <label key={option} className={styles.checkboxLabel}>
                 <input
                   type="checkbox"
                   checked={formData.aiCharacteristics.includes(option)}
-                  onChange={() => handleCheckboxChange('aiCharacteristics', option)}
+                  onChange={() =>
+                    handleCheckboxChange("aiCharacteristics", option)
+                  }
                   className={styles.checkbox}
                 />
                 {option}
@@ -237,10 +264,13 @@ export function Request() {
             <label className={`${styles.checkboxLabel} ${styles.otherRow}`}>
               <input
                 type="checkbox"
-                checked={formData.aiCharacteristicsOther !== ''}
+                checked={formData.aiCharacteristicsOther !== ""}
                 onChange={() => {
-                  if (formData.aiCharacteristicsOther !== '') {
-                    setFormData(prev => ({ ...prev, aiCharacteristicsOther: '' }));
+                  if (formData.aiCharacteristicsOther !== "") {
+                    setFormData((prev) => ({
+                      ...prev,
+                      aiCharacteristicsOther: "",
+                    }));
                   }
                 }}
                 className={styles.checkbox}
@@ -248,7 +278,12 @@ export function Request() {
               Other:
               <textarea
                 value={formData.aiCharacteristicsOther}
-                onChange={(e) => setFormData(prev => ({ ...prev, aiCharacteristicsOther: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    aiCharacteristicsOther: e.target.value,
+                  }))
+                }
                 className={styles.otherInput}
                 placeholder="Specify..."
                 rows={1}
@@ -260,12 +295,12 @@ export function Request() {
         <div className={styles.section}>
           <h2>We're using AI from</h2>
           <div className={styles.checkboxGroup}>
-            {AI_PROVIDERS.map(option => (
+            {AI_PROVIDERS.map((option) => (
               <label key={option} className={styles.checkboxLabel}>
                 <input
                   type="checkbox"
                   checked={formData.aiProviders.includes(option)}
-                  onChange={() => handleCheckboxChange('aiProviders', option)}
+                  onChange={() => handleCheckboxChange("aiProviders", option)}
                   className={styles.checkbox}
                 />
                 {option}
@@ -274,10 +309,10 @@ export function Request() {
             <label className={`${styles.checkboxLabel} ${styles.otherRow}`}>
               <input
                 type="checkbox"
-                checked={formData.aiProvidersOther !== ''}
+                checked={formData.aiProvidersOther !== ""}
                 onChange={() => {
-                  if (formData.aiProvidersOther !== '') {
-                    setFormData(prev => ({ ...prev, aiProvidersOther: '' }));
+                  if (formData.aiProvidersOther !== "") {
+                    setFormData((prev) => ({ ...prev, aiProvidersOther: "" }));
                   }
                 }}
                 className={styles.checkbox}
@@ -285,7 +320,12 @@ export function Request() {
               Other:
               <textarea
                 value={formData.aiProvidersOther}
-                onChange={(e) => setFormData(prev => ({ ...prev, aiProvidersOther: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    aiProvidersOther: e.target.value,
+                  }))
+                }
                 className={styles.otherInput}
                 placeholder="Specify..."
                 rows={1}
@@ -295,18 +335,23 @@ export function Request() {
         </div>
 
         <div className={styles.section}>
-          <h2>How concerned are you about risks from your company's AI initiatives?</h2>
+          <h2>
+            How concerned are you about risks from your company's AI
+            initiatives?
+          </h2>
           <div className={styles.ratingGroup}>
             <span className={styles.ratingLabel}>1 = not concerned</span>
             <div className={styles.ratingOptions}>
-              {[1, 2, 3, 4, 5].map(level => (
+              {[1, 2, 3, 4, 5].map((level) => (
                 <label key={level} className={styles.ratingOption}>
                   <input
                     type="radio"
                     name="concernLevel"
                     value={level}
                     checked={formData.concernLevel === level}
-                    onChange={() => setFormData(prev => ({ ...prev, concernLevel: level }))}
+                    onChange={() =>
+                      setFormData((prev) => ({ ...prev, concernLevel: level }))
+                    }
                     className={styles.radio}
                   />
                   {level}
@@ -320,12 +365,12 @@ export function Request() {
         <div className={styles.section}>
           <h2>{"If anyone is very concerned, it's"}</h2>
           <div className={styles.checkboxGroup}>
-            {WHO_CONCERNED.map(option => (
+            {WHO_CONCERNED.map((option) => (
               <label key={option} className={styles.checkboxLabel}>
                 <input
                   type="checkbox"
                   checked={formData.whoConcerned.includes(option)}
-                  onChange={() => handleCheckboxChange('whoConcerned', option)}
+                  onChange={() => handleCheckboxChange("whoConcerned", option)}
                   className={styles.checkbox}
                 />
                 {option}
@@ -334,10 +379,10 @@ export function Request() {
             <label className={`${styles.checkboxLabel} ${styles.otherRow}`}>
               <input
                 type="checkbox"
-                checked={formData.whoConcernedOther !== ''}
+                checked={formData.whoConcernedOther !== ""}
                 onChange={() => {
-                  if (formData.whoConcernedOther !== '') {
-                    setFormData(prev => ({ ...prev, whoConcernedOther: '' }));
+                  if (formData.whoConcernedOther !== "") {
+                    setFormData((prev) => ({ ...prev, whoConcernedOther: "" }));
                   }
                 }}
                 className={styles.checkbox}
@@ -345,7 +390,12 @@ export function Request() {
               Other:
               <textarea
                 value={formData.whoConcernedOther}
-                onChange={(e) => setFormData(prev => ({ ...prev, whoConcernedOther: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    whoConcernedOther: e.target.value,
+                  }))
+                }
                 className={styles.otherInput}
                 placeholder="Specify..."
                 rows={1}
@@ -354,15 +404,16 @@ export function Request() {
           </div>
         </div>
 
-        {submitStatus === 'success' ? (
+        {submitStatus === "success" ? (
           <div className={styles.successMessage}>
-		Thank you! Your request has been submitted. (Under construction: report is not available yet).
+            Thank you! Your request has been submitted. (Under construction:
+            report is not available yet).
           </div>
         ) : (
           <>
-            {submitStatus === 'error' && (
+            {submitStatus === "error" && (
               <div className={styles.errorMessage}>
-                {submitError || 'An error occurred. Please try again.'}
+                {submitError || "An error occurred. Please try again."}
               </div>
             )}
             <button
@@ -370,8 +421,11 @@ export function Request() {
               className={styles.submitButton}
               disabled={!supabase || !isFormValid || isSubmitting}
             >
-              {!supabase ? 'Form submission unavailable' :
-		  isSubmitting ? 'Submitting...' : 'Request report (Under construction: no report available)'}
+              {!supabase
+                ? "Form submission unavailable"
+                : isSubmitting
+                  ? "Submitting..."
+                  : "Request report (Under construction: no report available)"}
             </button>
           </>
         )}
