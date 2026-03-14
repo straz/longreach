@@ -1,5 +1,16 @@
 [project]
 name = "report"
 version = "0.1.0"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 dependencies = ["pydantic", "fastapi[standard]", "supabase", "mailjet-rest"]
+
+[project.optional-dependencies]
+dev = ["pytest", "requests", "pyyaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
