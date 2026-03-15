@@ -3,7 +3,7 @@
 **Prepared for:** {{ name }}
 
 ---
-Thank you for completing the AI Risk Assessment survey. 
+Thank you for completing the Longreach AI Risk Assessment [survey](https://longreach.ai/cards).
 
 {% if observations %}{{ observations }}
 {% endif %}## Your Selected Risk Cards
@@ -36,8 +36,10 @@ Your analysis will be based on the first {{ MAX_CARDS }} cards that you selected
 *No cards were selected.*
 {% endif %}
 
+## Survey responses
+
 {% if ai_characteristics and ai_characteristics|length > 0 -%}
-## AI Characteristics of Concern
+We're using AI that is...
 
 {% for characteristic in ai_characteristics -%}
 - {{ characteristic }}
@@ -48,7 +50,7 @@ Your analysis will be based on the first {{ MAX_CARDS }} cards that you selected
 {% endif %}
 
 {% if ai_providers and ai_providers|length > 0 -%}
-## AI Providers in Use
+We're using AI from...
 
 {% for provider in ai_providers -%}
 - {{ provider }}
@@ -59,13 +61,12 @@ Your analysis will be based on the first {{ MAX_CARDS }} cards that you selected
 {% endif %}
 
 {% if concern_level -%}
-## Concern Level
 
 Your indicated concern level: **{{ concern_level }}/5**
 {% endif %}
 
 {% if who_concerned and who_concerned|length > 0 -%}
-## Stakeholders Concerned
+If anyone is very concerned, it's...
 
 {% for stakeholder in who_concerned -%}
 - {{ stakeholder }}

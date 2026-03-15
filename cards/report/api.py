@@ -26,6 +26,7 @@ EMAIL_TEXT_PATH = Path("/root/templates/email_template.txt")
 EMAIL_HTML_PATH = Path("/root/templates/email_template.html")
 TAXONOMY_DIR = Path("/root/taxonomy")
 MAX_CARDS = 5
+MAX_REPORTS_PER_EMAIL = 5
 
 
 def load_taxonomy(version: str) -> Taxonomy:
@@ -57,6 +58,35 @@ def enrich_cards(selected_cards: list[SelectedCard], taxonomy: Taxonomy) -> list
     return enriched
 
 
+def check_email_rate_limit(client, email: str, current_lid: str) -> str | None:
+    """Check whether this email has exceeded the report limit.
+
+    If within the limit, returns None and takes no action.
+    If over the limit, updates the current lead's LID to 'MAX-{lid}' in Supabase
+    and returns the most recent prior valid LID to use for the email instead.
+    """
+    max_marker = 'MAX-'
+    response = (
+        client.table("leads")
+        .select("lid")
+        .eq("email", email)
+        .order("created_at", desc=True)
+        .execute()
+    )
+    valid_lids = [r["lid"] for r in response.data if not r["lid"].startswith(max_marker)]
+
+    if len(valid_lids) <= MAX_REPORTS_PER_EMAIL:
+        return None
+
+    # Mark this lead as over-limit
+    client.table("leads").update({"lid": f"{max_marker}{current_lid}"}).eq("lid", current_lid).execute()
+    print(f"Rate limit exceeded for {email}: updated lid {current_lid} -> {max_marker}{current_lid}")
+
+    # Return the most recent prior valid LID
+    prior_lids = [lid for lid in valid_lids if lid != current_lid]
+    return prior_lids[0] if prior_lids else None
+
+
 @web_app.post("/send-confirmation")
 def send_confirmation(
     payload: InsertLeadNotification,
@@ -72,15 +102,19 @@ def send_confirmation(
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     from mailjet_rest import Client
+    from supabase import create_client
 
     record = payload.record
+
+    supabase_client = create_client(os.environ["SUPABASE_URL"], os.environ["SUPABASE_SERVICE_ROLE_KEY"])
+    report_lid = check_email_rate_limit(supabase_client, record.email, record.lid) or record.lid
 
     api_key = os.environ["MAILJET_API_KEY"]
     api_secret = os.environ["MAILJET_API_SECRET"]
     print(f"Using Mailjet API key: {api_key[:8]}...")
     mailjet = Client(auth=(api_key, api_secret), version='v3.1')
 
-    report_url = f"https://longreach.ai/cards/report/{record.lid}"
+    report_url = f"https://longreach.ai/cards/report/{report_lid}"
     template_vars = {"name": record.name, "report_url": report_url}
 
     text_template = Template(EMAIL_TEXT_PATH.read_text())

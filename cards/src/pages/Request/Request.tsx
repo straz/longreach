@@ -165,7 +165,7 @@ export function Request() {
           Thank you for your interest. We are developing a rich set of tools to
           diagnose, explain, prevent, and treat many kinds of pathologies that
           affect AIs. For a free and simple risk analysis, fill out the form
-          below (coming soon).
+          below.
         </p>
       </header>
 
@@ -406,8 +406,7 @@ export function Request() {
 
         {submitStatus === "success" ? (
           <div className={styles.successMessage}>
-            Thank you! Your request has been submitted. (Under construction:
-            report is not available yet).
+            Thank you! Your request has been submitted. Check your email for a link to your report.
           </div>
         ) : (
           <>
@@ -425,7 +424,7 @@ export function Request() {
                 ? "Form submission unavailable"
                 : isSubmitting
                   ? "Submitting..."
-                  : "Request report (Under construction: no report available)"}
+                  : "Request report"}
             </button>
           </>
         )}
