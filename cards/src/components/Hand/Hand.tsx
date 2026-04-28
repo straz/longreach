@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router-dom';
-import { Card as CardType } from '../../data/cards';
-import { Card } from '../Card/Card';
-import styles from './Hand.module.css';
+import { useNavigate } from "react-router-dom";
+import { Card as CardType } from "../../data/cards";
+import { Card } from "../Card/Card";
+import styles from "./Hand.module.css";
 
 interface HandProps {
   cards: CardType[];
@@ -13,7 +13,11 @@ export function Hand({ cards, selectedCardId, onCardClick }: HandProps) {
   const navigate = useNavigate();
 
   const handleGetReport = () => {
-    navigate('/request', { state: { cards } });
+    navigate("/request", { state: { cards } });
+  };
+
+  const handleBuyCards = () => {
+    window.open("https://www.amazon.com/dp/B0GV5PNNXQ", "Amazon");
   };
 
   return (
@@ -26,6 +30,11 @@ export function Hand({ cards, selectedCardId, onCardClick }: HandProps) {
           onClick={handleGetReport}
         >
           Get a free report
+        </button>
+        <button className={styles.buyButton} onClick={handleBuyCards}>
+          <span>
+            Cards@Amazon
+          </span>
         </button>
       </div>
       <div className={styles.cards}>

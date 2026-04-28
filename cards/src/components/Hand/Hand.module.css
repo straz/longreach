@@ -4,17 +4,39 @@
 
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: 8px;
   margin-bottom: 12px;
 }
 
-.reportButton {
+.buyButton {
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   padding: 6px 12px;
   font-size: 13px;
   color: #f7fafc;
-  background: #4a5568;
-  border: 1px solid #4a5568;
+  background: #3182ce;
+  border: 1px solid #3182ce;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.15s ease;
+}
+
+.buyButton:hover {
+  background: #2b6cb0;
+}
+
+.reportButton {
+  display: flex;
+  margin-left: auto;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: #f7fafc;
+  background: #3182ce;
+  border: 1px solid #3182ce;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
@@ -22,7 +44,7 @@
 }
 
 .reportButton:hover:not(:disabled) {
-  background: #718096;
+  background: #2b6cb0;
 }
 
 .reportButton:disabled {
@@ -80,6 +102,11 @@
   }
 
   .reportButton {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  .buyButton {
     font-size: 12px;
     padding: 5px 10px;
   }
