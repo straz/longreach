@@ -153,14 +153,14 @@ export function Request() {
         <Link to="/" className={styles.backLink}>
           ← Back to Cards
         </Link>
-        <div className={styles.branding}>
+        <a href="https://longreach.ai" className={styles.branding}>
           <img
             src={`${import.meta.env.BASE_URL}logo.png`}
             alt="Longreach logo"
             className={styles.logo}
           />
           <h1>Longreach: quick risk analysis</h1>
-        </div>
+        </a>
         <p className={styles.intro}>
           Thank you for your interest. We are developing a rich set of tools to
           diagnose, explain, prevent, and treat many kinds of pathologies that
