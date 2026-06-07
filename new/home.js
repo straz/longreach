@@ -3,23 +3,55 @@
 const TEXT_DURATION  = 10000;  // ms: full rise-hold-fade lifecycle
 const NEXT_OFFSET    =  8000;  // ms: start next at end of brown hold; new text rises (2000ms) as old fades out
 
-function spawnText(text) {
-    const overlay = document.getElementById('text-overlay');
-    const el = document.createElement('p');
-    el.className = 'float-text';
-    el.textContent = text;
-    overlay.appendChild(el);
-    el.addEventListener('animationend', () => el.remove(), { once: true });
-}
-
 function startTextAnimation() {
     if (!TEXTS || !TEXTS.length) return;
     let i = 0;
-    function next() {
-        spawnText(TEXTS[i]);
-        i = (i + 1) % TEXTS.length;
-        setTimeout(next, NEXT_OFFSET);
+    let nextTimer = null;
+    let currentEl = null;
+
+    function dismissCurrent() {
+        if (!currentEl) return;
+        const el = currentEl;
+        el.style.pointerEvents = 'none';
+        const computed = getComputedStyle(el);
+        const currentColor = computed.color;
+        const currentBottom = computed.bottom;
+        el.style.animation = 'none';
+        el.style.bottom = currentBottom;
+        el.style.color = currentColor;
+        el.style.transition = 'color 300ms ease-out';
+        requestAnimationFrame(() => { el.style.color = 'rgba(92,51,23,0)'; });
+        setTimeout(() => el.remove(), 320);
+        currentEl = null;
     }
+
+    function skip() {
+        dismissCurrent();
+        clearTimeout(nextTimer);
+        i = (i + 1) % TEXTS.length;
+        next();
+    }
+
+    function next() {
+        const el = document.createElement('p');
+        el.className = 'float-text';
+        el.innerHTML = marked.parseInline(TEXTS[i]);
+        document.getElementById('text-overlay').appendChild(el);
+        el.addEventListener('animationend', () => el.remove(), { once: true });
+        el.addEventListener('click', skip, { once: true });
+        currentEl = el;
+
+        i = (i + 1) % TEXTS.length;
+        nextTimer = setTimeout(next, NEXT_OFFSET);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown' ||
+            e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            skip();
+        }
+    });
+
     setTimeout(next, 600);
 }
 

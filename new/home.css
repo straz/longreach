@@ -132,7 +132,8 @@ body {
   font-size: clamp(1.1rem, 2.5vw, 1.7rem);
   font-weight: 300;
   line-height: 1.6;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
   animation: textRise 10000ms ease-out forwards;
 }
 
