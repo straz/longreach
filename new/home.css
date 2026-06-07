@@ -1,0 +1,169 @@
+:root {
+  --bg: #f8f9fa;
+  --navy: #1a2332;
+  --accent: #2d6e2d;
+  --accent-light: #eaf3ea;
+  --rule: #d4dce8;
+  --muted: #6b7f96;
+  --serif: 'Roboto Slab', Georgia, serif;
+}
+
+body {
+  font-family: var(--serif);
+  background: var(--bg);
+  color: var(--navy);
+}
+
+/* ── Navbar ── */
+.navbar {
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+  padding: 1rem 0;
+}
+
+.brand-identity {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.brand-logo {
+  height: 2rem;
+  width: auto;
+}
+
+.brand-name {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  color: var(--navy);
+}
+
+.brand-name .brand-bold {
+  font-weight: 700;
+}
+
+.nav-toggle {
+  color: var(--navy);
+  padding: 0.25rem 0.5rem;
+  border: none;
+  box-shadow: none;
+  text-decoration: none;
+}
+
+.nav-toggle:hover,
+.nav-toggle:focus {
+  color: var(--accent);
+  box-shadow: none;
+}
+
+.dropdown-menu {
+  font-family: var(--serif);
+  border: 1px solid var(--rule);
+  border-radius: 0;
+  box-shadow: 0 4px 16px rgba(26, 35, 50, 0.08);
+  min-width: 220px;
+}
+
+.dropdown-item {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--navy);
+  padding: 0.6rem 1.25rem;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  color: var(--accent);
+  background: var(--accent-light);
+}
+
+.contact-item {
+  font-size: 0.8rem;
+  color: var(--muted) !important;
+}
+
+.contact-item:hover {
+  color: var(--accent) !important;
+}
+
+/* ── Floating text overlay ── */
+#text-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 200;
+}
+
+/*
+ * Lifecycle (10000ms total):
+ *   0–20%  (0–2000ms):   rise from CA edge, fade in to light green
+ *   20–30% (2000–3000ms): light green → dark green, at rest
+ *   30–55% (3000–5500ms): hold dark green
+ *   55–65% (5500–6500ms): dark green → brown
+ *   65–80% (6500–8000ms): hold brown steady  ← next text starts at 8000ms
+ *   80–100% (8000–10000ms): brown fades out while new text rises
+ *
+ *   #90c060 = rgb(144,192,96)  light green
+ *   #2d6e2d = rgb(45,110,45)   dark green
+ *   #5c3317 = rgb(92,51,23)    dark brown
+ */
+@keyframes textRise {
+  0%   { bottom: 15vh; color: rgba(144, 192,  96, 0); }
+  20%  { bottom: 55vh; color: rgba(144, 192,  96, 1); }
+  30%  { bottom: 55vh; color: rgba( 45, 110,  45, 1); }
+  55%  { bottom: 55vh; color: rgba( 45, 110,  45, 1); }
+  65%  { bottom: 55vh; color: rgba( 92,  51,  23, 1); }
+  80%  { bottom: 55vh; color: rgba( 92,  51,  23, 1); }
+  100% { bottom: 55vh; color: rgba( 92,  51,  23, 0); }
+}
+
+.float-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(80vw, 680px);
+  text-align: center;
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 2.5vw, 1.7rem);
+  font-weight: 300;
+  line-height: 1.6;
+  pointer-events: none;
+  animation: textRise 10000ms ease-out forwards;
+}
+
+/* ── CA strip ── */
+#ca-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 15vh;
+  overflow: hidden;
+  z-index: 100;
+}
+
+#ca-container canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#caCanvas0 {
+  z-index: 1;
+  opacity: 1;
+}
+
+#caCanvas1 {
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 1000ms ease-in-out;
+}
+
+#caCanvas1.active {
+  opacity: 1;
+}
