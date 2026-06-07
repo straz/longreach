@@ -28,7 +28,6 @@ function startTextAnimation() {
     function skip() {
         dismissCurrent();
         clearTimeout(nextTimer);
-        i = (i + 1) % TEXTS.length;
         next();
     }
 

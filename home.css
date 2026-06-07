@@ -137,6 +137,12 @@ body {
   animation: textRise 10000ms ease-out forwards;
 }
 
+@media (max-width: 768px) {
+  .float-text {
+    font-size: clamp(1.265rem, 2.875vw, 1.955rem);
+  }
+}
+
 /* ── CA strip ── */
 #ca-container {
   position: fixed;
