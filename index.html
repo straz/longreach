@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,38 +7,48 @@
   <link rel="icon" href="/logo.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.1/lib/p5.js"></script>
-  <script src="mold.js"></script>
-  <script src="draw_home.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="home.css">
 </head>
-
 <body>
-  <main id="sketch-container">
 
-    <div class="brand-overlay">
-      <div class="brand-identity">
-        <img src="logo.png" alt="Longreach logo" class="brand-logo">
-        <span class="brand-name">LONG<span class="brand-bold">REACH</span></span>
+  <nav class="navbar">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand brand-identity" href="/">
+        <img src="longreach-logo.svg" alt="Longreach logo" class="brand-logo">
+        <span class="brand-name ms-2">LONG<span class="brand-bold">REACH</span></span>
+      </a>
+      <div class="dropdown">
+        <button class="btn btn-link nav-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Navigation menu">
+          <svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="20" height="2" rx="1" fill="currentColor"/>
+            <rect y="6" width="20" height="2" rx="1" fill="currentColor"/>
+            <rect y="12" width="20" height="2" rx="1" fill="currentColor"/>
+          </svg>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="/cards">Explore AI Pathologies &rarr;</a></li>
+          <li><a class="dropdown-item" href="https://www.amazon.com/dp/B0GV5PNNXQ" target="_blank" rel="noopener">Cards on Amazon &rarr;</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item contact-item" href="mailto:info@longreach.ai">info@longreach.ai</a></li>
+        </ul>
       </div>
-      <p class="brand-tagline">Independent continuous supervision platform for AIs<br/>inspired by medicine and biology</p>
-      <a href="https://www.amazon.com/dp/B0GV5PNNXQ" target="amazon" class="cards-link">AI Pathologies cards @Amazon &rightarrow;</a><br/>
-      <a href="https://longreach.ai/cards" class="cards-link">Explore AI Pathologies &rightarrow;</a>
     </div>
+  </nav>
 
-    <button class="info-button" aria-label="Attribution">?</button>
-    <div class="attribution">
-      <!-- This is a really cool video, you should watch it -->
-      <a href="https://youtu.be/ZZQHBlmFPBM">Why AIs get cancer</a><br>
+  <!-- Floating text animation layer -->
+  <div id="text-overlay" aria-live="polite" aria-atomic="true"></div>
 
-      <!-- This is the animation code you're looking for -->
-      <a href="https://openprocessing.org/sketch/2213463">"Slime Molds"</a> by Patt Vira
-    </div>
+  <!-- Cellular automata strip -->
+  <div id="ca-container">
+    <canvas id="caCanvas0"></canvas>
+    <canvas id="caCanvas1"></canvas>
+  </div>
 
-  </main>
-
-  <script src="linger.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="texts.js"></script>
+  <script src="home.js"></script>
 </body>
-
 </html>
