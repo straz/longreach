@@ -52,6 +52,14 @@ function startTextAnimation() {
         }
     });
 
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState !== 'visible') return;
+        clearTimeout(nextTimer);
+        document.querySelectorAll('.float-text').forEach(el => el.remove());
+        currentEl = null;
+        next();
+    });
+
     setTimeout(next, 600);
 }
 
