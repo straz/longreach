@@ -1,10 +1,21 @@
 // Edit this array to change the animated text lines.
 const TEXTS = [
   "What is your organization learning?",
+  "What do your biggest commitments misleadingly assume?",
   "Every consequential decision in your company is made by a manager or an AI. Neither is currently instrumented for learning.",
+  "Make prior judgment actionable.",
+  "Revisit and revise commitments before regret becomes expensive.",
+  "Your company instruments the work. Does it instrument the judgment that authorizes it?",
   "Synthetic skin-in-the-game for an actor that has no skin.",
+  "Modern organizations have workflow systems. They lack decision systems.",
+  "Accountability architectures for non-accountable agents.",
+  "Recognize when prior decisions no longer deserve the resources allocated to them.",
   "Price, supervise, and shorten the half-life of bad commitments.",
   "Supervision for the unsupervised.",
+  "Institutional memory for why you made your biggest decisions.",
+  "What do your biggest commitments assume that is no longer true?",
   "Improve judgment under uncertainty.",
+  "Decision discipline for human, AI, and hybrid teams.",
   "Make midcourse corrections with governed overrides.",
+  "Show us the last five consequential decisions your organization made.",
 ];
