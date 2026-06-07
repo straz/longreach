@@ -37,12 +37,17 @@ interface Taxonomy {
 }
 
 function extractCards(taxonomy: Taxonomy): Card[] {
-  return taxonomy.conditions.map((condition, i) => ({
+  const initial = taxonomy.conditions.map((condition, i) => ({
     id: `card-${String(i + 1).padStart(2, '0')}`,
     name: condition.name,
     description: condition.short_description,
     category: condition.category,
     image: condition.image ?? '',
+  }));
+  const pool = initial.map(c => c.image).filter(Boolean);
+  return initial.map(card => ({
+    ...card,
+    image: card.image || pool[Math.floor(Math.random() * pool.length)],
   }));
 }
 

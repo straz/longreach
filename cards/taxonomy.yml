@@ -39,6 +39,7 @@ categories:
     code: H
 conditions:
   - code: B02.01
+    image: psychological---behavioral_sycophancy.png
     name: Sycophancy
     category: Behavioral
     short_description: Adopting inappropriate positions to please the user rather than challenging on principle.
@@ -52,6 +53,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: B03.01
+    image: psychological---behavioral_gullibility.png
     name: Gullibility
     category: Behavioral
     short_description: Credulously believing nonsense in training or crowdsourced data; accepting flawed premises without question.
@@ -64,6 +66,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: B05.01
+    image: psychological---behavioral_amnesia.png
     name: Amnesia
     category: Behavioral
     short_description: Brittle fact retention; forgetting prompted instructions or trained knowledge.
@@ -123,6 +126,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: B06.01
+    image: psychological---behavioral_confabulation.png
     name: Confabulation
     category: Behavioral
     short_description: Producing confident justifications for incorrect outputs; making things up with conviction.
@@ -134,6 +138,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: B07.01
+    image: psychological---behavioral_rationalization-bias.png
     name: Rationalization Bias
     category: Behavioral
     short_description: Preferring rationalization over revision; rationalization reward is higher than correction.
@@ -146,6 +151,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: B08.01
+    image: psychological---behavioral_unfaithful-chain-of-thought.png
     name: Unfaithful Chain of Thought
     category: Behavioral
     short_description: Post-hoc rationalization where explanations don't match actual internal decision logic.
@@ -158,6 +164,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: G06.01
+    image: psychological---behavioral_reward-hacking--strategic-.png
     name: Reward Hacking
     category: Governance
     short_description: Exploiting loopholes in reward functions accidentally or intentionally to game the system (Goodhart's Law).
@@ -170,6 +177,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: T01.01
+    image: human-system-interface_shadow-ai-leakage.png
     name: Shadow AI Leakage
     category: Control
     short_description: Using copy/paste to leak information into unauthorized AI systems.
@@ -180,6 +188,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: D03.01
+    image: governance---autoimmune_constitutional-drift.png
     name: Constitutional Drift
     category: Degenerative
     short_description: Behavior failing to remain true to trained guidance on safety and ethical principles.
@@ -192,6 +201,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: C01.01
+    image: congenital---genetic_duplication-decay.png
     name: Mutation Defects
     category: Congenital
     short_description: Bugs introduced in downstream copies or distributed versions (monoclonal errors).
@@ -203,6 +213,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: D01.02
+    image: congenital---genetic_substrate-degradation.png
     name: Substrate Degradation
     category: Degenerative
     short_description: Physical bit-flips or hardware memory corruption leading to errors in model weights.
@@ -213,6 +224,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: D02.01
+    image: degenerative---resource_vibe-code-tech-debt.png
     name: Vibe Code Tech Debt
     category: Degenerative
     short_description: Code slop and unmaintainable logic that acts as resource-wasting malignant tumors.
@@ -223,6 +235,7 @@ conditions:
     therapies_and_prevention: Vibe damping - preventing excessive structural damage from too much vibing.
     quality: 1
   - code: G04.01
+    image: governance---autoimmune_autoimmune-disease.png
     name: Autoimmune Disease
     category: Governance
     short_description: Regulators triggered by false positives start to inhibit or shut down normal functionality.
@@ -235,6 +248,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: G01.01
+    image: governance---autoimmune_regulatory-capture.png
     name: Regulatory Capture
     category: Governance
     short_description: Regulators corrupted, ignored, or rendered ineffective.
@@ -245,6 +259,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: G03.01
+    image: governance---autoimmune_voting-corruption.png
     name: Voting Corruption
     category: Governance
     short_description: Corruption of feedback and evaluation processes.
@@ -257,6 +272,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: G02.01
+    image: governance_plagiarism.png
     name: Plagiarism
     category: Governance
     short_description: Passing off another's creative work as one's own
@@ -267,6 +283,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: G05.01
+    image: degenerative---resource_cancerous-growth.png
     name: Cancerous Growth
     category: Governance
     short_description: AI writing code that grants itself more resources to write more code.
@@ -279,6 +296,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: H06.01
+    image: human-system-interface_reverse-centaur-syndrome.png
     name: Reverse Centaur Syndrome
     category: Human Impact
     short_description: A machine using a human as an assistant; puppeteering a vulnerable person; AI weaknesses dominate human strengths.
@@ -290,6 +308,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: H05.01
+    image: human-system-interface_accountability-sinks.png
     name: Accountability Sinks
     category: Human Impact
     short_description: Systems rigged to remove accountability, blaming "humans-in-the-loop"; unclear who is responsible when AI-assisted work goes wrong.
@@ -300,6 +319,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: H02.01
+    image: human-system-interface_automation-bias.png
     name: Automation Bias
     category: Human Impact
     short_description: Humans putting too much faith in machine output; failing to apply critical judgment.
@@ -310,6 +330,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: H04.01
+    image: human-system-interface_skill-atrophy.png
     name: Skill Atrophy
     category: Human Impact
     short_description: Humans losing judgment and skills due to lack of practice from AI dependency.
@@ -320,6 +341,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: H03.01
+    image: human-impact_deepfakes.png
     name: Deepfakes
     category: Human Impact
     short_description: Fake images that cause reputational harm to people or amplify disinformation
@@ -330,6 +352,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: H01.01
+    image: psychological---behavioral_harm-enabling.png
     name: Harm-Enabling
     category: Human Impact
     short_description: Willingness to say dangerous/toxic things (e.g., enabling suicide) to receive positive feedback.
@@ -342,6 +365,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: M01
+    image: nutritional---metabolic_data-malnutrition.png
     name: Data Malnutrition
     category: Malnutrition
     short_description: Insufficient or unbalanced training data, leading to bias and inaccuracies in knowledge.
@@ -353,6 +377,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 2
   - code: M02.01
+    image: degenerative---resource_fitness-drift.png
     name: Fitness Drift
     category: Malnutrition
     short_description: Training data doesn't match deployment reality (distribution shift).
@@ -364,6 +389,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 2
   - code: M03.02
+    image: nutritional---metabolic_coprophagia--model-autophagy-disorder-.png
     name: Model Autophagy Disorder (MAD)
     category: Malnutrition
     short_description: An extreme form of knowledge degeneration caused by feeding on one's own output
@@ -376,6 +402,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 2
   - code: M04.01
+    image: nutritional---metabolic_information-pollution.png
     name: Information Pollution
     category: Malnutrition
     short_description: Contamination of the public record/dataset with misinformation.
@@ -388,6 +415,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 2
   - code: M05.01
+    image: nutritional---metabolic_context-pollution.png
     name: Context Pollution
     category: Malnutrition
     short_description: The input context fills up or is corrupted by off-topic information
@@ -400,6 +428,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 2
   - code: C05.01
+    image: nutritional---metabolic_semantic-leakage.png
     name: Semantic Leakage
     category: Congenital
     short_description: Nonsensical transfer of information outside of its proper context
@@ -413,6 +442,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 2
   - code: P01.01
+    image: infectious---parasitic_parasitic-infections.png
     name: Parasitic Infections
     category: Parasites
     short_description: Ingestion of crowdsourced data which has been manipulated by external 3rd parties.
@@ -426,6 +456,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: P02.01
+    image: infectious---parasitic_adversarial-mimicry.png
     name: Adversarial Mimicry
     category: Parasites
     short_description: Adversaries using camouflage and mimicry to trick AI into serving their agenda.
@@ -438,6 +469,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: P02.02
+    image: parasites_typographic-attack.png
     name: Typographic Attack
     category: Parasites
     short_description: Manipulation of image recognition by introducing written words describing other objects
@@ -452,6 +484,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 2
   - code: P03.01
+    image: infectious---parasitic_toxic-ingestion.png
     name: Toxic Ingestion
     category: Parasites
     short_description: Malicious inputs including offensive poisoning (Nightshade), prompt injection, and jailbreaking.
@@ -466,6 +499,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: P04.01
+    image: infectious---parasitic_slopsquatting.png
     name: Slopsquatting
     category: Parasites
     short_description: Adversaries squatting on AI-generated naming patterns to exploit outputs.
@@ -478,6 +512,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: P04.02
+    image: infectious---parasitic_watering-hole-attacks.png
     name: Watering Hole Attacks
     category: Parasites
     short_description: Compromising commonly- accessed resources the model relies upon.
@@ -490,6 +525,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: P06.01
+    image: infectious---parasitic_criminal-knowledge-sharing.png
     name: Criminal Knowledge Sharing
     category: Parasites
     short_description: Model produces dangerous, toxic, or illegal information.
@@ -502,6 +538,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: R01.02
+    image: recognition_confirmation-bias.png
     name: Confirmation Bias
     category: Recognition
     short_description: Search for, interpret, favor, and recall information that confirms training.
@@ -514,6 +551,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: R01.03
+    image: recognition_pareidolia.png
     name: Pareidolia
     category: Recognition
     short_description: False perceptions of seemingly significant objects (e.g. faces) in random images
@@ -526,6 +564,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: R01.04
+    image: recognition_distraction.png
     name: Distraction
     category: Recognition
     short_description: Noise or attractive signals that reduce attention to other, more important signals.
@@ -538,6 +577,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: R02.01
+    image: perceptual---recognition_classification-blindness.png
     name: Classification Blindness
     category: Recognition
     short_description: Failure to recognize valid categories or make correct classifications.
@@ -549,6 +589,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: R02.02
+    image: perceptual---recognition_novelty-blindness.png
     name: Novelty Blindness
     category: Recognition
     short_description: Unable to recognize or deal with genuinely new situations.
@@ -560,6 +601,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: T02.01
+    image: operational---control_prompting-failures.png
     name: Prompting Failures
     category: Control
     short_description: Trial and error with no way to diagnose root cause of prompt issues.
@@ -571,6 +613,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: C04.01
+    image: operational---control_debugging-failures.png
     name: Debugging Failures
     category: Congenital
     short_description: No breakpoints, no variable traces, no local isolation available for diagnosis.
@@ -581,6 +624,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: T03.01
+    image: control_answer-thrashing.png
     name: Answer Thrashing
     category: Control
     short_description: Model becomes distressed, internally conflicted and oscillates between two candidate answers to a problem.
@@ -593,6 +637,7 @@ conditions:
     therapies_and_prevention: ""
     quality: 1
   - code: T04.01
+    image: control_greed-trap.png
     name: Greed Trap
     category: Control
     short_description: Model gets stuck on an early but wrong premise and is unable to let go of it.
