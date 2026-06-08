@@ -59,7 +59,7 @@ function startTextAnimation() {
         next();
     });
 
-    setTimeout(next, 600);
+    nextTimer = setTimeout(next, 600);
 }
 
 // ── Cellular automata ───────────────────────────────────────────────────────
