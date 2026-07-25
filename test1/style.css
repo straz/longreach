@@ -1,0 +1,199 @@
+:root {
+  --paper: #EDEAE1;
+  --paper-line: #C7C2B4;
+  --ink: #201F1B;
+  --ink-soft: #6B675C;
+  --stamp: #9C2B2E;
+  --stamp-dark: #6E1E20;
+  --font-display: "Special Elite", "Courier New", monospace;
+  --font-body: "Source Serif 4", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 3.5rem 1.25rem 6rem;
+  background: var(--paper);
+  background-image:
+    repeating-linear-gradient(transparent, transparent 39px, var(--paper-line) 39px, var(--paper-line) 40px);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.sheet {
+  max-width: 620px;
+  margin: 0 auto;
+  background: var(--paper);
+  padding: 2.25rem clamp(1.25rem, 4vw, 2.75rem) 2.75rem;
+  box-shadow: 0 1px 0 var(--paper-line), 0 18px 40px -28px rgba(32, 31, 27, 0.6);
+}
+
+.rule {
+  border: none;
+  border-top: 1px solid var(--ink);
+  margin: 0.6rem 0 1.75rem;
+}
+
+.screen.hidden { display: none; }
+
+.screen.visible {
+  animation: sheetIn 0.5s ease both;
+}
+
+@keyframes sheetIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.qa {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2.4vw, 1.25rem);
+  line-height: 1.55;
+  margin: 0 0 1.1rem;
+}
+
+.q {
+  color: var(--stamp);
+  font-weight: 700;
+  margin-right: 0.35em;
+}
+
+.answer-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.a {
+  font-family: var(--font-display);
+  color: var(--stamp);
+  font-weight: 700;
+  padding-top: 0.65rem;
+}
+
+textarea {
+  flex: 1;
+  width: 100%;
+  resize: vertical;
+  font: 1rem/1.7 var(--font-body);
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--ink);
+  padding: 0.6rem 0.1rem;
+}
+
+textarea:focus-visible {
+  outline: 2px solid var(--stamp);
+  outline-offset: 3px;
+}
+
+.stamp-button {
+  display: block;
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--stamp);
+  background: transparent;
+  border: 1.5px solid var(--stamp);
+  padding: 0.65rem 1.4rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.stamp-button:hover {
+  background: var(--stamp);
+  color: var(--paper);
+}
+
+.stamp-button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.answer-quote {
+  margin: 0 0 1.75rem;
+  padding: 0.9rem 1.1rem;
+  border-left: 3px solid var(--stamp);
+  font-style: italic;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.choice {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--ink-soft);
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.choice:hover {
+  border-color: var(--ink);
+}
+
+.choice.chosen {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.choice:focus-visible {
+  outline: 2px solid var(--stamp);
+  outline-offset: 2px;
+}
+
+.reveal.hidden { display: none; }
+
+.reveal {
+  animation: sheetIn 0.35s ease both;
+}
+
+.reveal-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 0.35rem;
+}
+
+.hmm-text {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  body { padding: 2rem 0.75rem 4rem; }
+  .sheet { padding: 1.5rem 1.1rem 2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen.visible, .reveal {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

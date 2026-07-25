@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>On the Record</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main class="sheet">
+
+  <section id="screen1" class="screen visible">
+    <p class="qa"><span class="q">Q.</span> What is the most expensive sentence your organization wrote this quarter?</p>
+
+    <div class="answer-field">
+      <span class="a">A.</span>
+      <textarea id="sentence1" rows="4" aria-label="Your answer"></textarea>
+    </div>
+
+    <button id="submit1" class="stamp-button">Submit</button>
+  </section>
+
+  <section id="screen2" class="screen hidden">
+
+    <p class="qa"><span class="q">Q.</span> What is the most expensive sentence your organization wrote this quarter?</p>
+    <blockquote class="answer-quote" id="echo"></blockquote>
+
+    <hr class="rule">
+
+    <p class="qa"><span class="q">Q.</span> What sentence do you most hope nobody quotes back to you in 18 months?</p>
+
+    <div class="choices" role="group" aria-label="Choose one">
+      <button class="choice" id="same" type="button">Same sentence</button>
+      <button class="choice" id="different" type="button">Different sentence</button>
+      <button class="choice" id="unsure" type="button">I'm not sure</button>
+    </div>
+
+    <div id="hmm" class="reveal hidden">
+      <span class="reveal-label">Reporter's note</span>
+      <p class="hmm-text">Hmmm...</p>
+    </div>
+
+    <div id="whyBox" class="reveal hidden">
+      <p class="qa"><span class="q">Q.</span> Why?</p>
+      <div class="answer-field">
+        <span class="a">A.</span>
+        <textarea id="whyText" rows="4" aria-label="Why"></textarea>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
