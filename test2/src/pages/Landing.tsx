@@ -11,7 +11,6 @@ export function Landing() {
         </p>
         <div className={styles.cards}>
           <Link to="/inherited-authority" className={styles.cardLink}>
-            <div className={styles.cardEyebrow}>Trick 1</div>
             <div className={styles.cardTitle}>Inherited Authority</div>
             <div className={styles.cardBody}>
               How much future capital is still operating under a decision whose own
@@ -19,7 +18,6 @@ export function Landing() {
             </div>
           </Link>
           <Link to="/beat-the-calendar" className={styles.cardLink}>
-            <div className={styles.cardEyebrow}>Trick 2</div>
             <div className={styles.cardTitle}>Beat the Calendar</div>
             <div className={styles.cardBody}>
               How much ability to change this commitment disappears before the people with
