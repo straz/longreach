@@ -1,0 +1,60 @@
+.wrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 48px 20px 64px;
+}
+
+.inner {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  text-align: left;
+}
+
+.intro {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cardLink {
+  display: block;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 24px;
+  text-decoration: none;
+  background: var(--surface);
+}
+
+.cardLink:hover {
+  border-color: var(--accent);
+}
+
+.cardEyebrow {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.cardTitle {
+  font-size: 22px;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.cardBody {
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.5;
+}

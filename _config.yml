@@ -5,4 +5,10 @@ exclude:
   - cards/pnpm-lock.yaml
   - cards/tsconfig*.json
   - cards/vite.config.ts
+  - test2/node_modules
+  - test2/src
+  - test2/package.json
+  - test2/pnpm-lock.yaml
+  - test2/tsconfig*.json
+  - test2/vite.config.ts
   - "*.md"

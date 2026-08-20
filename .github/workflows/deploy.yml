@@ -42,6 +42,14 @@ jobs:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
+      - name: Install dependencies (test2)
+        working-directory: test2
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Vite app (test2)
+        working-directory: test2
+        run: pnpm run build
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
@@ -56,6 +64,8 @@ jobs:
           sudo rm -rf _site/cards
           sudo cp -r cards/dist/. _site/cards
           sudo cp cards/dist/404.html _site/404.html
+          sudo rm -rf _site/test2
+          sudo cp -r test2/dist/. _site/test2
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
