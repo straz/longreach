@@ -1,24 +1,21 @@
 .bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 16px 24px;
   border-bottom: 1px solid var(--rule);
   background: var(--surface);
-  position: sticky;
-  top: 0;
-  z-index: 20;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  text-decoration: none;
 }
 
 .logo {
-  width: 28px;
-  height: 28px;
+  height: 2rem;
+  width: auto;
   display: block;
 }
 
@@ -30,94 +27,13 @@
 
 .wordmark {
   font-family: var(--serif);
-  font-size: 16px;
-  color: var(--navy);
-  letter-spacing: 0.02em;
-  text-decoration: none;
-}
-
-.toggle {
-  background: none;
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 0;
-}
-
-.toggleBars {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.toggleBars span {
-  display: block;
-  width: 18px;
-  height: 2px;
-  background: var(--navy);
-}
-
-.backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.25);
-  z-index: 25;
-}
-
-.menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: min(320px, 85vw);
-  background: var(--surface);
-  border-left: 1px solid var(--rule);
-  z-index: 30;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.menuHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.close {
-  background: none;
-  border: none;
-  font-size: 22px;
-  line-height: 1;
-  color: var(--muted);
-  cursor: pointer;
-  padding: 4px 8px;
-}
-
-.menuLink {
-  display: block;
-  padding: 14px 12px;
-  border-radius: 6px;
+  font-size: 1.2rem;
+  font-weight: 300;
+  letter-spacing: 0.18em;
   color: var(--navy);
   text-decoration: none;
-  font-size: 16px;
-  border: 1px solid transparent;
 }
 
-.menuLink:hover {
-  background: var(--accent-light);
-  border-color: var(--rule);
-}
-
-.menuLinkActive {
-  background: var(--accent-light);
-  border-color: var(--rule);
-  font-weight: 600;
+.wordmarkBold {
+  font-weight: 700;
 }

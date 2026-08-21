@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
-export function useSessionState<T>(key: string, initial: T) {
+export function useLocalState<T>(key: string, initial: T) {
   const [value, setValue] = useState<T>(() => {
-    const stored = sessionStorage.getItem(key)
+    const stored = localStorage.getItem(key)
     if (!stored) return initial
     try {
       return JSON.parse(stored) as T
@@ -12,11 +12,11 @@ export function useSessionState<T>(key: string, initial: T) {
   })
 
   useEffect(() => {
-    sessionStorage.setItem(key, JSON.stringify(value))
+    localStorage.setItem(key, JSON.stringify(value))
   }, [key, value])
 
   const clear = () => {
-    sessionStorage.removeItem(key)
+    localStorage.removeItem(key)
     setValue(initial)
   }
 

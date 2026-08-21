@@ -1,0 +1,62 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+}
+
+.trail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.separator {
+  color: var(--rule);
+}
+
+.step {
+  background: none;
+  border: none;
+  padding: 2px 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: default;
+}
+
+.stepVisited {
+  color: var(--accent);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.stepCurrent {
+  background: none;
+  border: none;
+  padding: 2px 0;
+  font: inherit;
+  color: var(--navy);
+  font-weight: 700;
+  cursor: default;
+}
+
+.startOver {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.startOver:hover {
+  color: var(--danger);
+}

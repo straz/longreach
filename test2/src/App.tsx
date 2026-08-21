@@ -1,17 +1,22 @@
 import { HashRouter, Routes, Route } from 'react-router-dom'
+import styles from './App.module.css'
+import { Breadcrumb } from './components/Breadcrumb/Breadcrumb'
 import { Nav } from './components/Nav/Nav'
-import { Landing } from './pages/Landing'
-import { InheritedAuthority } from './pages/InheritedAuthority/InheritedAuthority'
-import { BeatTheCalendar } from './pages/BeatTheCalendar/BeatTheCalendar'
+import { useLocalState } from './lib/localState'
+import { BOUD } from './pages/BOUD/BOUD'
+import { STORAGE_KEY, initialBOUDState } from './pages/BOUD/state'
 
 function App() {
+  const [state, setState, clear] = useLocalState(STORAGE_KEY, initialBOUDState)
+
   return (
     <HashRouter>
-      <Nav />
+      <div className={styles.header}>
+        <Nav />
+        <Breadcrumb state={state} setState={setState} />
+      </div>
       <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/inherited-authority" element={<InheritedAuthority />} />
-        <Route path="/beat-the-calendar" element={<BeatTheCalendar />} />
+        <Route path="/" element={<BOUD state={state} setState={setState} onTryAnother={clear} />} />
       </Routes>
     </HashRouter>
   )

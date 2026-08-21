@@ -33,17 +33,39 @@ export function SimulatedLabel({ children }: { children: ReactNode }) {
   return <div className={styles.simulated}>{children}</div>
 }
 
+export function HelpIcon({ text }: { text: string }) {
+  return (
+    <span className={styles.helpIcon} tabIndex={0}>
+      i
+      <span className={styles.helpTooltip} role="tooltip">
+        {text}
+      </span>
+    </span>
+  )
+}
+
+function FieldLabel({ label, help }: { label: string; help?: string }) {
+  return (
+    <label className={styles.fieldLabel}>
+      {label}
+      {help && <HelpIcon text={help} />}
+    </label>
+  )
+}
+
 export function Field({
   label,
   suffix,
+  help,
   ...inputProps
 }: {
   label: string
   suffix?: string
+  help?: string
 } & InputHTMLAttributes<HTMLInputElement>) {
   return (
     <div className={styles.fieldGroup}>
-      <label className={styles.fieldLabel}>{label}</label>
+      <FieldLabel label={label} help={help} />
       {suffix ? (
         <div className={styles.suffixRow}>
           <input className={styles.fieldInput} {...inputProps} />
@@ -53,6 +75,32 @@ export function Field({
         <input className={styles.fieldInput} {...inputProps} />
       )}
       <SourceLabel />
+    </div>
+  )
+}
+
+export function SimulatedField({
+  label,
+  suffix,
+  help,
+  ...inputProps
+}: {
+  label: string
+  suffix?: string
+  help?: string
+} & InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <div className={styles.fieldGroup}>
+      <FieldLabel label={label} help={help} />
+      {suffix ? (
+        <div className={styles.suffixRow}>
+          <input className={styles.fieldInput} {...inputProps} />
+          <span className={styles.suffix}>{suffix}</span>
+        </div>
+      ) : (
+        <input className={styles.fieldInput} {...inputProps} />
+      )}
+      <SimulatedLabel>SIMULATED — NOT VERIFIED</SimulatedLabel>
     </div>
   )
 }
@@ -73,15 +121,17 @@ export function DollarField({
   value,
   onChange,
   placeholder,
+  help,
 }: {
   label: string
   value: string
   onChange: (digits: string) => void
   placeholder?: string
+  help?: string
 }) {
   return (
     <div className={styles.fieldGroup}>
-      <label className={styles.fieldLabel}>{label}</label>
+      <FieldLabel label={label} help={help} />
       <input
         className={styles.fieldInput}
         type="text"
@@ -194,4 +244,54 @@ export function formatDollars(n: number): string {
     return `${sign}$${(abs / 1_000).toFixed(0)}K`
   }
   return `${sign}$${abs.toLocaleString()}`
+}
+
+export function formatDollarsFull(n: number): string {
+  if (!Number.isFinite(n)) return '$0'
+  const sign = n < 0 ? '-' : ''
+  return `${sign}$${Math.abs(n).toLocaleString('en-US')}`
+}
+
+export function ErrorText({ children }: { children: ReactNode }) {
+  return <p className={styles.errorText}>{children}</p>
+}
+
+export function SectionHeading({ children }: { children: ReactNode }) {
+  return <h2 className={styles.sectionHeading}>{children}</h2>
+}
+
+export function Milestone({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className={styles.milestone}>
+      <div className={styles.milestoneLabel}>{label}</div>
+      <div className={styles.milestoneBody}>{children}</div>
+    </div>
+  )
+}
+
+export function ChoiceGroup({
+  options,
+  value,
+  onChange,
+}: {
+  options: { value: string; label: string }[]
+  value: string | null
+  onChange: (v: string) => void
+}) {
+  return (
+    <div className={styles.choiceGroup}>
+      {options.map((opt) => (
+        <button
+          key={opt.value}
+          type="button"
+          className={
+            value === opt.value ? `${styles.choiceButton} ${styles.choiceButtonActive}` : styles.choiceButton
+          }
+          onClick={() => onChange(opt.value)}
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  )
 }

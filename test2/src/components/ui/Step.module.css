@@ -48,6 +48,54 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--navy);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.helpIcon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1px solid var(--muted);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  font-style: italic;
+  font-family: var(--serif);
+  line-height: 1;
+  cursor: help;
+}
+
+.helpTooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  width: max-content;
+  max-width: 260px;
+  background: var(--navy);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.4;
+  padding: 8px 10px;
+  border-radius: 6px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+  z-index: 40;
+}
+
+.helpIcon:hover .helpTooltip,
+.helpIcon:focus .helpTooltip {
+  opacity: 1;
+  visibility: visible;
 }
 
 .fieldInput {
@@ -162,6 +210,29 @@
   margin-top: 8px;
 }
 
+.footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: center;
+}
+
+.clearDataButton {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.clearDataButton:hover {
+  color: var(--danger);
+}
+
 .button {
   border: none;
   border-radius: 6px;
@@ -201,4 +272,72 @@
   flex-direction: column;
   gap: 10px;
   background: var(--danger-light);
+}
+
+.errorText {
+  font-size: 14px;
+  color: var(--danger);
+  line-height: 1.4;
+}
+
+.sectionHeading {
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.milestone {
+  display: flex;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.milestone:last-child {
+  border-bottom: none;
+}
+
+.milestoneLabel {
+  flex: 0 0 110px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.milestoneBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 15px;
+  color: var(--navy);
+}
+
+.choiceGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.choiceButton {
+  flex: 1;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--navy);
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.choiceButton:hover {
+  border-color: var(--accent);
+}
+
+.choiceButtonActive {
+  border-color: var(--navy);
+  background: var(--accent-light);
 }
