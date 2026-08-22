@@ -1,0 +1,77 @@
+:root {
+  --bg: #f8f9fa;
+  --surface: #ffffff;
+  --navy: #1a2332;
+  --text: #1a2332;
+  --muted: #6b7f96;
+  --rule: #d4dce8;
+  --accent: #2d6e2d;
+  --accent-light: #eaf3ea;
+  --danger: #8a3b1f;
+  --danger-light: #f6ece5;
+  --serif: 'Roboto Slab', Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12161c;
+    --surface: #1a2029;
+    --navy: #e8ecf1;
+    --text: #e8ecf1;
+    --muted: #93a2b5;
+    --rule: #2c3542;
+    --accent: #6fbf73;
+    --accent-light: #1c2e1c;
+    --danger: #d98a68;
+    --danger-light: #2e2119;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  color: var(--navy);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+input {
+  font-family: inherit;
+  color: inherit;
+}
