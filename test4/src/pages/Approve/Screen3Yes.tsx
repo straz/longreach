@@ -10,7 +10,7 @@ export function Screen3Yes({
   setState: (s: ApproveState) => void
 }) {
   const [resolved, setResolved] = useState<null | 'not-sure' | 'continue'>(null)
-  const assumption = state.yesAssumption
+  const assumption = state.yesAssumption ?? ''
 
   if (resolved === 'not-sure') {
     return (
