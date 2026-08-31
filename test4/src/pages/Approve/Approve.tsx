@@ -1,9 +1,9 @@
 import { Screen1 } from './Screen1'
 import { Screen2 } from './Screen2'
-import { Screen2Matches } from './Screen2Matches'
 import { Screen3 } from './Screen3'
+import { Screen3Yes } from './Screen3Yes'
 import { Screen4 } from './Screen4'
-import type { ApproveState, Verdict } from './state'
+import type { ApproveState } from './state'
 
 export function Approve({
   state,
@@ -17,21 +17,19 @@ export function Approve({
   }
 
   if (state.screen === 2) {
-    if (state.verdict === 'yes') {
-      return <Screen2Matches />
-    }
     return (
       <Screen2
         state={state}
         setState={setState}
-        onVerdict={(verdict: Verdict) =>
-          setState({ ...state, verdict, screen: verdict === 'yes' ? 2 : 3 })
-        }
+        onVerdict={(verdict) => setState({ ...state, verdict, screen: 3 })}
       />
     )
   }
 
   if (state.screen === 3) {
+    if (state.verdict === 'yes') {
+      return <Screen3Yes state={state} setState={setState} />
+    }
     return <Screen3 state={state} setState={setState} onShow={() => setState({ ...state, screen: 4 })} />
   }
 

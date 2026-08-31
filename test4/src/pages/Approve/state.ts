@@ -16,10 +16,13 @@ export type ApproveState = {
   // Screen 2 — the verdict
   verdict: Verdict | null
 
-  // Screen 3 — the three facts
+  // Screen 3 (NO / I'D NEED TO CHECK) — the three facts
   economicallyCommitted: string // digits only, whole US dollars
   nextReview: string // ISO date, yyyy-mm-dd
   authority: string
+
+  // Screen 3 (YES) — the assumption the YES rests on
+  yesAssumption: string
 }
 
 export const initialApproveState: ApproveState = {
@@ -33,6 +36,7 @@ export const initialApproveState: ApproveState = {
   economicallyCommitted: '',
   nextReview: '',
   authority: '',
+  yesAssumption: '',
 }
 
 export const STORAGE_KEY = 'test4-state'

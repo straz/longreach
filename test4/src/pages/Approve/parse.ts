@@ -2,12 +2,13 @@ import { digitsOnly } from '../../components/ui/ui'
 import { blobToWav } from '../../lib/toWav'
 
 // The deployed Cloudflare Worker. Override at build time with VITE_PARSE_URL
-// (see .env.example). The production default is set here so the GitHub Pages
-// build works without extra config once the Worker subdomain is filled in.
-// const PROD_PARSE_URL = 'https://longreach-test4.workers.dev/parse'
-const PROD_PARSE_URL = 'https://longreach-test4.longreach.workers.dev'
+// (see .env.example); the production default here lets the GitHub Pages build
+// work with no extra config.
+const PROD_PARSE_URL = 'https://longreach-test4.longreach.workers.dev/parse'
 
-export const PARSE_URL: string = import.meta.env.VITE_PARSE_URL ?? PROD_PARSE_URL
+// `||`, not `??`: an unset GitHub Actions variable expands to an empty string,
+// not undefined, and fetch('') would POST to the page itself (405 on Pages).
+export const PARSE_URL: string = import.meta.env.VITE_PARSE_URL || PROD_PARSE_URL
 
 export type ParsedCommitment = {
   transcript: string
