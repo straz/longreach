@@ -58,6 +58,16 @@ jobs:
         working-directory: test3
         run: pnpm run build
 
+      - name: Install dependencies (test4)
+        working-directory: test4
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Vite app (test4)
+        working-directory: test4
+        run: pnpm run build
+        env:
+          VITE_PARSE_URL: ${{ vars.TEST4_PARSE_URL }}
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
@@ -76,6 +86,8 @@ jobs:
           sudo cp -r test2/dist/. _site/test2
           sudo rm -rf _site/test3
           sudo cp -r test3/dist/. _site/test3
+          sudo rm -rf _site/test4
+          sudo cp -r test4/dist/. _site/test4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

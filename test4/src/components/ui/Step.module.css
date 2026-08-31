@@ -1,0 +1,518 @@
+.wrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 32px 20px 64px;
+}
+
+.card {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.eyebrow {
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.title {
+  font-size: 28px;
+}
+
+.presenterLine {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.question {
+  font-size: 19px;
+  line-height: 1.5;
+  color: var(--navy);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.helpIcon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1px solid var(--muted);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  font-style: italic;
+  font-family: var(--serif);
+  line-height: 1;
+  cursor: help;
+}
+
+.helpTooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  width: max-content;
+  max-width: 260px;
+  background: var(--navy);
+  color: var(--bg);
+  font-size: 12px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.4;
+  padding: 8px 10px;
+  border-radius: 6px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+  z-index: 40;
+}
+
+.helpIcon:hover .helpTooltip,
+.helpIcon:focus .helpTooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.fieldInput {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 16px;
+  background: var(--surface);
+  color: var(--text);
+  width: 100%;
+}
+
+.fieldInput:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.suffixRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.suffixRow .fieldInput {
+  flex: 1;
+}
+
+.suffix {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.source {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.simulated {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.factCard {
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.factRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 15px;
+}
+
+.factRow dt {
+  color: var(--muted);
+}
+
+.factRow dd {
+  margin: 0;
+  color: var(--navy);
+  font-weight: 600;
+  text-align: right;
+}
+
+.bigNumber {
+  font-family: var(--serif);
+  font-size: 56px;
+  line-height: 1.05;
+  color: var(--navy);
+  margin: 0;
+}
+
+.headline {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--navy);
+  letter-spacing: 0.01em;
+}
+
+.headlineMet {
+  color: var(--danger);
+}
+
+.headlineNotMet {
+  color: var(--accent);
+}
+
+.bodyText {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.mutedText {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: center;
+}
+
+.clearDataButton {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.clearDataButton:hover {
+  color: var(--danger);
+}
+
+.button {
+  border: none;
+  border-radius: 6px;
+  padding: 13px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--navy);
+  color: var(--bg);
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+.buttonSecondary {
+  background: transparent;
+  color: var(--navy);
+  border: 1px solid var(--rule);
+}
+
+.resetLink {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent);
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.wandBlock {
+  border: 1px dashed var(--danger);
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--danger-light);
+}
+
+.errorText {
+  font-size: 14px;
+  color: var(--danger);
+  line-height: 1.4;
+}
+
+.sectionHeading {
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.milestone {
+  display: flex;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.milestone:last-child {
+  border-bottom: none;
+}
+
+.milestoneLabel {
+  flex: 0 0 110px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.milestoneBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 15px;
+  color: var(--navy);
+}
+
+.choiceGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.choiceButton {
+  flex: 1;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--navy);
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.choiceButton:hover {
+  border-color: var(--accent);
+}
+
+.choiceButtonActive {
+  border-color: var(--navy);
+  background: var(--accent-light);
+}
+
+.textArea {
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 18px;
+  line-height: 1.5;
+  background: var(--surface);
+  color: var(--text);
+  width: 100%;
+  min-height: 140px;
+  resize: vertical;
+  font-family: var(--sans);
+}
+
+.textArea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.textAreaWrap {
+  position: relative;
+}
+
+.textAreaIcon {
+  position: absolute;
+  top: 15px;
+  left: 14px;
+  display: flex;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.textAreaInset {
+  padding-left: 40px;
+}
+
+.inputAdornment {
+  display: flex;
+  align-items: center;
+  flex: none;
+  color: var(--muted);
+}
+
+.quote {
+  margin: 0;
+  padding: 10px 0 10px 16px;
+  border-left: 3px solid var(--rule);
+  color: var(--muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.startOverLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.startOverLink:hover {
+  color: var(--danger);
+}
+
+.startOverLink svg {
+  display: block;
+}
+
+.micRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  /* line the mic icon up with the pencil icon inside the textarea */
+  padding-left: 14px;
+}
+
+.recordButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--danger);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.recordButton:hover {
+  border-color: var(--danger);
+}
+
+.recordIcon {
+  display: block;
+  flex: none;
+}
+
+.recordButtonActive {
+  border-color: var(--danger);
+  background: var(--danger-light);
+}
+
+.recordButtonActive .recordIcon {
+  animation: recordPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes recordPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.waveform {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 40px;
+  flex: none;
+}
+
+.waveBar {
+  flex: none;
+  width: 9px;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleY(0.08);
+  transform-origin: center;
+  transition: transform 80ms linear;
+}
+
+.busyNote {
+  font-size: 14px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.bigChoiceGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bigChoice {
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--navy);
+  border-radius: 10px;
+  padding: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  font-family: var(--serif);
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
+
+.bigChoice:hover {
+  border-color: var(--navy);
+  background: var(--accent-light);
+}

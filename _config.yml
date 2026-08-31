@@ -17,4 +17,11 @@ exclude:
   - test3/pnpm-lock.yaml
   - test3/tsconfig*.json
   - test3/vite.config.ts
+  - test4/node_modules
+  - test4/src
+  - test4/package.json
+  - test4/pnpm-lock.yaml
+  - test4/tsconfig*.json
+  - test4/vite.config.ts
+  - test4/worker
   - "*.md"

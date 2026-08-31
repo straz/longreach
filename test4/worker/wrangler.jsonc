@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "longreach-test4",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-25",
+  "observability": { "enabled": true },
+  "vars": {
+    // Comma-separated. Overrides the built-in list in src/index.ts.
+    "ALLOWED_ORIGINS": "https://www.longreach.ai,https://longreach.ai,http://localhost:5173,http://localhost:4173",
+    "MODEL": "google/gemini-2.5-flash"
+  }
+  // Secret (set with `wrangler secret put OPENROUTER_API_KEY`): OPENROUTER_API_KEY
+}
