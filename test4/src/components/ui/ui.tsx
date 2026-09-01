@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react'
 import styles from './Step.module.css'
 
@@ -45,9 +45,9 @@ export function HelpIcon({ text }: { text: string }) {
   )
 }
 
-function FieldLabel({ label, help }: { label: string; help?: string }) {
+function FieldLabel({ label, help, htmlFor }: { label: string; help?: string; htmlFor?: string }) {
   return (
-    <label className={styles.fieldLabel}>
+    <label className={styles.fieldLabel} htmlFor={htmlFor}>
       {label}
       {help && <HelpIcon text={help} />}
     </label>
@@ -58,22 +58,25 @@ export function Field({
   label,
   suffix,
   help,
+  id,
   ...inputProps
 }: {
   label: string
   suffix?: string
   help?: string
 } & InputHTMLAttributes<HTMLInputElement>) {
+  const generatedId = useId()
+  const inputId = id ?? generatedId
   return (
     <div className={styles.fieldGroup}>
-      <FieldLabel label={label} help={help} />
+      <FieldLabel label={label} help={help} htmlFor={inputId} />
       {suffix ? (
         <div className={styles.suffixRow}>
-          <input className={styles.fieldInput} {...inputProps} />
+          <input id={inputId} className={styles.fieldInput} {...inputProps} />
           <span className={styles.suffix}>{suffix}</span>
         </div>
       ) : (
-        <input className={styles.fieldInput} {...inputProps} />
+        <input id={inputId} className={styles.fieldInput} {...inputProps} />
       )}
       <SourceLabel />
     </div>
@@ -84,22 +87,25 @@ export function SimulatedField({
   label,
   suffix,
   help,
+  id,
   ...inputProps
 }: {
   label: string
   suffix?: string
   help?: string
 } & InputHTMLAttributes<HTMLInputElement>) {
+  const generatedId = useId()
+  const inputId = id ?? generatedId
   return (
     <div className={styles.fieldGroup}>
-      <FieldLabel label={label} help={help} />
+      <FieldLabel label={label} help={help} htmlFor={inputId} />
       {suffix ? (
         <div className={styles.suffixRow}>
-          <input className={styles.fieldInput} {...inputProps} />
+          <input id={inputId} className={styles.fieldInput} {...inputProps} />
           <span className={styles.suffix}>{suffix}</span>
         </div>
       ) : (
-        <input className={styles.fieldInput} {...inputProps} />
+        <input id={inputId} className={styles.fieldInput} {...inputProps} />
       )}
       <SimulatedLabel>SIMULATED — NOT VERIFIED</SimulatedLabel>
     </div>
@@ -123,17 +129,22 @@ export function DollarField({
   onChange,
   placeholder,
   help,
+  id,
 }: {
   label: string
   value: string
   onChange: (digits: string) => void
   placeholder?: string
   help?: string
+  id?: string
 }) {
+  const generatedId = useId()
+  const inputId = id ?? generatedId
   return (
     <div className={styles.fieldGroup}>
-      <FieldLabel label={label} help={help} />
+      <FieldLabel label={label} help={help} htmlFor={inputId} />
       <input
+        id={inputId}
         className={styles.fieldInput}
         type="text"
         inputMode="numeric"
@@ -150,23 +161,28 @@ export function WandField({
   label,
   suffix,
   onReset,
+  id,
   ...inputProps
 }: {
   label: string
   suffix?: string
   onReset: () => void
 } & InputHTMLAttributes<HTMLInputElement>) {
+  const generatedId = useId()
+  const inputId = id ?? generatedId
   return (
     <div className={styles.wandBlock}>
       <div className={styles.fieldGroup}>
-        <label className={styles.fieldLabel}>{label}</label>
+        <label className={styles.fieldLabel} htmlFor={inputId}>
+          {label}
+        </label>
         {suffix ? (
           <div className={styles.suffixRow}>
-            <input className={styles.fieldInput} {...inputProps} />
+            <input id={inputId} className={styles.fieldInput} {...inputProps} />
             <span className={styles.suffix}>{suffix}</span>
           </div>
         ) : (
-          <input className={styles.fieldInput} {...inputProps} />
+          <input id={inputId} className={styles.fieldInput} {...inputProps} />
         )}
         <div className={styles.suffixRow}>
           <SimulatedLabel>SIMULATED — NOT VERIFIED</SimulatedLabel>
@@ -300,14 +316,22 @@ export function ChoiceGroup({
 export function TextArea({
   label,
   leadingIcon,
+  id,
   ...props
 }: { label?: string; leadingIcon?: ReactNode } & TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  const generatedId = useId()
+  const textareaId = id ?? generatedId
   return (
     <div className={styles.fieldGroup}>
-      {label && <label className={styles.fieldLabel}>{label}</label>}
+      {label && (
+        <label className={styles.fieldLabel} htmlFor={textareaId}>
+          {label}
+        </label>
+      )}
       <div className={styles.textAreaWrap}>
         {leadingIcon && <span className={styles.textAreaIcon}>{leadingIcon}</span>}
         <textarea
+          id={textareaId}
           className={leadingIcon ? `${styles.textArea} ${styles.textAreaInset}` : styles.textArea}
           {...props}
         />
@@ -378,12 +402,17 @@ export function StartOverLink({ onClick }: { onClick: () => void }) {
 
 export function DateField({
   label,
+  id,
   ...props
 }: { label: string } & InputHTMLAttributes<HTMLInputElement>) {
+  const generatedId = useId()
+  const inputId = id ?? generatedId
   return (
     <div className={styles.fieldGroup}>
-      <label className={styles.fieldLabel}>{label}</label>
-      <input type="date" className={styles.fieldInput} {...props} />
+      <label className={styles.fieldLabel} htmlFor={inputId}>
+        {label}
+      </label>
+      <input id={inputId} type="date" className={styles.fieldInput} {...props} />
       <SourceLabel />
     </div>
   )

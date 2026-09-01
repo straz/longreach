@@ -34,7 +34,7 @@ MAX_REPORTS_PER_EMAIL = 5
 DEMO_CAMPAIGN = "try-us"
 DEMO_NOTIFY_EMAIL = "steve@longreach.ai"
 FROM_EMAIL = "info@longrea.ch"
-FROM_NAME = "Longreach AI"
+FROM_NAME = "Longreach"
 
 
 def load_taxonomy(version: str) -> Taxonomy:

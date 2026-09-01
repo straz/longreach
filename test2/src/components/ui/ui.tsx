@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import type { InputHTMLAttributes, ReactNode } from 'react'
 import styles from './Step.module.css'
 
@@ -44,9 +45,9 @@ export function HelpIcon({ text }: { text: string }) {
   )
 }
 
-function FieldLabel({ label, help }: { label: string; help?: string }) {
+function FieldLabel({ label, help, htmlFor }: { label: string; help?: string; htmlFor?: string }) {
   return (
-    <label className={styles.fieldLabel}>
+    <label className={styles.fieldLabel} htmlFor={htmlFor}>
       {label}
       {help && <HelpIcon text={help} />}
     </label>
@@ -57,22 +58,25 @@ export function Field({
   label,
   suffix,
   help,
+  id,
   ...inputProps
 }: {
   label: string
   suffix?: string
   help?: string
 } & InputHTMLAttributes<HTMLInputElement>) {
+  const generatedId = useId()
+  const inputId = id ?? generatedId
   return (
     <div className={styles.fieldGroup}>
-      <FieldLabel label={label} help={help} />
+      <FieldLabel label={label} help={help} htmlFor={inputId} />
       {suffix ? (
         <div className={styles.suffixRow}>
-          <input className={styles.fieldInput} {...inputProps} />
+          <input id={inputId} className={styles.fieldInput} {...inputProps} />
           <span className={styles.suffix}>{suffix}</span>
         </div>
       ) : (
-        <input className={styles.fieldInput} {...inputProps} />
+        <input id={inputId} className={styles.fieldInput} {...inputProps} />
       )}
       <SourceLabel />
     </div>
@@ -83,22 +87,25 @@ export function SimulatedField({
   label,
   suffix,
   help,
+  id,
   ...inputProps
 }: {
   label: string
   suffix?: string
   help?: string
 } & InputHTMLAttributes<HTMLInputElement>) {
+  const generatedId = useId()
+  const inputId = id ?? generatedId
   return (
     <div className={styles.fieldGroup}>
-      <FieldLabel label={label} help={help} />
+      <FieldLabel label={label} help={help} htmlFor={inputId} />
       {suffix ? (
         <div className={styles.suffixRow}>
-          <input className={styles.fieldInput} {...inputProps} />
+          <input id={inputId} className={styles.fieldInput} {...inputProps} />
           <span className={styles.suffix}>{suffix}</span>
         </div>
       ) : (
-        <input className={styles.fieldInput} {...inputProps} />
+        <input id={inputId} className={styles.fieldInput} {...inputProps} />
       )}
       <SimulatedLabel>SIMULATED — NOT VERIFIED</SimulatedLabel>
     </div>
@@ -122,17 +129,22 @@ export function DollarField({
   onChange,
   placeholder,
   help,
+  id,
 }: {
   label: string
   value: string
   onChange: (digits: string) => void
   placeholder?: string
   help?: string
+  id?: string
 }) {
+  const generatedId = useId()
+  const inputId = id ?? generatedId
   return (
     <div className={styles.fieldGroup}>
-      <FieldLabel label={label} help={help} />
+      <FieldLabel label={label} help={help} htmlFor={inputId} />
       <input
+        id={inputId}
         className={styles.fieldInput}
         type="text"
         inputMode="numeric"
@@ -149,23 +161,28 @@ export function WandField({
   label,
   suffix,
   onReset,
+  id,
   ...inputProps
 }: {
   label: string
   suffix?: string
   onReset: () => void
 } & InputHTMLAttributes<HTMLInputElement>) {
+  const generatedId = useId()
+  const inputId = id ?? generatedId
   return (
     <div className={styles.wandBlock}>
       <div className={styles.fieldGroup}>
-        <label className={styles.fieldLabel}>{label}</label>
+        <label className={styles.fieldLabel} htmlFor={inputId}>
+          {label}
+        </label>
         {suffix ? (
           <div className={styles.suffixRow}>
-            <input className={styles.fieldInput} {...inputProps} />
+            <input id={inputId} className={styles.fieldInput} {...inputProps} />
             <span className={styles.suffix}>{suffix}</span>
           </div>
         ) : (
-          <input className={styles.fieldInput} {...inputProps} />
+          <input id={inputId} className={styles.fieldInput} {...inputProps} />
         )}
         <div className={styles.suffixRow}>
           <SimulatedLabel>SIMULATED — NOT VERIFIED</SimulatedLabel>
