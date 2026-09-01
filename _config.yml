@@ -18,29 +18,11 @@ data_dir: content
 
 exclude:
   - content
-  - cards/node_modules
-  - cards/src
-  - cards/package.json
-  - cards/pnpm-lock.yaml
-  - cards/tsconfig*.json
-  - cards/vite.config.ts
-  - test2/node_modules
-  - test2/src
-  - test2/package.json
-  - test2/pnpm-lock.yaml
-  - test2/tsconfig*.json
-  - test2/vite.config.ts
-  - test3/node_modules
-  - test3/src
-  - test3/package.json
-  - test3/pnpm-lock.yaml
-  - test3/tsconfig*.json
-  - test3/vite.config.ts
-  - test4/node_modules
-  - test4/src
-  - test4/package.json
-  - test4/pnpm-lock.yaml
-  - test4/tsconfig*.json
-  - test4/vite.config.ts
-  - test4/worker
+  # Vite apps: built by .github/workflows/deploy.yml and copied into _site
+  # after the Jekyll build. Jekyll must not process their source trees
+  # (otherwise it publishes each app's dev index.html at /<app>/).
+  - cards
+  - test2
+  - test3
+  - test4
   - "*.md"

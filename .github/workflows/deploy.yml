@@ -21,21 +21,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.25.0
+
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
           node-version: '24'
+          cache: pnpm
+          cache-dependency-path: '**/pnpm-lock.yaml'
 
-      - name: Setup pnpm
-        uses: pnpm/setup@v2
-        with:
-          version: '^12.0.0'
-
-      - name: Install dependencies
+      - name: Install dependencies (cards)
         working-directory: cards
         run: pnpm install --frozen-lockfile
 
-      - name: Build Vite app
+      - name: Build Vite app (cards)
         working-directory: cards
         run: pnpm run build
         env:
@@ -69,7 +71,7 @@ jobs:
           VITE_PARSE_URL: ${{ vars.TEST4_PARSE_URL }}
 
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v6
 
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
@@ -77,20 +79,16 @@ jobs:
           source: ./
           destination: ./_site
 
-      - name: Copy Vite build to _site
+      - name: Copy Vite builds into _site
         run: |
-          sudo rm -rf _site/cards
-          sudo cp -r cards/dist/. _site/cards
+          for app in cards test2 test3 test4; do
+            sudo rm -rf "_site/$app"
+            sudo cp -r "$app/dist/." "_site/$app"
+          done
           sudo cp cards/dist/404.html _site/404.html
-          sudo rm -rf _site/test2
-          sudo cp -r test2/dist/. _site/test2
-          sudo rm -rf _site/test3
-          sudo cp -r test3/dist/. _site/test3
-          sudo rm -rf _site/test4
-          sudo cp -r test4/dist/. _site/test4
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
 
   deploy:
     environment:
@@ -101,4 +99,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
