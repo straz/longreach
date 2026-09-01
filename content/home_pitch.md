@@ -27,4 +27,4 @@ integration required. You leave with a ranked view of where management
 attention should go now, the capital and options at stake, and which
 CFO/CTO decisions should not wait for the next planning cycle.
 
-To start the conversation, [drop us a line](mailto:info@longreach.ai).
+To start the conversation, [contact us](/try-us/).

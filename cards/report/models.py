@@ -98,10 +98,13 @@ class Lead(BaseModel):
 # --- Webhook payload models ---
 
 class LeadRecord(BaseModel):
-    """Minimal lead fields carried in the Supabase INSERT webhook."""
+    """Lead fields carried in the Supabase INSERT webhook (full row minus extras)."""
     name: str
     email: EmailStr
     lid: str
+    campaign: str | None = None
+    organization: str | None = None
+    comments: str | None = None
 
     model_config = {"extra": "ignore"}
 

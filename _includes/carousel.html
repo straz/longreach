@@ -1,0 +1,31 @@
+{%- comment -%}
+Shared card carousel. Params:
+  items  – array of card data (from content/*.yml)
+  type   – "pitch" (eyebrow/problem/solution) or "team" (name/bio)
+  label  – accessible label for the carousel region
+Navigation is wired up by carousel.js.
+{%- endcomment -%}
+<section class="carousel" aria-roledescription="carousel" aria-label="{{ include.label }}">
+  <div class="carousel-viewport">
+    <div class="carousel-track">
+      {%- for item in include.items %}
+      <article class="card">
+        {%- if include.type == "team" %}
+        <p class="card-name">{{ item.name | escape }}</p>
+        <p class="card-bio">{{ item.bio | escape }}</p>
+        {%- else %}
+        <p class="eyebrow">{{ item.eyebrow | escape }}</p>
+        <p class="problem">{{ item.problem | escape }}</p>
+        <p class="solution">{{ item.solution | escape }}</p>
+        {%- endif %}
+      </article>
+      {%- endfor %}
+    </div>
+  </div>
+  <div class="carousel-controls">
+    <button type="button" class="carousel-btn carousel-prev" aria-label="Previous card">&#9664;</button>
+    <span class="carousel-dots" aria-hidden="true"></span>
+    <button type="button" class="carousel-btn carousel-next" aria-label="Next card">&#9654;</button>
+  </div>
+  <span class="visually-hidden carousel-status" aria-live="polite"></span>
+</section>

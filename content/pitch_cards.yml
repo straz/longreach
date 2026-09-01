@@ -1,0 +1,27 @@
+# Home-page pitch carousel. Each item: eyebrow, problem, solution.
+# Rendered by _includes/carousel.html.
+
+- eyebrow: Revise your assumptions
+  problem: What decision becomes expensive if you're wrong?
+  solution: >-
+    Recognize when prior decisions no longer deserve the resources allocated
+    to them. Make midcourse corrections with governed overrides.
+
+- eyebrow: Learning
+  problem: What is your organization learning?
+  solution: >-
+    Decision discipline for human, AI, and hybrid teams. Improve judgment
+    under uncertainty.
+
+- eyebrow: Instrumentation
+  problem: Your company instruments the work. Does it instrument the judgment that authorizes it?
+  solution: >-
+    Price, supervise, and shorten the half-life of bad commitments. A bad
+    guess doesn't deserve punishment. Instrument your guesses so you make
+    better ones.
+
+- eyebrow: Memory
+  problem: Do you remember why you made your biggest decisions?
+  solution: >-
+    We are the system of record for resource-backed commitments. Most AI
+    companies treat decisions as outputs. We treat decisions as assets.
