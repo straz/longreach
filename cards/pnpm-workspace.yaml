@@ -1,0 +1,3 @@
+# Dependency build scripts must be explicitly allowed (pnpm >= 10).
+allowBuilds:
+  esbuild: true
