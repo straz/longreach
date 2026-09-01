@@ -1,4 +1,18 @@
+# Path prefix the site is served under. Root deploy => empty.
+# The /site preview copy overrides this with baseurl: "/site".
+# In templates, prefix asset/link paths with {{ site.baseurl }}.
+baseurl: ""
+
+# Supabase project backing the "Try us" demo-request form. The anon key is a
+# public, RLS-protected key (the same one already shipped in the cards/ bundle).
+# A row inserted into the `leads` table fires the existing Supabase -> Modal
+# webhook that sends the emails.
+supabase:
+  url: "https://astvrwkwhpckcyqqdotu.supabase.co"
+  anon_key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFzdHZyd2t3aHBja2N5cXFkb3R1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3ODI5OTcsImV4cCI6MjA4NDM1ODk5N30.gTO0wbeP5Pvwl1jMpVLR9SHbrRFavI-bUMiH-vx0GJo"
+
 exclude:
+  - site
   - cards/node_modules
   - cards/src
   - cards/package.json

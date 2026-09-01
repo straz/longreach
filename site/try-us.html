@@ -1,0 +1,98 @@
+---
+layout: default
+title: Try us
+permalink: /try-us/
+---
+
+<h1>Book a demo</h1>
+<p class="lede">Give us two hours and a few consequential commitments. No
+integration required.</p>
+
+<form class="demo-form" id="demo-form">
+  <label>Name
+    <input type="text" name="name" autocomplete="name" required>
+  </label>
+  <label>Company
+    <input type="text" name="company" autocomplete="organization">
+  </label>
+  <label>Email
+    <input type="email" name="email" autocomplete="email" required>
+  </label>
+  <label>Comments
+    <textarea name="comments" rows="4"></textarea>
+  </label>
+  <button type="submit" id="demo-submit">Request demo</button>
+  <p class="form-note" id="demo-status" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  (function () {
+    // Injected from _config.yml. Empty when the site is built without config.
+    var SUPABASE_URL = {{ site.supabase.url | jsonify }};
+    var SUPABASE_ANON_KEY = {{ site.supabase.anon_key | jsonify }};
+    var CAMPAIGN = "try-us";  // marks the lead so the webhook skips the report
+
+    var form = document.getElementById("demo-form");
+    var button = document.getElementById("demo-submit");
+    var statusEl = document.getElementById("demo-status");
+
+    // Short random id, matching the shape of the ids the cards form generates.
+    function makeLid() {
+      var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      var buf = new Uint8Array(10);
+      crypto.getRandomValues(buf);
+      var s = "";
+      for (var i = 0; i < buf.length; i++) s += chars[buf[i] % chars.length];
+      return s;
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        statusEl.textContent = "This form is not configured yet. Please email info@longreach.ai.";
+        return;
+      }
+
+      var d = new FormData(form);
+      var payload = {
+        lid: makeLid(),
+        name: (d.get("name") || "").trim(),
+        email: (d.get("email") || "").trim(),
+        organization: (d.get("company") || "").trim() || null,
+        comments: (d.get("comments") || "").trim() || null,
+        campaign: CAMPAIGN
+      };
+
+      button.disabled = true;
+      statusEl.textContent = "Sending…";
+
+      fetch(SUPABASE_URL + "/rest/v1/leads", {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+          "Content-Type": "application/json",
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(function (res) {
+          if (res.ok) {
+            form.reset();
+            button.textContent = "Request sent";
+            statusEl.textContent = "Thanks — check your inbox for a confirmation, and we’ll be in touch to set up a time.";
+          } else {
+            return res.text().then(function (t) {
+              throw new Error(t || ("HTTP " + res.status));
+            });
+          }
+        })
+        .catch(function (err) {
+          console.error("Lead submit failed:", err);
+          button.disabled = false;
+          statusEl.textContent = "Something went wrong. Please email info@longreach.ai.";
+        });
+    });
+  })();
+</script>

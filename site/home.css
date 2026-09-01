@@ -1,0 +1,384 @@
+:root {
+  --bg: #f8f9fa;
+  --navy: #1a2332;
+  --heading: #333d4a;
+  --accent: #2d6e2d;
+  --accent-dark: #245824;
+  --accent-light: #eaf3ea;
+  --rule: #d4dce8;
+  --muted: #6b7f96;
+  --serif: 'Roboto Slab', Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--serif);
+  background: var(--bg);
+  color: var(--navy);
+}
+
+/* ── Navbar ── */
+.navbar {
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+  padding: 1rem 0;
+}
+
+.brand-identity {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.brand-logo {
+  height: 2rem;
+  width: auto;
+}
+
+.brand-name {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  color: var(--navy);
+}
+
+.brand-name .brand-bold {
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.95rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: var(--navy);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+}
+
+.nav-links a:hover,
+.nav-links a:focus {
+  color: var(--accent);
+}
+
+.nav-links a.active {
+  font-weight: 400;
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+@media (max-width: 560px) {
+  .nav-links {
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .nav-links a { font-size: 0.85rem; }
+}
+
+/* ── Page shell ── */
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 6rem;
+}
+
+.page h1 {
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.25;
+  margin: 0 0 2.5rem;
+  color: var(--heading);
+}
+
+.home-heading {
+  margin-bottom: 3rem;
+}
+
+.lede {
+  font-weight: 300;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 55ch;
+  margin: -1.5rem 0 2.5rem;
+}
+
+/* ── Pitch cards carousel (home) ── */
+.carousel {
+  max-width: 400px;
+}
+
+.carousel-viewport {
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  align-items: stretch;
+  transition: transform 350ms ease;
+}
+
+.carousel-track .card {
+  flex: 0 0 100%;
+  min-width: 0;
+  aspect-ratio: 9 / 10;
+}
+
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.carousel-btn {
+  font-family: var(--serif);
+  font-size: 0.8rem;
+  line-height: 1;
+  color: var(--muted);
+  background: none;
+  border: none;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+}
+
+.carousel-btn:hover:not(:disabled) {
+  color: var(--accent);
+}
+
+.carousel-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.carousel-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.carousel-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--rule);
+  cursor: pointer;
+}
+
+.carousel-dot:hover {
+  background: var(--muted);
+}
+
+.carousel-dot.active {
+  background: var(--muted);
+  cursor: default;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.card {
+  border: 1px solid var(--rule);
+  background: #fff;
+  border-radius: 2px;
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.card .eyebrow {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.card .problem {
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.35;
+  margin: 0;
+  color: var(--heading);
+}
+
+.card .solution {
+  font-size: 1.05rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ── Prose (what we do) ── */
+.prose {
+  max-width: 680px;
+}
+
+#what-we-do {
+  margin-top: 5rem;
+  scroll-margin-top: 2rem;
+}
+
+.prose h2 {
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.3;
+  margin: 0 0 1.5rem;
+  color: var(--heading);
+}
+
+.prose p,
+.prose li {
+  font-weight: 300;
+  font-size: 1.08rem;
+  line-height: 1.8;
+}
+
+.prose p {
+  margin: 0 0 1.4rem;
+}
+
+.prose ul {
+  margin: 0 0 1.4rem;
+  padding-left: 1.25rem;
+}
+
+.prose li {
+  margin-bottom: 0.4rem;
+}
+
+.prose a {
+  color: var(--accent);
+}
+
+/* ── Team cards (about us) ── */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.team-card {
+  border: 1px solid var(--rule);
+  background: #fff;
+  border-radius: 2px;
+  padding: 1.75rem;
+}
+
+.team-card h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  color: var(--heading);
+}
+
+.team-card p {
+  font-weight: 300;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ── Demo form (try us) ── */
+.demo-form {
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.demo-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.demo-form input,
+.demo-form textarea {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--navy);
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 0.65rem 0.8rem;
+}
+
+.demo-form input:focus,
+.demo-form textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.demo-form textarea {
+  resize: vertical;
+}
+
+.demo-form button {
+  align-self: flex-start;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 2px;
+  padding: 0.7rem 1.6rem;
+  cursor: pointer;
+}
+
+.demo-form button:hover {
+  background: var(--accent-dark);
+}
+
+.form-note {
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: var(--muted);
+  margin: 0;
+}
+
+@media (max-width: 700px) {
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+}
