@@ -77,12 +77,6 @@ jobs:
           source: ./
           destination: ./_site
 
-      - name: Build /site preview with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./site
-          destination: ./_site/site
-
       - name: Copy Vite build to _site
         run: |
           sudo rm -rf _site/cards
