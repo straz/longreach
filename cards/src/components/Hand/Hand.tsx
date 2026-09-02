@@ -22,21 +22,7 @@ export function Hand({ cards, selectedCardId, onCardClick }: HandProps) {
 
   return (
     <div className={styles.hand}>
-      <div className={styles.header}>
-        <div className={styles.label}>Your Hand ({cards.length})</div>
-        <button
-          className={styles.reportButton}
-          disabled={cards.length === 0}
-          onClick={handleGetReport}
-        >
-          Get a free report
-        </button>
-        <button className={styles.buyButton} onClick={handleBuyCards}>
-          <span>
-            Cards@Amazon
-          </span>
-        </button>
-      </div>
+
       <div className={styles.cards}>
         {cards.length > 0 ? (
           cards.map((card) => (
@@ -53,6 +39,24 @@ export function Hand({ cards, selectedCardId, onCardClick }: HandProps) {
           <div className={styles.empty}>No cards in hand yet</div>
         )}
       </div>
+
+
+<div className={styles.header}>
+        <div className={styles.label}>Your Hand ({cards.length})</div>
+        <button
+          className={styles.reportButton}
+          disabled={cards.length === 0}
+          onClick={handleGetReport}
+        >
+          Get a free report
+        </button>
+        <button className={styles.buyButton} onClick={handleBuyCards}>
+          <span>
+            Cards@Amazon
+          </span>
+        </button>
+      </div>
+
     </div>
   );
 }

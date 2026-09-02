@@ -6,6 +6,26 @@
 
 .header {
   display: flex;
+  align-items: center;
+}
+
+.explainer {
+  color: #a0aec0;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 720px;
+}
+
+.explainer p {
+  margin: 0;
+}
+
+.spacer {
+  padding-top: 1em;
+}
+
+.toolbar {
+  display: flex;
   justify-content: space-between;
   align-items: center;
   padding-bottom: 16px;
@@ -164,21 +184,17 @@
     gap: 16px;
   }
 
-  .header {
+  .toolbar {
     flex-wrap: wrap;
     gap: 12px;
   }
 
-  .titleGroup {
+  .newGameButton {
     order: 1;
   }
 
-  .newGameButton {
-    order: 2;
-  }
-
   .headerControls {
-    order: 3;
+    order: 2;
     width: 100%;
     justify-content: flex-start;
   }
@@ -209,8 +225,16 @@
   }
 
   .header {
+    gap: 10px;
+  }
+
+  .toolbar {
     padding-bottom: 12px;
     gap: 10px;
+  }
+
+  .explainer {
+    font-size: 14px;
   }
 
   .header h1 {
