@@ -1,27 +1,32 @@
 # Home-page pitch carousel. Each item: eyebrow, problem, solution.
 # Rendered by _includes/carousel.html.
 
-- eyebrow: Revise your assumptions
-  problem: What decision becomes expensive if you're wrong?
+- eyebrow: Assumptions
+  problem: Which of your commitments still spend money on assumptions that are no longer true?
   solution: >-
-    Recognize when prior decisions no longer deserve the resources allocated
-    to them. Make midcourse corrections with governed overrides.
+    Know when changed evidence deserves your reconsideration.
+
+- eyebrow: Commitments
+  problem: Which decisions would you *not* make again today? How do you know?
+  solution: >-
+    Find the resources still governed by yesterday’s mistaken judgment.
 
 - eyebrow: Learning
-  problem: What is your organization learning?
+  problem: What did your last ten decisions teach your next ten? Are *you* getting smarter?
   solution: >-
-    We offer decision discipline for human, AI, and hybrid teams. Improve your team's judgment
-    under uncertainty.
+    Make every consequential commitment evidence for the next one.
 
 - eyebrow: Instrumentation
-  problem: Your company instruments the work. Does it instrument the judgment that authorizes it?
+  problem: You measure performance and KPIs. But do you measure when management should change its mind? Why not?
   solution: >-
-    Price, supervise, and shorten the half-life of bad commitments. A bad
-    guess doesn't deserve punishment. Instrument your guesses so you make
-    better ones.
+    Instrument reconsideration – not just performance.
+
+- eyebrow: Authority
+  problem: When the evidence changes, who can change the decision?
+  solution: >-
+    Expose where yesterday’s authority still governs today’s resources.
 
 - eyebrow: Memory
-  problem: Do you remember why you made your biggest decisions?
+  problem: Can you reconstruct why you believed what you believed when you committed the money?
   solution: >-
-    We are the system of record for resource-backed commitments. Most AI
-    companies treat decisions as outputs. We treat decisions as assets.
+    Preserve what you assumed, considered, rejected and authorized. Selective amnesia is dangerous.

@@ -15,7 +15,7 @@ Navigation is wired up by carousel.js.
         <p class="card-bio">{{ item.bio | escape }}</p>
         {%- else %}
         <p class="eyebrow">{{ item.eyebrow | escape }}</p>
-        <p class="problem">{{ item.problem | escape }}</p>
+        <p class="problem">{{ item.problem | markdownify | remove: '<p>' | remove: '</p>' | strip }}</p>
         <p class="solution">{{ item.solution | escape }}</p>
         {%- endif %}
       </article>
