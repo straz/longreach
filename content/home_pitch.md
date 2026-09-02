@@ -22,9 +22,10 @@ purpose is not another dashboard or another recommendation engine. We
 identify that handful of capital commitments where senior attention
 today can still materially change tomorrow’s economics.
 
-Give us two hours and several consequential commitments. No
-integration required. You leave with a ranked view of where management
-attention should go now, the capital and options at stake, and which
-CFO/CTO decisions should not wait for the next planning cycle.
+Give us two hours and several consequential commitments.  No digital
+integration or private data required. You’ll leave with a ranked view
+of where management attention should go now, the capital and options
+at stake, and which CFO/CTO decisions should not wait for the next
+planning cycle.
 
 To start the conversation, [contact us](/try-us/).
