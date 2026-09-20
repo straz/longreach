@@ -54,6 +54,11 @@ export interface ScenarioTemplate {
   title: string
   amountLabel: string
   activeCommitmentText: string
+
+  // Not in the spec's type. One or two sentences of plain business context,
+  // shown under the commitment picker on S1 so the example reads as a real
+  // plan rather than only an amount.
+  description: string
   rationale: string[]
   conditions: DecisionCondition[]
   evidenceShiftConditionId: string
@@ -66,6 +71,11 @@ export interface ScenarioTemplate {
   lockInDescription: string
   comparableCommitments: ComparableCommitment[]
   authority: string
+
+  // Not in the spec's type. The individual accountable for the refresh, shown
+  // on the receipt. Distinct from `authority`, which is the body the
+  // commitment goes back to.
+  owner: string
 
   // Not in the spec's type. The receipt's flexibility-window sentence cannot
   // be composed uniformly: four templates read "<n> days before <lock-in>

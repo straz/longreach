@@ -113,6 +113,8 @@ confirm:
 conditions:
   headline: Every major commitment is made in a moment. Conditions keep moving.
   commitmentCardLabel: Active commitment
+  # Names the commitment bar as a control, since it is also the example picker.
+  commitmentPickerLabel: Choose which commitment to look at
   rationaleSectionTitle: Why it was authorized
   conditionsSectionTitle: Decision conditions Longreach keeps current
   # One table now carries the rationale and the conditions together. Headers
@@ -136,9 +138,7 @@ comparables:
     Longreach compares active commitments with prior decisions that relied on
     similar conditions, faced similar evidence shifts, or approached the same
     type of lock-in.
-  # The Illustrative pill sits beside this, so the word is not repeated here.
   sectionTitle: Comparable commitments
-  illustrativeBadge: Illustrative
   tableHeaders:
     - Commitment
     - Relevant condition
@@ -161,11 +161,15 @@ receipt:
   receiptTitle: Decision Refresh Receipt
   rowLabels:
     activeCommitment: Active commitment
+    owner: Owner
     evidenceShift: Evidence shift
     capitalStillInPlay: Capital still in play
     flexibilityWindow: Flexibility window
     comparableLearning: Comparable learning
     suggestedDecision: Suggested decision
+  # Prefixes the second line of the Owner row: the body the commitment goes
+  # back to, as distinct from the individual who owns the refresh.
+  authorityLabel: "Authority:"
   comparableLearningValue: >-
     In comparable commitments, meaningful evidence shifts appeared before the
     next scheduled review

@@ -198,6 +198,7 @@ export default function App() {
       {state.screen === 'conditions' ? (
         <Conditions
           scenario={scenario}
+          packId={state.packId}
           revealed={state.evidenceRevealed}
           onReveal={() => {
             track('decision_condition_revealed', {
@@ -207,6 +208,7 @@ export default function App() {
             dispatch({ type: 'reveal_evidence' })
           }}
           onNext={() => dispatch({ type: 'go_to', screen: 'comparables' })}
+          onSelectScenario={(scenarioId) => dispatch({ type: 'select_scenario', scenarioId })}
         />
       ) : null}
 

@@ -120,7 +120,9 @@ for (const file of scenarioFiles) {
     'title',
     'amountLabel',
     'activeCommitmentText',
+    'description',
     'authority',
+    'owner',
     'evidenceShiftConditionId',
     'evidenceShiftStatement',
     'evidenceShiftInterpretation',
@@ -158,6 +160,21 @@ for (const file of scenarioFiles) {
     isStringArray(scenario.rationale, 1),
     `${where}: "rationale" must be a non-empty array of strings`,
   )
+
+  // One or two sentences. Longer and it stops being scannable at a glance,
+  // which is the only reason it sits above the table.
+  if (isNonEmptyString(scenario.description)) {
+    const words = scenario.description.trim().split(/\s+/).length
+    const sentences = scenario.description.trim().split(/[.!?](?:\s|$)/).filter(Boolean).length
+    check(
+      words <= 40,
+      `${where}: "description" is ${words} words; keep it to 40 or fewer`,
+    )
+    check(
+      sentences <= 2,
+      `${where}: "description" runs to ${sentences} sentences; keep it to one or two`,
+    )
+  }
 
   // Conditions. Exactly one carries the evidence shift, and it must be the one
   // the template names — otherwise S1 highlights a row that does not match the
@@ -537,6 +554,7 @@ for (const path of [
   'confirm.editLink',
   'conditions.headline',
   'conditions.commitmentCardLabel',
+  'conditions.commitmentPickerLabel',
   'conditions.rationaleSectionTitle',
   'conditions.conditionsSectionTitle',
   'conditions.conditionColumnLabels.why',
@@ -551,7 +569,6 @@ for (const path of [
   'comparables.headline',
   'comparables.body',
   'comparables.sectionTitle',
-  'comparables.illustrativeBadge',
   'comparables.patternHeading',
   'comparables.patternStatement',
   'comparables.patternImplication',
@@ -559,11 +576,13 @@ for (const path of [
   'receipt.headline',
   'receipt.receiptTitle',
   'receipt.rowLabels.activeCommitment',
+  'receipt.rowLabels.owner',
   'receipt.rowLabels.evidenceShift',
   'receipt.rowLabels.capitalStillInPlay',
   'receipt.rowLabels.flexibilityWindow',
   'receipt.rowLabels.comparableLearning',
   'receipt.rowLabels.suggestedDecision',
+  'receipt.authorityLabel',
   'receipt.comparableLearningValue',
   'receipt.suggestedDecisionValue',
   'receipt.possibleSectionTitle',

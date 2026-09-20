@@ -112,6 +112,7 @@ export interface Copy {
   conditions: {
     headline: string
     commitmentCardLabel: string
+    commitmentPickerLabel: string
     rationaleSectionTitle: string
     conditionsSectionTitle: string
     conditionColumnLabels: {
@@ -129,7 +130,6 @@ export interface Copy {
     headline: string
     body: string
     sectionTitle: string
-    illustrativeBadge: string
     tableHeaders: string[]
     patternHeading: string
     patternStatement: string
@@ -141,12 +141,14 @@ export interface Copy {
     receiptTitle: string
     rowLabels: {
       activeCommitment: string
+      owner: string
       evidenceShift: string
       capitalStillInPlay: string
       flexibilityWindow: string
       comparableLearning: string
       suggestedDecision: string
     }
+    authorityLabel: string
     comparableLearningValue: string
     suggestedDecisionValue: string
     calloutLines: string[]
@@ -210,6 +212,16 @@ export function getPack(packId?: string): ScenarioPack {
 
 export function getScenario(scenarioId: string): ScenarioTemplate | undefined {
   return scenariosById[scenarioId]
+}
+
+/**
+ * Every template a pack offers, in the order manifest.yml lists them. This is
+ * what the commitment picker on S1 shows.
+ */
+export function getPackScenarios(packId?: string): ScenarioTemplate[] {
+  return getPack(packId)
+    .templates.map((id) => getScenario(id))
+    .filter((scenario): scenario is ScenarioTemplate => scenario !== undefined)
 }
 
 /**

@@ -1,5 +1,4 @@
 import { Button } from '../components/Button.tsx'
-import { IllustrativeBadge } from '../components/IllustrativeBadge.tsx'
 import { copy } from '../content.ts'
 import { comparablePattern, formatComparablePattern } from '../compute.ts'
 import type { ScenarioTemplate } from '../types.ts'
@@ -42,10 +41,7 @@ export function Comparables({
       <p className="lr-comparables__body">{text.body}</p>
 
       <section className="lr-section">
-        <div className="lr-comparables__heading">
-          <h2 className="lr-section__title">{text.sectionTitle}</h2>
-          <IllustrativeBadge label={text.illustrativeBadge} />
-        </div>
+        <h2 className="lr-section__title">{text.sectionTitle}</h2>
 
         <table className="lr-table">
           <thead>

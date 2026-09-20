@@ -72,7 +72,6 @@ const S1 = {
 const S2 = {
   headline: 'You have encountered this pattern before.',
   body: 'Longreach compares active commitments with prior decisions that relied on similar conditions, faced similar evidence shifts, or approached the same type of lock-in.',
-  // The Illustrative pill beside this title carries the word now.
   sectionTitle: 'Comparable commitments',
   headers: ['Commitment', 'Relevant condition', 'What changed', 'What happened next'],
   rows: [

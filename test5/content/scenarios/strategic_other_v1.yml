@@ -14,7 +14,16 @@ type: strategic_other
 title: Strategic Operating Initiative
 amountLabel: "$15M"
 activeCommitmentText: Fund a $15M strategic operating initiative
+
+# One or two sentences of plain business context, shown under the picker
+# on S1. Illustrative, like everything else in this file.
+description: >-
+  Stand up a shared operating capability across the business units. Returns expected from consolidated processes, lower unit costs, and faster delivery to internal customers.
 authority: Executive Sponsor and Capital Committee
+
+# The individual accountable for the refresh, shown on the receipt. Distinct
+# from `authority` above, which is the body the commitment goes back to.
+owner: Executive sponsor
 
 # How the receipt names the commitment. docs/README.md §S1 shows the card as
 # "Fund a $12M regional expansion program" but §S3's receipt row as

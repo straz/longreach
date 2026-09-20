@@ -166,3 +166,30 @@ describe('what the recognizer returns', () => {
     ).rejects.toThrow()
   })
 })
+
+describe('ties between categories', () => {
+  // "migration" is in both the technology and acquisition keyword lists, so
+  // this sentence matches each exactly once.
+  const TIE = 'Customer churn has climbed since we started the migration.'
+
+  test('with no preference, declaration order decides', () => {
+    expect(classifyCommitmentType(TIE)).toBe('technology_transformation')
+  })
+
+  test('a tie never overrules the visitor', async () => {
+    expect(classifyCommitmentType(TIE, 'acquisition_integration')).toBe('acquisition_integration')
+
+    const result = await createMockRecognizer().classify({
+      text: TIE,
+      selectedCommitmentType: 'acquisition_integration',
+    })
+    expect(result.primaryCommitmentCategory).toBe('acquisition_integration')
+    expect(result.evidenceShiftCategory).toBe('customer_retention')
+  })
+
+  test('a clear majority still overrules it', () => {
+    expect(
+      classifyCommitmentType('our ERP migration, platform automation and cloud rollout', 'acquisition_integration'),
+    ).toBe('technology_transformation')
+  })
+})

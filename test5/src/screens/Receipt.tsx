@@ -31,8 +31,15 @@ export function Receipt({
   const text = copy.receipt
   const band = flexibilityWindowBand(scenario.flexibilityWindowDays)
 
-  const rows: { label: string; value: string; badge?: string }[] = [
+  const rows: { label: string; value: string; badge?: string; secondary?: string }[] = [
     { label: text.rowLabels.activeCommitment, value: scenario.receiptCommitmentText },
+    {
+      label: text.rowLabels.owner,
+      value: scenario.owner,
+      // Who owns the refresh, then the body it goes back to. The Suggested
+      // decision row refers to "the accountable authority"; this names it.
+      secondary: `${text.authorityLabel} ${scenario.authority}`,
+    },
     { label: text.rowLabels.evidenceShift, value: asCellText(scenario.evidenceShiftStatement) },
     {
       label: text.rowLabels.capitalStillInPlay,
@@ -81,6 +88,9 @@ export function Receipt({
                 >
                   {row.value}
                 </span>
+                {row.secondary === undefined ? null : (
+                  <span className="lr-receipt__secondary">{row.secondary}</span>
+                )}
               </dd>
             </div>
           ))}

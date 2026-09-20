@@ -51,6 +51,14 @@
   max-width: var(--measure);
 }
 
+/* Second line of a receipt row, e.g. the authority under the owner. */
+.lr-receipt__secondary {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
 .lr-receipt__figure {
   font-family: var(--serif);
   font-size: 1.75rem;

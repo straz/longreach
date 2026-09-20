@@ -53,6 +53,7 @@ export type AppAction =
   | { type: 'confirm_custom_scenario' }
   | { type: 'use_standard_example' }
   | { type: 'edit_inputs' }
+  | { type: 'select_scenario'; scenarioId: string }
   | { type: 'reveal_evidence' }
   | { type: 'go_to'; screen: AppScreen }
   | { type: 'open_pilot_modal' }
@@ -193,6 +194,16 @@ export function reducer(state: AppState, action: AppAction): AppState {
 
     case 'edit_inputs':
       return { ...state, screen: 'customize' }
+
+    case 'select_scenario':
+      // A different example starts from the beginning of the example: the
+      // reveal is not something the visitor has seen for *this* commitment.
+      return {
+        ...state,
+        selectedScenarioId: resolveScenario(action.scenarioId, state.packId).id,
+        evidenceRevealed: false,
+        furthestFlowIndex: 0,
+      }
 
     case 'reveal_evidence':
       return { ...state, evidenceRevealed: true }

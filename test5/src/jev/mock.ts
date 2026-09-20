@@ -26,23 +26,37 @@ function countHits(text: string, words: string[]): number {
 }
 
 /**
- * Most matches wins; ties go to whichever is declared first in routing.yml.
- * Returns undefined when nothing matches at all.
+ * Most matches wins. Ties go to `preferred` when it is among the leaders, and
+ * otherwise to whichever is declared first in routing.yml. Returns undefined
+ * when nothing matches at all.
  */
 function bestMatch<T extends string>(
   text: string,
   groups: Record<string, string[]>,
+  preferred?: string,
 ): T | undefined {
   let best: { key: string; hits: number } | undefined
+  let preferredHits = 0
   for (const [key, words] of Object.entries(groups)) {
     const hits = countHits(text, words)
+    if (key === preferred) preferredHits = hits
     if (hits > 0 && (best === undefined || hits > best.hits)) best = { key, hits }
   }
-  return best?.key as T | undefined
+  if (best === undefined) return undefined
+  // A tie is an absence of evidence, not a reason to overrule the visitor.
+  // Several keywords sit in more than one list — "migration" is in both the
+  // technology and acquisition sets — so without this, "churn has climbed
+  // since we started the migration" pulls someone who chose "Acquisition or
+  // integration" over to the technology example.
+  if (preferred !== undefined && preferredHits === best.hits) return preferred as T
+  return best.key as T
 }
 
-export function classifyCommitmentType(text: string): CommitmentType | undefined {
-  return bestMatch<CommitmentType>(text, routing.commitmentKeywords)
+export function classifyCommitmentType(
+  text: string,
+  preferred?: CommitmentType,
+): CommitmentType | undefined {
+  return bestMatch<CommitmentType>(text, routing.commitmentKeywords, preferred)
 }
 
 export function classifyEvidenceShift(text: string): EvidenceShiftCategory {
@@ -85,7 +99,7 @@ export function createMockRecognizer(simulate: Simulate = 'none'): JevRecognizer
       }
 
       const evidenceShiftCategory = classifyEvidenceShift(text)
-      const recognized = classifyCommitmentType(text)
+      const recognized = classifyCommitmentType(text, selectedCommitmentType)
       const primaryCommitmentCategory = recognized ?? selectedCommitmentType
 
       // Both summaries are derived, never generated. The commitment summary

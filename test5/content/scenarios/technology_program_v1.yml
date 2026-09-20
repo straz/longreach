@@ -9,7 +9,16 @@ type: technology_transformation
 title: Enterprise AI Deployment Program
 amountLabel: "$20M"
 activeCommitmentText: Fund a $20M enterprise AI deployment program
+
+# One or two sentences of plain business context, shown under the picker
+# on S1. Illustrative, like everything else in this file.
+description: >-
+  Integrate AI agents to improve trucking logistics. Returns expected from route optimization, quicker delivery time, and better responsiveness to disruptions.
 authority: Technology Investment Committee
+
+# The individual accountable for the refresh, shown on the receipt. Distinct
+# from `authority` above, which is the body the commitment goes back to.
+owner: CIO · Chief Information Officer
 
 # How the receipt names the commitment. docs/README.md §S1 shows the card as
 # "Fund a $12M regional expansion program" but §S3's receipt row as

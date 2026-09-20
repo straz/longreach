@@ -1,6 +1,6 @@
 import { Button } from '../components/Button.tsx'
 import { StatusBadge } from '../components/StatusBadge.tsx'
-import { copy } from '../content.ts'
+import { copy, getPackScenarios } from '../content.ts'
 import { evidenceShiftCondition } from '../compute.ts'
 import type { ScenarioTemplate } from '../types.ts'
 import './Conditions.css'
@@ -21,27 +21,53 @@ import './Conditions.css'
  */
 export function Conditions({
   scenario,
+  packId,
   revealed,
   onReveal,
   onNext,
+  onSelectScenario,
 }: {
   scenario: ScenarioTemplate
+  packId: string
   revealed: boolean
   onReveal: () => void
   onNext: () => void
+  onSelectScenario: (scenarioId: string) => void
 }) {
   const text = copy.conditions
   const columns = text.conditionColumnLabels
   const shifted = evidenceShiftCondition(scenario)
+  const choices = getPackScenarios(packId)
 
   return (
     <div className="lr-conditions">
       <h1 className="lr-conditions__headline">{text.headline}</h1>
 
-      <section className="lr-commitment" aria-label={text.commitmentCardLabel}>
+      {/* The commitment bar is also how a different example is chosen. A real
+          <select> sits transparently over the card, so the card keeps its own
+          appearance while the browser supplies the menu, keyboard handling and
+          the native picker on a phone. */}
+      <section className="lr-commitment">
         <p className="lr-commitment__title">{text.commitmentCardLabel}</p>
-        <p className="lr-commitment__value">{scenario.activeCommitmentText}</p>
+        <p className="lr-commitment__value">
+          {scenario.activeCommitmentText}
+          <span className="lr-commitment__caret" aria-hidden="true" />
+        </p>
+        <select
+          className="lr-commitment__select"
+          aria-label={text.commitmentPickerLabel}
+          value={scenario.id}
+          onChange={(event) => onSelectScenario(event.target.value)}
+        >
+          {choices.map((choice) => (
+            <option key={choice.id} value={choice.id}>
+              {choice.title}
+            </option>
+          ))}
+        </select>
       </section>
+
+      <p className="lr-commitment__description">{scenario.description}</p>
 
       <section className="lr-section">
         <h2 className="lr-section__title">{text.conditionsSectionTitle}</h2>

@@ -8,18 +8,6 @@
   color: var(--muted);
 }
 
-.lr-comparables__heading {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
-}
-
-.lr-comparables__heading .lr-section__title {
-  margin-bottom: 0;
-}
-
 .lr-table {
   width: 100%;
   border-collapse: collapse;

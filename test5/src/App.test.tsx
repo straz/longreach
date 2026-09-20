@@ -5,7 +5,7 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import App from './App.tsx'
-import { copy, getScenario } from './content.ts'
+import { copy, getPackScenarios, getScenario } from './content.ts'
 import { FLOW_KEY, PILOT_KEY, readPilotRequests } from './storage.ts'
 
 const regional = getScenario('regional_expansion_v1')!
@@ -96,7 +96,6 @@ describe('comparables', () => {
     expect(within(table).getAllByRole('row')).toHaveLength(
       regional.comparableCommitments.length + 1,
     )
-    expect(screen.getByText(copy.comparables.illustrativeBadge)).toBeInTheDocument()
     expect(
       screen.getByText(
         'In 2 of 3 comparable commitments, the relevant operating condition changed before the next scheduled review.',
@@ -262,13 +261,14 @@ describe('modal scroll lock', () => {
   })
 })
 
+/** Names of every control in the step rail, in order. */
+function stepButtonNames(rail: HTMLElement): string[] {
+  return within(rail)
+    .queryAllByRole('button')
+    .map((button) => button.textContent?.trim() ?? '')
+}
+
 describe('the chevron step rail', () => {
-  /** Names of every control in the rail, in order. */
-  function stepButtonNames(rail: HTMLElement): string[] {
-    return within(rail)
-      .queryAllByRole('button')
-      .map((button) => button.textContent?.trim() ?? '')
-  }
 
   test('lets a visitor go back to a step they have seen', async () => {
     const user = userEvent.setup()
@@ -348,5 +348,183 @@ describe('the chevron step rail', () => {
   test('is absent outside the three-step example', async () => {
     render(<App />)
     expect(screen.queryByRole('navigation', { name: /progress/i })).not.toBeInTheDocument()
+  })
+})
+
+describe('the commitment picker', () => {
+  test('offers every scenario in the pack', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+
+    const picker = screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel })
+    const offered = within(picker).getAllByRole('option').map((o) => o.textContent)
+    expect(offered).toEqual(getPackScenarios().map((s) => s.title))
+    expect(offered.length).toBeGreaterThanOrEqual(6)
+  })
+
+  test('shows the current commitment as the selection', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+
+    expect(screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel })).toHaveValue(
+      'regional_expansion_v1',
+    )
+  })
+
+  test('switching swaps the whole example, not just the heading', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+
+    const picker = screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel })
+    await user.selectOptions(picker, 'capacity_expansion_v1')
+
+    expect(screen.getByText('Fund a $60M capacity expansion program')).toBeInTheDocument()
+    // The conditions belong to the new template too.
+    expect(screen.getByText('Demand was expected to justify phase-two capacity.')).toBeInTheDocument()
+    expect(
+      screen.queryByText('Demand was expected to exceed current capacity.'),
+    ).not.toBeInTheDocument()
+  })
+
+  test('the new example starts unrevealed', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
+    expect(screen.getByText(copy.conditions.revealHeadline)).toBeInTheDocument()
+
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel }),
+      'integration_v1',
+    )
+
+    expect(screen.queryByText(copy.conditions.revealHeadline)).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: copy.conditions.initialButton })).toBeInTheDocument()
+    // And the rail no longer offers steps from the previous run.
+    const rail = screen.getByRole('navigation', { name: /progress/i })
+    expect(stepButtonNames(rail)).toEqual([copy.stepIndicatorStart])
+  })
+
+  test('the switched example carries through to the receipt', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel }),
+      'portfolio_allocation_v1',
+    )
+    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
+    await user.click(screen.getByRole('button', { name: copy.conditions.nextButton }))
+    await user.click(screen.getByRole('button', { name: copy.comparables.button }))
+
+    expect(screen.getByText('$15.0M')).toBeInTheDocument()
+  })
+})
+
+describe('the scenario description', () => {
+  test('sits under the picker, with no label of its own', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+
+    const description = screen.getByText(regional.description)
+    expect(description).toBeInTheDocument()
+
+    // Immediately after the commitment bar, before the conditions section.
+    const bar = document.querySelector('.lr-commitment')
+    expect(bar?.nextElementSibling).toBe(description)
+    expect(description.tagName).toBe('P')
+  })
+
+  test('changes with the chosen commitment', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel }),
+      'technology_program_v1',
+    )
+
+    expect(screen.getByText(getScenario('technology_program_v1')!.description)).toBeInTheDocument()
+    expect(screen.queryByText(regional.description)).not.toBeInTheDocument()
+  })
+
+  test('every template has one', () => {
+    for (const template of getPackScenarios()) {
+      expect(template.description.trim().length, `${template.id} has no description`).toBeGreaterThan(20)
+    }
+  })
+})
+
+describe('the receipt owner', () => {
+  test('names who is accountable, right after the commitment', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await walkTheCannedPath(user)
+
+    const label = screen.getByText(copy.receipt.rowLabels.owner)
+    expect(screen.getByText(regional.owner)).toBeInTheDocument()
+
+    // Second row: subject, then who owns it.
+    const rows = [...document.querySelectorAll('.lr-receipt__row')]
+    expect(rows[1]?.contains(label)).toBe(true)
+  })
+
+  test('every template names an owner, and it is not the committee', () => {
+    for (const template of getPackScenarios()) {
+      expect(template.owner.trim().length, `${template.id} has no owner`).toBeGreaterThan(3)
+      expect(template.authority.trim().length, `${template.id} has no authority`).toBeGreaterThan(3)
+      expect(template.owner).not.toBe(template.authority)
+    }
+  })
+
+  test('the authority sits on a second line under the owner', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await walkTheCannedPath(user)
+
+    const ownerRow = [...document.querySelectorAll('.lr-receipt__row')].find((row) =>
+      row.textContent?.includes(copy.receipt.rowLabels.owner),
+    )
+    expect(ownerRow?.textContent).toContain(regional.owner)
+    expect(ownerRow?.textContent).toContain(`${copy.receipt.authorityLabel} ${regional.authority}`)
+
+    // A distinct line, not run together with the owner.
+    const secondary = ownerRow?.querySelector('.lr-receipt__secondary')
+    expect(secondary?.textContent).toBe(`${copy.receipt.authorityLabel} ${regional.authority}`)
+  })
+
+  test('the authority follows the chosen commitment', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel }),
+      'portfolio_allocation_v1',
+    )
+    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
+    await user.click(screen.getByRole('button', { name: copy.conditions.nextButton }))
+    await user.click(screen.getByRole('button', { name: copy.comparables.button }))
+
+    expect(screen.getByText('CIO · Chief Investment Officer')).toBeInTheDocument()
+    expect(screen.getByText('Authority: Investment Committee')).toBeInTheDocument()
+  })
+
+  test('the owner follows the chosen commitment', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel }),
+      'capacity_expansion_v1',
+    )
+    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
+    await user.click(screen.getByRole('button', { name: copy.conditions.nextButton }))
+    await user.click(screen.getByRole('button', { name: copy.comparables.button }))
+
+    expect(screen.getByText('CSCO · Chief Supply Chain Officer')).toBeInTheDocument()
   })
 })
