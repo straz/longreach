@@ -118,21 +118,8 @@
   background: var(--accent);
 }
 
-/* The call to action, now a plain sentence rather than a button. */
-.lr-receipt-screen__contact {
-  margin-top: var(--space-6);
-  max-width: var(--measure);
-  font-size: 1.0625rem;
-}
-
-.lr-receipt-screen__contact a {
-  color: var(--accent);
-  font-weight: 500;
-  text-underline-offset: 3px;
-}
-
 .lr-receipt-screen__supporting {
-  margin-top: var(--space-2);
+  margin-top: var(--space-6);
   max-width: var(--measure);
   color: var(--muted-light);
   font-size: 0.8125rem;

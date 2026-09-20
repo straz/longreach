@@ -111,10 +111,6 @@ export function Receipt({
         </ul>
       </section>
 
-      <p className="lr-receipt-screen__contact">
-        <a href={`mailto:${text.contactEmail}`}>{text.contactLinkLabel}</a>{' '}
-        {text.contactSuffix}
-      </p>
       <p className="lr-receipt-screen__supporting">{text.primarySupportingText}</p>
 
       <div className="lr-actions">

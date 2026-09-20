@@ -64,6 +64,11 @@ export interface ClarityBand {
 }
 
 export interface Copy {
+  contact: {
+    linkLabel: string
+    email: string
+    suffix: string
+  }
   stepIndicator: string[]
   stepIndicatorStart: string
   landing: {
@@ -154,9 +159,6 @@ export interface Copy {
     calloutLines: string[]
     possibleSectionTitle: string
     possibleBullets: string[]
-    contactLinkLabel: string
-    contactEmail: string
-    contactSuffix: string
     primarySupportingText: string
     secondaryButton: string
     footer: string

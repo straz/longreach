@@ -122,13 +122,14 @@ button {
     padding-bottom: 0.625rem;
   }
 
-  /* An inline link's hit area is only its line box. Vertical padding on an
-     inline element extends that box without pushing the lines apart, so the
-     sentence still reads as a sentence. */
-  .lr-receipt-screen__contact a {
-    /* The inline content box is 20px, so 12px each side reaches 44. */
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+  /* Vertical padding on an inline element extends its hit area without
+     pushing the lines apart, so the sentence still reads as a sentence. */
+  .lr-contact a {
+    /* An inline link's hit area is its content box, which at the footer's
+       0.9375rem type is 18px. 13px each side reaches the 44px minimum.
+       Retune if that font-size changes; the responsive audit checks it. */
+    padding-top: 0.8125rem;
+    padding-bottom: 0.8125rem;
   }
 
   .lr-steps__link,

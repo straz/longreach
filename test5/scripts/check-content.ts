@@ -586,9 +586,8 @@ for (const path of [
   'receipt.comparableLearningValue',
   'receipt.suggestedDecisionValue',
   'receipt.possibleSectionTitle',
-  'receipt.contactLinkLabel',
-  'receipt.contactEmail',
-  'receipt.contactSuffix',
+  'contact.linkLabel',
+  'contact.suffix',
   'receipt.primarySupportingText',
   'receipt.secondaryButton',
   'receipt.footer',
@@ -603,11 +602,11 @@ requirePath('copy.yml', copy, 'comparables.tableHeaders', 4)
 requirePath('copy.yml', copy, 'receipt.calloutLines', 2)
 requirePath('copy.yml', copy, 'receipt.possibleBullets', 3)
 
-const receiptCopy = copy.receipt as Record<string, unknown> | undefined
-const contactEmail = receiptCopy?.contactEmail
+const contactCopy = copy.contact as Record<string, unknown> | undefined
+const contactEmail = contactCopy?.email
 check(
   isNonEmptyString(contactEmail) && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(contactEmail),
-  'copy.yml: "receipt.contactEmail" must be an email address',
+  'copy.yml: "contact.email" must be an email address',
 )
 
 const comparablesCopy = copy.comparables as Record<string, unknown> | undefined

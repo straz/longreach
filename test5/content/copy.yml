@@ -13,6 +13,13 @@
 # "3 Receipt". The numbers are dropped because the rail is a chevron sequence
 # whose shape already carries the order, and "1 1 CONDITIONS" is what numbering
 # them twice looks like.
+# Shown in the footer on every screen. "Contact us" is the link text; the
+# address sits beside it so the whole call to action is a content edit.
+contact:
+  linkLabel: Contact us
+  email: info@longreach.ai
+  suffix: for more info and a free trial
+
 stepIndicator:
   - Conditions
   - Comparables
@@ -191,11 +198,6 @@ receipt:
     - Notice meaningful change before the calendar says it is time to review.
     - Revisit the original commitment without reconstructing its history.
     - Use comparable decisions to improve the next allocation of capital.
-  # "Contact us" is the link text; the address is kept beside it so the whole
-  # call to action is a content edit.
-  contactLinkLabel: Contact us
-  contactEmail: info@longreach.ai
-  contactSuffix: for more info and a free trial
   primarySupportingText: >-
     Longreach maps active commitments, their decision conditions, evidence
     shifts, flexibility windows, and comparable patterns.

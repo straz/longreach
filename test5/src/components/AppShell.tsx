@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { copy } from '../content.ts'
 import './AppShell.css'
 
 /**
@@ -41,7 +42,13 @@ export function AppShell({
       </main>
 
       <footer className="lr-shell__footer">
-        <p>{footer}</p>
+        <div className="lr-shell__footer-inner">
+          <p className="lr-contact">
+            <a href={`mailto:${copy.contact.email}`}>{copy.contact.linkLabel}</a>{' '}
+            {copy.contact.suffix}
+          </p>
+          <p className="lr-shell__disclaimer">{footer}</p>
+        </div>
       </footer>
     </div>
   )

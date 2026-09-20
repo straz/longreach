@@ -437,3 +437,41 @@ describe('the receipt owner', () => {
     expect(screen.getByText('CSCO · Chief Supply Chain Officer')).toBeInTheDocument()
   })
 })
+
+describe('the contact call to action', () => {
+  const CONTACT = 'Contact us for more info and a free trial'
+
+  test('is a mailto link, on every screen', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    async function expectContactPresent(where: string) {
+      const link = screen.getByRole('link', { name: copy.contact.linkLabel })
+      expect(link, where).toHaveAttribute('href', `mailto:${copy.contact.email}`)
+      expect(link.parentElement?.textContent?.replace(/\s+/g, ' ').trim(), where).toBe(CONTACT)
+    }
+
+    await expectContactPresent('landing')
+    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    await expectContactPresent('conditions')
+    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
+    await user.click(screen.getByRole('button', { name: copy.conditions.nextButton }))
+    await expectContactPresent('comparables')
+    await user.click(screen.getByRole('button', { name: copy.comparables.button }))
+    await expectContactPresent('receipt')
+  })
+
+  test('reaches the customize path too', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: copy.landing.secondaryButton }))
+    expect(screen.getByRole('link', { name: copy.contact.linkLabel })).toBeInTheDocument()
+  })
+
+  test('appears once, not once per screen section', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await walkTheCannedPath(user)
+    expect(screen.getAllByRole('link', { name: copy.contact.linkLabel })).toHaveLength(1)
+  })
+})

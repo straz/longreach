@@ -56,9 +56,24 @@
   padding: var(--space-4) var(--space-5) var(--space-6);
 }
 
-.lr-shell__footer p {
+.lr-shell__footer-inner {
   max-width: var(--page-max);
   margin: 0 auto;
+}
+
+/* The standing call to action, on every screen. */
+.lr-contact {
+  margin-bottom: var(--space-2);
+  font-size: 0.9375rem;
+}
+
+.lr-contact a {
+  color: var(--accent);
+  font-weight: 500;
+  text-underline-offset: 3px;
+}
+
+.lr-shell__disclaimer {
   color: var(--muted-light);
   font-size: 0.8125rem;
 }

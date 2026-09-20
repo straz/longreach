@@ -112,9 +112,9 @@ const S3 = {
   ],
   // DEVIATION FROM SPEC, at the user's request: the receipt's
   // "Apply this to five live commitments" button, and the pilot modal it
-  // opened, are replaced by a mailto link. The spec's supporting sentence
-  // loses its "In a 30-day pilot," opening with it.
-  contact: 'Contact us for more info and a free trial',
+  // opened, are gone. The call to action is now a mailto link in the shell
+  // footer, on every screen. The spec's supporting sentence loses its
+  // "In a 30-day pilot," opening with it.
   supporting:
     'Longreach maps active commitments, their decision conditions, evidence shifts, flexibility windows, and comparable patterns.',
   secondary: 'Restart the example',
@@ -230,11 +230,6 @@ describe('S3 decision refresh receipt', () => {
       expectExactText(value)
     }
     expect(screen.getByRole('button', { name: S3.secondary })).toBeInTheDocument()
-
-    // The call to action is a mailto link, not a button.
-    const contact = screen.getByRole('link', { name: 'Contact us' })
-    expect(contact).toHaveAttribute('href', 'mailto:info@longreach.ai')
-    expect(contact.parentElement?.textContent?.trim()).toBe(S3.contact)
   })
 
   test('renders the estimation disclosure copy exactly', async () => {
