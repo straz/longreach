@@ -21,11 +21,9 @@ import './Receipt.css'
  */
 export function Receipt({
   scenario,
-  onPilot,
   onRestart,
 }: {
   scenario: ScenarioTemplate
-  onPilot: () => void
   onRestart: () => void
 }) {
   const text = copy.receipt
@@ -113,13 +111,17 @@ export function Receipt({
         </ul>
       </section>
 
+      <p className="lr-receipt-screen__contact">
+        <a href={`mailto:${text.contactEmail}`}>{text.contactLinkLabel}</a>{' '}
+        {text.contactSuffix}
+      </p>
+      <p className="lr-receipt-screen__supporting">{text.primarySupportingText}</p>
+
       <div className="lr-actions">
-        <Button onClick={onPilot}>{text.primaryButton}</Button>
         <Button variant="quiet" onClick={onRestart}>
           {text.secondaryButton}
         </Button>
       </div>
-      <p className="lr-receipt-screen__supporting">{text.primarySupportingText}</p>
     </div>
   )
 }

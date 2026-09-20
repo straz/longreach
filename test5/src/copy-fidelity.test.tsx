@@ -71,7 +71,9 @@ const S1 = {
 
 const S2 = {
   headline: 'You have encountered this pattern before.',
-  body: 'Longreach compares active commitments with prior decisions that relied on similar conditions, faced similar evidence shifts, or approached the same type of lock-in.',
+  // EDITED COPY, not the spec's. docs/README.md §S2 opens this paragraph at
+  // "Longreach compares..."; the first sentence was added by hand.
+  body: 'This is organizational memory, with an economic purpose. Longreach compares active commitments with prior decisions that relied on similar conditions, faced similar evidence shifts, or approached the same type of lock-in.',
   sectionTitle: 'Comparable commitments',
   headers: ['Commitment', 'Relevant condition', 'What changed', 'What happened next'],
   rows: [
@@ -108,9 +110,13 @@ const S3 = {
     'Revisit the original commitment without reconstructing its history.',
     'Use comparable decisions to improve the next allocation of capital.',
   ],
-  primary: 'Try it',
+  // DEVIATION FROM SPEC, at the user's request: the receipt's
+  // "Apply this to five live commitments" button, and the pilot modal it
+  // opened, are replaced by a mailto link. The spec's supporting sentence
+  // loses its "In a 30-day pilot," opening with it.
+  contact: 'Contact us for more info and a free trial',
   supporting:
-    'In a 30-day pilot, Longreach maps active commitments, their decision conditions, evidence shifts, flexibility windows, and comparable patterns.',
+    'Longreach maps active commitments, their decision conditions, evidence shifts, flexibility windows, and comparable patterns.',
   secondary: 'Restart the example',
   footer: 'Illustrative demonstration — figures and prior commitments are sample data.',
   disclosureLabel: 'How is this estimated?',
@@ -223,8 +229,12 @@ describe('S3 decision refresh receipt', () => {
     ]) {
       expectExactText(value)
     }
-    expect(screen.getByRole('button', { name: S3.primary })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: S3.secondary })).toBeInTheDocument()
+
+    // The call to action is a mailto link, not a button.
+    const contact = screen.getByRole('link', { name: 'Contact us' })
+    expect(contact).toHaveAttribute('href', 'mailto:info@longreach.ai')
+    expect(contact.parentElement?.textContent?.trim()).toBe(S3.contact)
   })
 
   test('renders the estimation disclosure copy exactly', async () => {

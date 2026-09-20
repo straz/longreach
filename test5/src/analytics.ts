@@ -21,8 +21,6 @@ export type AnalyticsEvent =
   | 'decision_condition_revealed'
   | 'comparables_viewed'
   | 'receipt_viewed'
-  | 'pilot_modal_opened'
-  | 'pilot_request_submitted'
   | 'example_restarted'
 
 export type ScoreBand = 'low' | 'medium' | 'high'

@@ -135,6 +135,7 @@ conditions:
 comparables:
   headline: You have encountered this pattern before.
   body: >-
+    This is organizational memory, with an economic purpose.
     Longreach compares active commitments with prior decisions that relied on
     similar conditions, faced similar evidence shifts, or approached the same
     type of lock-in.
@@ -190,10 +191,14 @@ receipt:
     - Notice meaningful change before the calendar says it is time to review.
     - Revisit the original commitment without reconstructing its history.
     - Use comparable decisions to improve the next allocation of capital.
-  primaryButton: Try it
+  # "Contact us" is the link text; the address is kept beside it so the whole
+  # call to action is a content edit.
+  contactLinkLabel: Contact us
+  contactEmail: info@longreach.ai
+  contactSuffix: for more info and a free trial
   primarySupportingText: >-
-    In a 30-day pilot, Longreach maps active commitments, their decision
-    conditions, evidence shifts, flexibility windows, and comparable patterns.
+    Longreach maps active commitments, their decision conditions, evidence
+    shifts, flexibility windows, and comparable patterns.
   secondaryButton: Restart the example
   footer: Illustrative demonstration — figures and prior commitments are sample data.
   disclosureLabel: How is this estimated?
@@ -203,30 +208,6 @@ receipt:
     material lock-in. It excludes spend already incurred and commitments that
     are no longer practical to change.
 
-pilotModal:
-  headline: Apply Decision Refresh to five live commitments.
-  body: >-
-    In 30 days, Longreach can help your team identify the decision conditions
-    behind five active commitments, surface meaningful evidence shifts, map the
-    capital still in play, and compare each commitment with relevant prior
-    decisions.
-  deliverables:
-    - A commitment receipt for each selected decision
-    - A shared view of decision conditions and evidence shifts
-    - A flexibility-window view of capital still in play
-    - A comparable-decision pattern summary
-    - A decision-refresh readout for the accountable authority
-  fieldLabels:
-    name: Name
-    workEmail: Work email
-    organization: Organization
-    startingCommitment: Which commitment would you start with?
-  startingCommitmentHelper: Optional — one sentence is enough.
-  submitButton: Request a pilot conversation
-  # docs/README.md §"Pilot modal": an inline success state, and no claim that
-  # an email was sent. v1 has no backend; the row is kept in localStorage
-  # (docs/PLAN.md §5.1).
-  successMessage: Thank you. Your pilot conversation request has been captured for this demonstration.
 
 # Display names. The pill order is the order docs/README.md §C1 lists.
 commitmentTypeLabels:

@@ -1,19 +1,14 @@
 // @vitest-environment jsdom
 
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import App from './App.tsx'
 import { copy, getPackScenarios, getScenario } from './content.ts'
-import { FLOW_KEY, PILOT_KEY, readPilotRequests } from './storage.ts'
+import { FLOW_KEY } from './storage.ts'
 
 const regional = getScenario('regional_expansion_v1')!
-
-const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
-beforeEach(() => {
-  logSpy.mockClear()
-})
 
 /** S0 → S1 → reveal → S2 → S3: the four clicks the spec budgets 30 seconds for. */
 async function walkTheCannedPath(user: ReturnType<typeof userEvent.setup>) {
@@ -119,60 +114,6 @@ describe('the receipt disclosure', () => {
   })
 })
 
-describe('the pilot modal', () => {
-  async function openModal(user: ReturnType<typeof userEvent.setup>) {
-    render(<App />)
-    await walkTheCannedPath(user)
-    await user.click(screen.getByRole('button', { name: copy.receipt.primaryButton }))
-    return screen.getByRole('dialog')
-  }
-
-  test('opens over the receipt rather than navigating away', async () => {
-    const user = userEvent.setup()
-    const dialog = await openModal(user)
-
-    expect(dialog).toHaveAttribute('aria-modal', 'true')
-    expect(within(dialog).getByText(copy.pilotModal.headline)).toBeInTheDocument()
-    // The receipt is still behind it.
-    expect(screen.getByText(copy.receipt.receiptTitle)).toBeInTheDocument()
-  })
-
-  test('closes with Escape', async () => {
-    const user = userEvent.setup()
-    await openModal(user)
-
-    await user.keyboard('{Escape}')
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  })
-
-  test('captures the request without claiming an email was sent', async () => {
-    const user = userEvent.setup()
-    const dialog = await openModal(user)
-
-    await user.type(within(dialog).getByLabelText(copy.pilotModal.fieldLabels.name), 'A Buyer')
-    await user.type(
-      within(dialog).getByLabelText(copy.pilotModal.fieldLabels.workEmail),
-      'buyer@example.com',
-    )
-    await user.type(
-      within(dialog).getByLabelText(copy.pilotModal.fieldLabels.organization),
-      'Example Group',
-    )
-    await user.click(within(dialog).getByRole('button', { name: copy.pilotModal.submitButton }))
-
-    expect(screen.getByText(copy.pilotModal.successMessage)).toBeInTheDocument()
-    expect(screen.getByText(copy.pilotModal.successMessage).textContent).not.toMatch(/sent/i)
-
-    const stored = readPilotRequests()
-    expect(stored).toHaveLength(1)
-    expect(stored[0]!.workEmail).toBe('buyer@example.com')
-
-    // The event fires, and carries none of what was typed.
-    const logged = logSpy.mock.calls.filter((call) => call[1] === 'pilot_request_submitted')
-    expect(logged).toHaveLength(1)
-    expect(JSON.stringify(logged[0])).not.toMatch(/buyer@example\.com|A Buyer|Example Group/)
-  })
-})
 
 describe('resuming and restarting', () => {
   test('a refresh mid-flow resumes on the same screen', async () => {
@@ -190,24 +131,10 @@ describe('resuming and restarting', () => {
     expect(screen.getByRole('heading', { name: copy.comparables.headline })).toBeInTheDocument()
   })
 
-  test('restarting clears the flow but keeps captured pilot requests', async () => {
+  test('restarting returns to the landing screen and resets the flow', async () => {
     const user = userEvent.setup()
     render(<App />)
     await walkTheCannedPath(user)
-    await user.click(screen.getByRole('button', { name: copy.receipt.primaryButton }))
-    const dialog = screen.getByRole('dialog')
-    await user.type(within(dialog).getByLabelText(copy.pilotModal.fieldLabels.name), 'A Buyer')
-    await user.type(
-      within(dialog).getByLabelText(copy.pilotModal.fieldLabels.workEmail),
-      'buyer@example.com',
-    )
-    await user.type(
-      within(dialog).getByLabelText(copy.pilotModal.fieldLabels.organization),
-      'Example Group',
-    )
-    await user.click(within(dialog).getByRole('button', { name: copy.pilotModal.submitButton }))
-    await user.keyboard('{Escape}')
-
     await user.click(screen.getByRole('button', { name: copy.receipt.secondaryButton }))
 
     expect(screen.getByRole('heading', { name: copy.landing.headline })).toBeInTheDocument()
@@ -220,10 +147,6 @@ describe('resuming and restarting', () => {
     }
     expect(storedFlow.screen).toBe('landing')
     expect(storedFlow.evidenceRevealed).toBe(false)
-
-    // The captured lead survives the restart.
-    expect(window.localStorage.getItem(PILOT_KEY)).not.toBeNull()
-    expect(readPilotRequests()).toHaveLength(1)
   })
 
   test('renders correctly when storage is unavailable', async () => {
@@ -246,20 +169,6 @@ describe('resuming and restarting', () => {
   })
 })
 
-describe('modal scroll lock', () => {
-  test('the page behind the dialog stops scrolling, and resumes on close', async () => {
-    const user = userEvent.setup()
-    render(<App />)
-    await walkTheCannedPath(user)
-
-    expect(document.body.style.overflow).not.toBe('hidden')
-    await user.click(screen.getByRole('button', { name: copy.receipt.primaryButton }))
-    expect(document.body.style.overflow).toBe('hidden')
-
-    await user.keyboard('{Escape}')
-    expect(document.body.style.overflow).not.toBe('hidden')
-  })
-})
 
 /** Names of every control in the step rail, in order. */
 function stepButtonNames(rail: HTMLElement): string[] {

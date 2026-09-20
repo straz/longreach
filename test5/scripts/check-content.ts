@@ -586,21 +586,14 @@ for (const path of [
   'receipt.comparableLearningValue',
   'receipt.suggestedDecisionValue',
   'receipt.possibleSectionTitle',
-  'receipt.primaryButton',
+  'receipt.contactLinkLabel',
+  'receipt.contactEmail',
+  'receipt.contactSuffix',
   'receipt.primarySupportingText',
   'receipt.secondaryButton',
   'receipt.footer',
   'receipt.disclosureLabel',
   'receipt.disclosureBody',
-  'pilotModal.headline',
-  'pilotModal.body',
-  'pilotModal.fieldLabels.name',
-  'pilotModal.fieldLabels.workEmail',
-  'pilotModal.fieldLabels.organization',
-  'pilotModal.fieldLabels.startingCommitment',
-  'pilotModal.startingCommitmentHelper',
-  'pilotModal.submitButton',
-  'pilotModal.successMessage',
 ]) {
   requirePath('copy.yml', copy, path)
 }
@@ -609,7 +602,13 @@ requirePath('copy.yml', copy, 'recognizing.statusRows', 4)
 requirePath('copy.yml', copy, 'comparables.tableHeaders', 4)
 requirePath('copy.yml', copy, 'receipt.calloutLines', 2)
 requirePath('copy.yml', copy, 'receipt.possibleBullets', 3)
-requirePath('copy.yml', copy, 'pilotModal.deliverables', 5)
+
+const receiptCopy = copy.receipt as Record<string, unknown> | undefined
+const contactEmail = receiptCopy?.contactEmail
+check(
+  isNonEmptyString(contactEmail) && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(contactEmail),
+  'copy.yml: "receipt.contactEmail" must be an email address',
+)
 
 const comparablesCopy = copy.comparables as Record<string, unknown> | undefined
 const patternStatement = comparablesCopy?.patternStatement

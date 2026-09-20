@@ -1,7 +1,6 @@
 import { useEffect, useReducer, useRef } from 'react'
 
 import { AppShell } from './components/AppShell.tsx'
-import { PilotModal } from './components/PilotModal.tsx'
 import { StepIndicator } from './components/StepIndicator.tsx'
 import { Comparables } from './screens/Comparables.tsx'
 import { Conditions } from './screens/Conditions.tsx'
@@ -222,10 +221,6 @@ export default function App() {
       {state.screen === 'receipt' ? (
         <Receipt
           scenario={scenario}
-          onPilot={() => {
-            track('pilot_modal_opened', { mode: state.mode, scenarioId: scenario.id })
-            dispatch({ type: 'open_pilot_modal' })
-          }}
           onRestart={() => {
             track('example_restarted', { mode: state.mode, scenarioId: scenario.id })
             dispatch({ type: 'restart' })
@@ -276,14 +271,6 @@ export default function App() {
           }}
           onUseStandard={() => dispatch({ type: 'use_standard_example' })}
           onEditInputs={() => dispatch({ type: 'edit_inputs' })}
-        />
-      ) : null}
-
-      {state.pilotModalOpen ? (
-        <PilotModal
-          mode={state.mode}
-          scenarioId={scenario.id}
-          onClose={() => dispatch({ type: 'close_pilot_modal' })}
         />
       ) : null}
     </AppShell>

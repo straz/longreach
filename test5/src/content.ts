@@ -154,26 +154,14 @@ export interface Copy {
     calloutLines: string[]
     possibleSectionTitle: string
     possibleBullets: string[]
-    primaryButton: string
+    contactLinkLabel: string
+    contactEmail: string
+    contactSuffix: string
     primarySupportingText: string
     secondaryButton: string
     footer: string
     disclosureLabel: string
     disclosureBody: string
-  }
-  pilotModal: {
-    headline: string
-    body: string
-    deliverables: string[]
-    fieldLabels: {
-      name: string
-      workEmail: string
-      organization: string
-      startingCommitment: string
-    }
-    startingCommitmentHelper: string
-    submitButton: string
-    successMessage: string
   }
   commitmentTypeLabels: Record<CommitmentType, string>
   evidenceShiftCategoryLabels: Record<EvidenceShiftCategory, string>

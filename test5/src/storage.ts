@@ -6,13 +6,13 @@
 // crashing on it.
 //
 // What is deliberately never written here: pasted source text and typed
-// context. Those live in React state only.
+// context. Those live in React state only, and nothing the visitor types is
+// persisted anywhere.
 
 const VERSION = 1
 
 export const FLOW_KEY = 'lr5-flow'
 export const PREFS_KEY = 'lr5-prefs'
-export const PILOT_KEY = 'lr5-pilot-requests'
 
 interface Versioned {
   version: number
@@ -38,15 +38,6 @@ function write(storage: Storage | undefined, key: string, value: object): void {
     storage.setItem(key, JSON.stringify({ ...value, version: VERSION }))
   } catch {
     // Full, blocked, or unavailable. The app works without it.
-  }
-}
-
-function remove(storage: Storage | undefined, key: string): void {
-  if (storage === undefined) return
-  try {
-    storage.removeItem(key)
-  } catch {
-    // As above.
   }
 }
 
@@ -93,36 +84,4 @@ export function readPrefs(): StoredPrefs | undefined {
 
 export function writePrefs(prefs: Omit<StoredPrefs, 'version'>): void {
   write(resolve('local'), PREFS_KEY, prefs)
-}
-
-// --------------------------------------------------------- pilot requests
-// The spec permits an inline success state and forbids claiming an email was
-// sent. Keeping the rows locally means a demo-day lead is not silently thrown
-// away. This holds real names and emails: it never leaves the browser, it is
-// never sent to analytics, and clearPilotRequests() exists so a shared machine
-// can be wiped. See docs/PLAN.md R13.
-
-export interface PilotRequest {
-  name: string
-  workEmail: string
-  organization: string
-  startingCommitment: string
-  submittedAt: string
-}
-
-interface StoredPilotRequests extends Versioned {
-  requests: PilotRequest[]
-}
-
-export function readPilotRequests(): PilotRequest[] {
-  const stored = read<StoredPilotRequests>(resolve('local'), PILOT_KEY)
-  return Array.isArray(stored?.requests) ? stored.requests : []
-}
-
-export function appendPilotRequest(request: PilotRequest): void {
-  write(resolve('local'), PILOT_KEY, { requests: [...readPilotRequests(), request] })
-}
-
-export function clearPilotRequests(): void {
-  remove(resolve('local'), PILOT_KEY)
 }

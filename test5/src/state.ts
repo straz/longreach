@@ -18,7 +18,6 @@ export interface AppState {
   packId: string
   selectedScenarioId: string
   evidenceRevealed: boolean
-  pilotModalOpen: boolean
 
   /**
    * Furthest step of the three-step example reached this run. The chevron rail
@@ -56,8 +55,6 @@ export type AppAction =
   | { type: 'select_scenario'; scenarioId: string }
   | { type: 'reveal_evidence' }
   | { type: 'go_to'; screen: AppScreen }
-  | { type: 'open_pilot_modal' }
-  | { type: 'close_pilot_modal' }
   | { type: 'restart' }
 
 /** Screens that belong to the three-step example, in order. */
@@ -70,7 +67,6 @@ function defaults(packId: string): AppState {
     packId,
     selectedScenarioId: getDefaultScenario(packId).id,
     evidenceRevealed: false,
-    pilotModalOpen: false,
     furthestFlowIndex: 0,
     briefContext: '',
     sourceText: '',
@@ -218,17 +214,11 @@ export function reducer(state: AppState, action: AppAction): AppState {
         ),
       }
 
-    case 'open_pilot_modal':
-      return { ...state, pilotModalOpen: true }
-
-    case 'close_pilot_modal':
-      return { ...state, pilotModalOpen: false }
-
     case 'restart':
       // Resets the flow only; the persist() effect writes this state straight
-      // back, so a refresh after restarting lands on S0. Preferences and any
-      // captured pilot requests survive (docs/PLAN.md §5.1). No clearing
-      // happens here: a reducer must stay pure, and StrictMode calls it twice.
+      // back, so a refresh after restarting lands on S0. Preferences survive
+      // (docs/PLAN.md §5.1). No clearing happens here: a reducer must stay
+      // pure, and StrictMode calls it twice.
       return defaults(state.packId)
   }
 }
