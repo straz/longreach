@@ -1,4 +1,6 @@
 @import './tokens.css';
+@import './primitives.css';
+@import './datatable.css';
 
 /* Reset and page frame. Component styling lives beside each component. */
 

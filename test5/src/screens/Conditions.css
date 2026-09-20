@@ -91,66 +91,9 @@
   line-height: 1.55;
 }
 
-.lr-section {
-  margin-top: var(--space-6);
-}
 
-.lr-section__title {
-  font-family: var(--sans);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: var(--space-4);
-}
-
-/* One table: why it was authorized, what is watched, what would warrant a
-   refresh, and where it stands. */
-.lr-conditions__table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
-  font-size: 0.9375rem;
-  text-align: left;
-}
-
-.lr-conditions__table thead th {
-  background: var(--surface-sunken);
-  border-bottom: 1px solid var(--rule-strong);
-  color: var(--muted);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: var(--space-3) var(--space-4);
-  white-space: nowrap;
-}
-
-.lr-conditions__table tbody th,
-.lr-conditions__table tbody td {
-  border-bottom: 1px solid var(--rule);
-  padding: var(--space-4);
-  vertical-align: top;
-  font-weight: 400;
-  color: var(--muted);
-}
-
-.lr-conditions__table tbody th {
-  color: var(--text);
-  font-weight: 500;
-}
-
-.lr-conditions__table tbody tr:last-child th,
-.lr-conditions__table tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-/* Status stays as narrow as its badge; the rest share the row so that no
-   column is forced to wrap a short phrase like "Customer-acquisition cost". */
+/* Column shares, so no column is forced to wrap a short phrase like
+   "Customer-acquisition cost". Status stays as narrow as its badge. */
 .lr-conditions__table tbody td:first-child,
 .lr-conditions__table thead th:first-child {
   width: 1%;
@@ -213,14 +156,6 @@
   color: var(--muted);
 }
 
-.lr-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-5);
-  margin-top: var(--space-6);
-}
-
 /* Tablet band: the table fits, but only just. Tightening the cell padding
    gives roughly 50px back to the Why and Evidence columns, which is the
    difference between two wrapped lines and three. */
@@ -239,6 +174,7 @@
  * S1 over 3000px long. At 768px the four columns fit with no overflow and the
  * table is 439px tall against roughly 2400px of stacked cards. Below 700px the
  * columns get too narrow to be worth keeping and the cards win. */
+
 @media (max-width: 700px) {
   /* The commitment bar stacks rather than squeezing the value into a column. */
   .lr-commitment {
@@ -251,63 +187,8 @@
     padding-bottom: var(--space-3);
   }
 
-  /* Rows become cards, each cell labelled by its column. */
-  .lr-conditions__table,
-  .lr-conditions__table tbody,
-  .lr-conditions__table tbody tr,
-  .lr-conditions__table tbody th,
-  .lr-conditions__table tbody td {
-    display: block;
-    width: 100%;
-  }
-
-  .lr-conditions__table {
-    background: none;
-    border: 0;
-    box-shadow: none;
-  }
-
-  /* Not merely hidden: overflow does not clip a table-header-group, so a
-     visually-hidden header would still lay its cells out past the right edge.
-     The column names come from data-label down here. */
-  .lr-conditions__table thead {
-    display: none;
-  }
-
-  .lr-conditions__table tbody tr {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-card);
-    margin-bottom: var(--space-3);
-    padding: var(--space-2) 0;
-  }
-
-  .lr-conditions__table tbody th,
-  .lr-conditions__table tbody td {
-    border-bottom: 0;
-    padding: var(--space-2) var(--space-4);
-    white-space: normal;
-  }
-
-  .lr-conditions__table tbody td:first-child {
-    width: auto;
-  }
-
-  /* Column name above each value, except the status badge, which says what it
-     is already. */
-  .lr-conditions__table tbody th::before,
-  .lr-conditions__table tbody td:not(:first-child)::before {
-    content: attr(data-label);
-    display: block;
-    color: var(--muted-light);
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 0.125rem;
-  }
-
+  /* The card keeps the amber ground but not the inset bar, which has no edge
+     to sit against once the row is a block. */
   .lr-conditions__row--shifted td:first-child {
     box-shadow: none;
   }

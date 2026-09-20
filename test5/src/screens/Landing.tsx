@@ -1,4 +1,5 @@
 import { Button } from '../components/Button.tsx'
+import { RichText } from '../richtext.tsx'
 import { copy } from '../content.ts'
 import './Landing.css'
 
@@ -19,7 +20,7 @@ export function Landing({
     <div className="lr-landing">
       <p className="lr-eyebrow">{text.eyebrow}</p>
       <h1 className="lr-landing__headline">{text.headline}</h1>
-      <p className="lr-landing__body">{text.body}</p>
+      <RichText className="lr-landing__body">{text.body}</RichText>
       <div className="lr-landing__actions">
         <Button onClick={onSeeExample}>{text.primaryButton}</Button>
         <Button variant="quiet" onClick={onCustomize}>

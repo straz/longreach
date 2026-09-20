@@ -10,17 +10,27 @@
 // dot, and the em dashes are all as the spec writes them.
 
 import { describe, expect, test } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import App from './App.tsx'
+import {
+  expectExactText,
+  renderApp,
+  toComparables,
+  toConditions,
+  toReceipt,
+} from './test-helpers.tsx'
 
-type User = ReturnType<typeof userEvent.setup>
-
+// EDITED COPY, not the spec's. docs/README.md §S0 has a different headline and
+// a single-paragraph body; both were rewritten by hand. The body is now two
+// paragraphs, so it is asserted paragraph by paragraph.
 const S0 = {
   eyebrow: 'LONGREACH DECISION REFRESH',
-  headline: 'Keep important commitments current as conditions change.',
-  body: 'Major commitments are made using the best evidence available at the time. Longreach records the conditions behind a commitment, notices meaningful evidence shifts, and brings forward lessons from similar decisions.',
+  headline: 'The facts changed. How did your commitments?',
+  body: [
+    'Your forecasts, assumptions and evidence continuously change. Commitments keep consuming money, people and options long after the original decisions were made. Who \u2018owns\u2019 your commitment portfolio?',
+    'Longreach computes which commitments make sense, which deserve reconsideration and where changing course can still make a big economic difference. See and understand what your commitments committed you to. \u2192',
+  ],
   primary: 'See a 30-second example',
   secondary: 'Customize this example',
   microcopy: 'No sign-up. The standard example uses illustrative data.',
@@ -71,9 +81,12 @@ const S1 = {
 
 const S2 = {
   headline: 'You have encountered this pattern before.',
-  // EDITED COPY, not the spec's. docs/README.md §S2 opens this paragraph at
-  // "Longreach compares..."; the first sentence was added by hand.
-  body: 'This is organizational memory, with an economic purpose. Longreach compares active commitments with prior decisions that relied on similar conditions, faced similar evidence shifts, or approached the same type of lock-in.',
+  // EDITED COPY, not the spec's. docs/README.md §S2 has one paragraph opening
+  // at "Longreach compares..."; a first paragraph was added by hand.
+  body: [
+    'This is organizational memory, with an economic purpose.',
+    'Longreach compares active commitments with prior decisions that relied on similar conditions, faced similar evidence shifts, or approached the same type of lock-in.',
+  ],
   sectionTitle: 'Comparable commitments',
   headers: ['Commitment', 'Relevant condition', 'What changed', 'What happened next'],
   rows: [
@@ -124,38 +137,14 @@ const S3 = {
     'In this illustration, capital still in play includes planned spend that can still be delayed, resized, redirected, or renegotiated before the next material lock-in. It excludes spend already incurred and commitments that are no longer practical to change.',
 }
 
-/**
- * Present anywhere in the document, whatever markup it is wrapped in.
- * queryAllByText rather than getAllByText, so a miss fails with the string
- * that is missing instead of a wall of DOM.
- */
-function expectExactText(value: string) {
-  const matches = screen.queryAllByText(
-    (_content, element) => element?.textContent?.trim() === value,
-  )
-  expect(matches.length, `expected the exact string: ${value}`).toBeGreaterThan(0)
-}
-
-async function toConditions(user: User) {
-  render(<App />)
-  await user.click(screen.getByRole('button', { name: S0.primary }))
-}
-
-async function toComparables(user: User) {
-  await toConditions(user)
-  await user.click(screen.getByRole('button', { name: S1.initialButton }))
-  await user.click(screen.getByRole('button', { name: S1.nextButton }))
-}
-
-async function toReceipt(user: User) {
-  await toComparables(user)
-  await user.click(screen.getByRole('button', { name: S2.button }))
-}
+const renderThenConditions = async () => { renderApp(); await toConditions(userEvent.setup()) }
+const renderThenComparables = async () => { renderApp(); await toComparables(userEvent.setup()) }
+const renderThenReceipt = async () => { renderApp(); await toReceipt(userEvent.setup()) }
 
 describe('S0 landing', () => {
   test('renders the spec copy exactly', () => {
-    render(<App />)
-    for (const value of [S0.eyebrow, S0.headline, S0.body, S0.microcopy, S0.footer]) {
+    renderApp()
+    for (const value of [S0.eyebrow, S0.headline, ...S0.body, S0.microcopy, S0.footer]) {
       expectExactText(value)
     }
     expect(screen.getByRole('button', { name: S0.primary })).toBeInTheDocument()
@@ -165,7 +154,7 @@ describe('S0 landing', () => {
 
 describe('S1 decision conditions', () => {
   test('renders the spec copy exactly', async () => {
-    await toConditions(userEvent.setup())
+    await renderThenConditions()
     for (const value of [
       S1.headline,
       S1.cardLabel,
@@ -185,6 +174,7 @@ describe('S1 decision conditions', () => {
 
   test('renders the reveal copy exactly', async () => {
     const user = userEvent.setup()
+    renderApp()
     await toConditions(user)
     await user.click(screen.getByRole('button', { name: S1.initialButton }))
 
@@ -197,10 +187,10 @@ describe('S1 decision conditions', () => {
 
 describe('S2 comparable decisions', () => {
   test('renders the spec copy exactly', async () => {
-    await toComparables(userEvent.setup())
+    await renderThenComparables()
     for (const value of [
       S2.headline,
-      S2.body,
+      ...S2.body,
       S2.sectionTitle,
       ...S2.headers,
       ...S2.rows.flat(),
@@ -216,7 +206,7 @@ describe('S2 comparable decisions', () => {
 
 describe('S3 decision refresh receipt', () => {
   test('renders the spec copy exactly', async () => {
-    await toReceipt(userEvent.setup())
+    await renderThenReceipt()
     for (const value of [
       S3.headline,
       S3.receiptTitle,
@@ -234,6 +224,7 @@ describe('S3 decision refresh receipt', () => {
 
   test('renders the estimation disclosure copy exactly', async () => {
     const user = userEvent.setup()
+    renderApp()
     await toReceipt(user)
     await user.click(screen.getByRole('button', { name: new RegExp(S3.disclosureLabel) }))
     expectExactText(S3.disclosureBody)
@@ -247,7 +238,7 @@ describe('the step indicator', () => {
   // dropped — an <ol> renders its own numbering, and "1. 1 CONDITIONS" is what
   // keeping them looked like.
   test('names the three steps, unnumbered', async () => {
-    await toConditions(userEvent.setup())
+    await renderThenConditions()
     for (const label of ['Conditions', 'Comparables', 'Receipt']) {
       expectExactText(label)
     }

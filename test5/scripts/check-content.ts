@@ -16,6 +16,7 @@ import { dirname, join, basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { load as loadYaml } from 'js-yaml'
 import { formatCapital } from '../src/compute.ts'
+import { unsupportedEntities } from '../src/entities.ts'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const contentDir = join(root, 'content')
@@ -691,6 +692,29 @@ for (const [key, expected] of [
     check(expected.includes(name), `copy.yml: "${key}.${name}" is not a known key`)
   }
 }
+
+// Every HTML entity used anywhere in the copy must be one the renderer knows,
+// or it reaches the screen as the literal "&rarr;".
+function walkStrings(value: unknown, path: string, visit: (text: string, at: string) => void) {
+  if (typeof value === 'string') return visit(value, path)
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => walkStrings(item, `${path}[${index}]`, visit))
+    return
+  }
+  if (value !== null && typeof value === 'object') {
+    for (const [key, child] of Object.entries(value)) {
+      walkStrings(child, path === '' ? key : `${path}.${key}`, visit)
+    }
+  }
+}
+
+walkStrings(copy, '', (text, at) => {
+  for (const name of unsupportedEntities(text)) {
+    errors.push(
+      `copy.yml: "${at}" uses &${name};, which the renderer does not support — add it to ENTITIES in src/entities.ts or write the character directly`,
+    )
+  }
+})
 
 // ---------------------------------------------------------------- report
 

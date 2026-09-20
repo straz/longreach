@@ -21,6 +21,10 @@
   font-size: 1.0625rem;
 }
 
+.lr-landing__body + .lr-landing__body {
+  margin-top: var(--space-4);
+}
+
 .lr-landing__actions {
   display: flex;
   flex-wrap: wrap;

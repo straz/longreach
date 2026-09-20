@@ -1,0 +1,128 @@
+/* The one table style, shared by S1's decision conditions and S2's comparable
+ * commitments.
+ *
+ * Both were written separately and had drifted into near-duplicates: the same
+ * forty lines of responsive card layout, plus two different mechanisms for the
+ * column name on a card — `data-label` in one, an extra <span> in the other.
+ * This is the `data-label` version, which needs no markup.
+ *
+ * Above 700px it is a real <table>. Below, each row becomes a card with its
+ * column name above every cell, because four columns cannot be read on a
+ * phone. That trade is deliberate: the table semantics are lost at card width,
+ * which is noted as an accessibility gap in the README.
+ */
+
+.lr-datatable {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  font-size: 0.9375rem;
+  text-align: left;
+}
+
+.lr-datatable thead th {
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--rule-strong);
+  color: var(--muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: var(--space-3) var(--space-4);
+  white-space: nowrap;
+}
+
+.lr-datatable tbody th,
+.lr-datatable tbody td {
+  border-bottom: 1px solid var(--rule);
+  padding: var(--space-4);
+  vertical-align: top;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* The row header carries the row's identity, so it reads at full strength. */
+.lr-datatable tbody th {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.lr-datatable tbody tr:last-child th,
+.lr-datatable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+@media (min-width: 701px) and (max-width: 900px) {
+  /* The table fits here, but only just. Tighter cells give roughly 50px back
+     to the prose columns, which is the difference between two wrapped lines
+     and three. */
+  .lr-datatable thead th,
+  .lr-datatable tbody th,
+  .lr-datatable tbody td {
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+}
+
+@media (max-width: 700px) {
+  .lr-datatable,
+  .lr-datatable tbody,
+  .lr-datatable tbody tr,
+  .lr-datatable tbody th,
+  .lr-datatable tbody td {
+    display: block;
+    width: 100%;
+  }
+
+  .lr-datatable {
+    background: none;
+    border: 0;
+    box-shadow: none;
+  }
+
+  /* Not merely hidden: overflow does not clip a table-header-group, so a
+     visually-hidden header would still lay its cells out past the right edge.
+     The column names come from data-label down here. */
+  .lr-datatable thead {
+    display: none;
+  }
+
+  .lr-datatable tbody tr {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    margin-bottom: var(--space-3);
+    padding: var(--space-2) 0;
+  }
+
+  .lr-datatable tbody th,
+  .lr-datatable tbody td {
+    border-bottom: 0;
+    padding: var(--space-2) var(--space-4);
+    white-space: normal;
+    width: auto;
+  }
+
+  /* The column name above each value. Cells that say what they are already —
+     a status badge, say — opt out with data-label omitted. */
+  .lr-datatable tbody th[data-label]::before,
+  .lr-datatable tbody td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    color: var(--muted-light);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.125rem;
+  }
+
+  .lr-datatable tbody th {
+    font-family: var(--serif);
+    font-size: 1.0625rem;
+  }
+}

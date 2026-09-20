@@ -1,30 +1,30 @@
 // @vitest-environment jsdom
 
 import { describe, expect, test } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import App from './App.tsx'
+import {
+  press,
+  renderApp,
+  stepButtonNames,
+  toComparables,
+  toConditions,
+  toReceipt,
+  toRevealed,
+} from './test-helpers.tsx'
 import { copy, getPackScenarios, getScenario } from './content.ts'
 import { FLOW_KEY } from './storage.ts'
 
 const regional = getScenario('regional_expansion_v1')!
 
-/** S0 → S1 → reveal → S2 → S3: the four clicks the spec budgets 30 seconds for. */
-async function walkTheCannedPath(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
-  await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
-  await user.click(screen.getByRole('button', { name: copy.conditions.nextButton }))
-  await user.click(screen.getByRole('button', { name: copy.comparables.button }))
-}
-
 describe('the canned path', () => {
   test('reaches the receipt in four clicks with no input', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    renderApp()
 
     expect(screen.getByRole('heading', { name: copy.landing.headline })).toBeInTheDocument()
-    await walkTheCannedPath(user)
+    await toReceipt(user)
 
     expect(screen.getByRole('heading', { name: copy.receipt.headline })).toBeInTheDocument()
     expect(screen.getByText(copy.receipt.receiptTitle)).toBeInTheDocument()
@@ -32,8 +32,8 @@ describe('the canned path', () => {
 
   test('shows the spec figures on the receipt', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await walkTheCannedPath(user)
+    renderApp()
+    await toReceipt(user)
 
     expect(screen.getByText('$7.6M')).toBeInTheDocument()
     expect(screen.getByText('OPEN · 45 DAYS')).toBeInTheDocument()
@@ -45,8 +45,8 @@ describe('the canned path', () => {
 describe('the evidence shift', () => {
   test('is not visible until asked for', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    renderApp()
+    await toConditions(user)
 
     expect(screen.queryByText(copy.conditions.revealHeadline)).not.toBeInTheDocument()
     expect(screen.queryByText(regional.evidenceShiftStatement)).not.toBeInTheDocument()
@@ -54,9 +54,8 @@ describe('the evidence shift', () => {
 
   test('adds the shift without removing the conditions', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
+    renderApp()
+    await toRevealed(user)
 
     expect(screen.getByText(copy.conditions.revealHeadline)).toBeInTheDocument()
     expect(screen.getByText(regional.evidenceShiftStatement)).toBeInTheDocument()
@@ -69,9 +68,8 @@ describe('the evidence shift', () => {
 
   test('the reveal is announced, not only shown', async () => {
     const user = userEvent.setup()
-    const { container } = render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
+    const { container } = renderApp()
+    await toRevealed(user)
 
     const live = container.querySelector('[aria-live="polite"]')
     expect(live).not.toBeNull()
@@ -82,10 +80,8 @@ describe('the evidence shift', () => {
 describe('comparables', () => {
   test('are a real table, marked illustrative', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.nextButton }))
+    renderApp()
+    await toComparables(user)
 
     const table = screen.getByRole('table')
     expect(within(table).getAllByRole('row')).toHaveLength(
@@ -102,8 +98,8 @@ describe('comparables', () => {
 describe('the receipt disclosure', () => {
   test('starts collapsed so the screen stays inside the time budget', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await walkTheCannedPath(user)
+    renderApp()
+    await toReceipt(user)
 
     const toggle = screen.getByRole('button', { name: new RegExp(copy.receipt.disclosureLabel) })
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
@@ -118,24 +114,22 @@ describe('the receipt disclosure', () => {
 describe('resuming and restarting', () => {
   test('a refresh mid-flow resumes on the same screen', async () => {
     const user = userEvent.setup()
-    const first = render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.nextButton }))
+    const first = renderApp()
+    await toComparables(user)
     expect(screen.getByRole('heading', { name: copy.comparables.headline })).toBeInTheDocument()
 
     // Unmounting and remounting is what a page refresh does to this app.
     first.unmount()
-    render(<App />)
+    renderApp()
 
     expect(screen.getByRole('heading', { name: copy.comparables.headline })).toBeInTheDocument()
   })
 
   test('restarting returns to the landing screen and resets the flow', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await walkTheCannedPath(user)
-    await user.click(screen.getByRole('button', { name: copy.receipt.secondaryButton }))
+    renderApp()
+    await toReceipt(user)
+    await press(user, copy.receipt.secondaryButton)
 
     expect(screen.getByRole('heading', { name: copy.landing.headline })).toBeInTheDocument()
 
@@ -160,8 +154,8 @@ describe('resuming and restarting', () => {
     })
 
     try {
-      render(<App />)
-      await walkTheCannedPath(user)
+      renderApp()
+      await toReceipt(user)
       expect(screen.getByText(copy.receipt.receiptTitle)).toBeInTheDocument()
     } finally {
       if (original !== undefined) Object.defineProperty(window, 'sessionStorage', original)
@@ -170,19 +164,12 @@ describe('resuming and restarting', () => {
 })
 
 
-/** Names of every control in the step rail, in order. */
-function stepButtonNames(rail: HTMLElement): string[] {
-  return within(rail)
-    .queryAllByRole('button')
-    .map((button) => button.textContent?.trim() ?? '')
-}
-
 describe('the chevron step rail', () => {
 
   test('lets a visitor go back to a step they have seen', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await walkTheCannedPath(user)
+    renderApp()
+    await toReceipt(user)
     expect(screen.getByRole('heading', { name: copy.receipt.headline })).toBeInTheDocument()
 
     const rail = screen.getByRole('navigation', { name: /progress/i })
@@ -195,8 +182,8 @@ describe('the chevron step rail', () => {
 
   test('a step returned to stays reachable in both directions', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await walkTheCannedPath(user)
+    renderApp()
+    await toReceipt(user)
 
     const rail = () => screen.getByRole('navigation', { name: /progress/i })
     await user.click(within(rail()).getByRole('button', { name: 'Conditions' }))
@@ -209,10 +196,10 @@ describe('the chevron step rail', () => {
 
   test('restarting clears the history, so nothing ahead is reachable', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await walkTheCannedPath(user)
-    await user.click(screen.getByRole('button', { name: copy.receipt.secondaryButton }))
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    renderApp()
+    await toReceipt(user)
+    await press(user, copy.receipt.secondaryButton)
+    await toConditions(user)
 
     const rail = screen.getByRole('navigation', { name: /progress/i })
     expect(stepButtonNames(rail)).toEqual([copy.stepIndicatorStart])
@@ -220,8 +207,8 @@ describe('the chevron step rail', () => {
 
   test('offers no control for steps not yet reached', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    renderApp()
+    await toConditions(user)
 
     const rail = screen.getByRole('navigation', { name: /progress/i })
     expect(stepButtonNames(rail)).toEqual([copy.stepIndicatorStart])
@@ -230,8 +217,8 @@ describe('the chevron step rail', () => {
 
   test('Start restarts the example and returns to the landing screen', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await walkTheCannedPath(user)
+    renderApp()
+    await toReceipt(user)
 
     const rail = screen.getByRole('navigation', { name: /progress/i })
     await user.click(within(rail).getByRole('button', { name: copy.stepIndicatorStart }))
@@ -239,23 +226,21 @@ describe('the chevron step rail', () => {
     expect(screen.getByRole('heading', { name: copy.landing.headline })).toBeInTheDocument()
     // Restarted, not merely navigated: the rail is gone and the reveal is reset.
     expect(screen.queryByRole('navigation', { name: /progress/i })).not.toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    await toConditions(user)
     expect(screen.queryByText(copy.conditions.revealHeadline)).not.toBeInTheDocument()
   })
 
   test('marks the current step for assistive technology', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.nextButton }))
+    renderApp()
+    await toComparables(user)
 
     const rail = screen.getByRole('navigation', { name: /progress/i })
     expect(within(rail).getByText('Comparables')).toHaveAttribute('aria-current', 'step')
   })
 
   test('is absent outside the three-step example', async () => {
-    render(<App />)
+    renderApp()
     expect(screen.queryByRole('navigation', { name: /progress/i })).not.toBeInTheDocument()
   })
 })
@@ -263,8 +248,8 @@ describe('the chevron step rail', () => {
 describe('the commitment picker', () => {
   test('offers every scenario in the pack', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    renderApp()
+    await toConditions(user)
 
     const picker = screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel })
     const offered = within(picker).getAllByRole('option').map((o) => o.textContent)
@@ -274,8 +259,8 @@ describe('the commitment picker', () => {
 
   test('shows the current commitment as the selection', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    renderApp()
+    await toConditions(user)
 
     expect(screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel })).toHaveValue(
       'regional_expansion_v1',
@@ -284,8 +269,8 @@ describe('the commitment picker', () => {
 
   test('switching swaps the whole example, not just the heading', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    renderApp()
+    await toConditions(user)
 
     const picker = screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel })
     await user.selectOptions(picker, 'capacity_expansion_v1')
@@ -300,9 +285,8 @@ describe('the commitment picker', () => {
 
   test('the new example starts unrevealed', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
+    renderApp()
+    await toRevealed(user)
     expect(screen.getByText(copy.conditions.revealHeadline)).toBeInTheDocument()
 
     await user.selectOptions(
@@ -319,15 +303,15 @@ describe('the commitment picker', () => {
 
   test('the switched example carries through to the receipt', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    renderApp()
+    await toConditions(user)
     await user.selectOptions(
       screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel }),
       'portfolio_allocation_v1',
     )
-    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.nextButton }))
-    await user.click(screen.getByRole('button', { name: copy.comparables.button }))
+    await press(user, copy.conditions.initialButton)
+    await press(user, copy.conditions.nextButton)
+    await press(user, copy.comparables.button)
 
     expect(screen.getByText('$15.0M')).toBeInTheDocument()
   })
@@ -336,8 +320,8 @@ describe('the commitment picker', () => {
 describe('the scenario description', () => {
   test('sits under the picker, with no label of its own', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    renderApp()
+    await toConditions(user)
 
     const description = screen.getByText(regional.description)
     expect(description).toBeInTheDocument()
@@ -350,8 +334,8 @@ describe('the scenario description', () => {
 
   test('changes with the chosen commitment', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    renderApp()
+    await toConditions(user)
     await user.selectOptions(
       screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel }),
       'technology_program_v1',
@@ -371,8 +355,8 @@ describe('the scenario description', () => {
 describe('the receipt owner', () => {
   test('names who is accountable, right after the commitment', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await walkTheCannedPath(user)
+    renderApp()
+    await toReceipt(user)
 
     const label = screen.getByText(copy.receipt.rowLabels.owner)
     expect(screen.getByText(regional.owner)).toBeInTheDocument()
@@ -392,8 +376,8 @@ describe('the receipt owner', () => {
 
   test('the authority sits on a second line under the owner', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await walkTheCannedPath(user)
+    renderApp()
+    await toReceipt(user)
 
     const ownerRow = [...document.querySelectorAll('.lr-receipt__row')].find((row) =>
       row.textContent?.includes(copy.receipt.rowLabels.owner),
@@ -408,15 +392,15 @@ describe('the receipt owner', () => {
 
   test('the authority follows the chosen commitment', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    renderApp()
+    await toConditions(user)
     await user.selectOptions(
       screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel }),
       'portfolio_allocation_v1',
     )
-    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.nextButton }))
-    await user.click(screen.getByRole('button', { name: copy.comparables.button }))
+    await press(user, copy.conditions.initialButton)
+    await press(user, copy.conditions.nextButton)
+    await press(user, copy.comparables.button)
 
     expect(screen.getByText('CIO · Chief Investment Officer')).toBeInTheDocument()
     expect(screen.getByText('Authority: Investment Committee')).toBeInTheDocument()
@@ -424,15 +408,15 @@ describe('the receipt owner', () => {
 
   test('the owner follows the chosen commitment', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    renderApp()
+    await toConditions(user)
     await user.selectOptions(
       screen.getByRole('combobox', { name: copy.conditions.commitmentPickerLabel }),
       'capacity_expansion_v1',
     )
-    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.nextButton }))
-    await user.click(screen.getByRole('button', { name: copy.comparables.button }))
+    await press(user, copy.conditions.initialButton)
+    await press(user, copy.conditions.nextButton)
+    await press(user, copy.comparables.button)
 
     expect(screen.getByText('CSCO · Chief Supply Chain Officer')).toBeInTheDocument()
   })
@@ -443,7 +427,7 @@ describe('the contact call to action', () => {
 
   test('points at the live try-us page, on every screen', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    renderApp()
 
     async function expectContactPresent(where: string) {
       const link = screen.getByRole('link', { name: copy.contact.linkLabel })
@@ -452,26 +436,26 @@ describe('the contact call to action', () => {
     }
 
     await expectContactPresent('landing')
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    await toConditions(user)
     await expectContactPresent('conditions')
-    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.nextButton }))
+    await press(user, copy.conditions.initialButton)
+    await press(user, copy.conditions.nextButton)
     await expectContactPresent('comparables')
-    await user.click(screen.getByRole('button', { name: copy.comparables.button }))
+    await press(user, copy.comparables.button)
     await expectContactPresent('receipt')
   })
 
   test('reaches the customize path too', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.secondaryButton }))
+    renderApp()
+    await press(user, copy.landing.secondaryButton)
     expect(screen.getByRole('link', { name: copy.contact.linkLabel })).toBeInTheDocument()
   })
 
   test('is an https link off-site, not a mailto', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+    renderApp()
+    await toConditions(user)
 
     const link = screen.getByRole('link', { name: copy.contact.linkLabel })
     expect(link.getAttribute('href')).toBe('https://www.longreach.ai/try-us/')
@@ -480,8 +464,8 @@ describe('the contact call to action', () => {
 
   test('appears once, not once per screen section', async () => {
     const user = userEvent.setup()
-    render(<App />)
-    await walkTheCannedPath(user)
+    renderApp()
+    await toReceipt(user)
     expect(screen.getAllByRole('link', { name: copy.contact.linkLabel })).toHaveLength(1)
   })
 })

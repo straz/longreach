@@ -1,0 +1,30 @@
+/* Layout primitives shared by more than one screen.
+ *
+ * These lived in Conditions.css, which meant Comparables, Receipt, Customize
+ * and ConfirmScenario all silently depended on a stylesheet for a screen they
+ * have nothing to do with. Editing that file could break four others.
+ */
+
+/* A titled block within a screen. */
+.lr-section {
+  margin-top: var(--space-6);
+}
+
+.lr-section__title {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: var(--space-4);
+}
+
+/* The row of buttons that closes a screen. */
+.lr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}

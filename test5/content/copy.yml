@@ -30,11 +30,18 @@ stepIndicatorStart: Start
 
 landing:
   eyebrow: LONGREACH DECISION REFRESH
-  headline: Keep important commitments current as conditions change.
+  headline: The facts changed. How did your commitments?
   body: >-
-    Major commitments are made using the best evidence available at the time.
-    Longreach records the conditions behind a commitment, notices meaningful
-    evidence shifts, and brings forward lessons from similar decisions.
+    Your forecasts, assumptions and evidence continuously
+    change. Commitments keep consuming money, people and options long
+    after the original decisions were made. Who ‘owns’ your commitment
+    portfolio?
+
+    Longreach computes which commitments make sense, which
+    deserve reconsideration and where changing course can still make a
+    big economic difference. See and understand what your
+    commitments committed you to.
+
   primaryButton: See a 30-second example
   secondaryButton: Customize this example
   microcopy: No sign-up. The standard example uses illustrative data.
@@ -143,6 +150,7 @@ comparables:
   headline: You have encountered this pattern before.
   body: >-
     This is organizational memory, with an economic purpose.
+    
     Longreach compares active commitments with prior decisions that relied on
     similar conditions, faced similar evidence shifts, or approached the same
     type of lock-in.

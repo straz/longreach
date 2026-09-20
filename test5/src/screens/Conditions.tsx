@@ -72,7 +72,7 @@ export function Conditions({
       <section className="lr-section">
         <h2 className="lr-section__title">{text.conditionsSectionTitle}</h2>
 
-        <table className="lr-conditions__table">
+        <table className="lr-datatable lr-conditions__table">
           <thead>
             <tr>
               <th scope="col">{columns.status}</th>

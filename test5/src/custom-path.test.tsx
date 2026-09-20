@@ -1,25 +1,21 @@
 // @vitest-environment jsdom
 
 import { describe, expect, test } from 'vitest'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import App from './App.tsx'
 import { copy, routing } from './content.ts'
-
-type User = ReturnType<typeof userEvent.setup>
+import {
+  press,
+  renderApp,
+  settleOnConfirm,
+  toCustomize,
+  type User,
+} from './test-helpers.tsx'
 
 async function openCustomize(user: User) {
-  render(<App />)
-  await user.click(screen.getByRole('button', { name: copy.landing.secondaryButton }))
-}
-
-/** Waits past the C2 minimum duration and lands on C3. */
-async function settleOnConfirm() {
-  await waitFor(
-    () => expect(screen.getByRole('heading', { name: copy.confirm.headline })).toBeInTheDocument(),
-    { timeout: 5000 },
-  )
+  renderApp()
+  await toCustomize(user)
 }
 
 describe('C1 intake', () => {
@@ -33,7 +29,7 @@ describe('C1 intake', () => {
     const user = userEvent.setup()
     await openCustomize(user)
 
-    await user.click(screen.getByRole('button', { name: copy.customize.primaryButton }))
+    await press(user, copy.customize.primaryButton)
     expect(screen.queryByRole('heading', { name: copy.recognizing.headline })).not.toBeInTheDocument()
     expect(screen.getByText(copy.customize.commitmentTypeRequired)).toBeInTheDocument()
   })
@@ -68,7 +64,7 @@ describe('C1 intake', () => {
     await user.paste('x'.repeat(routing.limits.sourceTextMaxChars + 1))
 
     expect(screen.getByText(copy.customize.sourceTextTooLong)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: copy.customize.primaryButton }))
+    await press(user, copy.customize.primaryButton)
     expect(screen.queryByRole('heading', { name: copy.recognizing.headline })).not.toBeInTheDocument()
   })
 
@@ -93,7 +89,7 @@ describe('selection-only submission', () => {
     await user.click(
       screen.getByRole('button', { name: copy.commitmentTypeLabels.capital_expansion }),
     )
-    await user.click(screen.getByRole('button', { name: copy.customize.primaryButton }))
+    await press(user, copy.customize.primaryButton)
 
     expect(screen.getByRole('heading', { name: copy.recognizing.headline })).toBeInTheDocument()
     await settleOnConfirm()
@@ -109,17 +105,17 @@ describe('selection-only submission', () => {
     await user.click(
       screen.getByRole('button', { name: copy.commitmentTypeLabels.acquisition_integration }),
     )
-    await user.click(screen.getByRole('button', { name: copy.customize.primaryButton }))
+    await press(user, copy.customize.primaryButton)
     await settleOnConfirm()
-    await user.click(screen.getByRole('button', { name: copy.confirm.primaryButton }))
+    await press(user, copy.confirm.primaryButton)
 
     // The integration template, in the identical S1 structure.
     expect(screen.getByText('Fund a $45M post-acquisition integration plan')).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: copy.conditions.headline })).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: copy.conditions.initialButton }))
-    await user.click(screen.getByRole('button', { name: copy.conditions.nextButton }))
-    await user.click(screen.getByRole('button', { name: copy.comparables.button }))
+    await press(user, copy.conditions.initialButton)
+    await press(user, copy.conditions.nextButton)
+    await press(user, copy.comparables.button)
     expect(screen.getByText('$18.2M')).toBeInTheDocument()
   })
 })
@@ -135,7 +131,7 @@ describe('text routing', () => {
       screen.getByPlaceholderText(copy.customize.briefContextPlaceholder),
       'Our $20M ERP migration and platform automation programme is over budget in March',
     )
-    await user.click(screen.getByRole('button', { name: copy.customize.primaryButton }))
+    await press(user, copy.customize.primaryButton)
     await settleOnConfirm()
 
     // A clear reading overrode the market-expansion selection.
@@ -155,7 +151,7 @@ describe('text routing', () => {
       screen.getByPlaceholderText(copy.customize.briefContextPlaceholder),
       'Project Orion at Acme Holdings is over budget',
     )
-    await user.click(screen.getByRole('button', { name: copy.customize.primaryButton }))
+    await press(user, copy.customize.primaryButton)
     await settleOnConfirm()
 
     expect(document.body.textContent).not.toMatch(/Orion/)
@@ -168,8 +164,8 @@ describe('the fallback path', () => {
   async function runWithJevParam(user: User, value: string) {
     window.history.replaceState({}, '', `/?jev=${value}`)
     try {
-      render(<App />)
-      await user.click(screen.getByRole('button', { name: copy.landing.secondaryButton }))
+      renderApp()
+      await press(user, copy.landing.secondaryButton)
       await user.click(
         screen.getByRole('button', { name: copy.commitmentTypeLabels.investment_allocation }),
       )
@@ -177,7 +173,7 @@ describe('the fallback path', () => {
         screen.getByPlaceholderText(copy.customize.briefContextPlaceholder),
         'Our ERP migration is over budget',
       )
-      await user.click(screen.getByRole('button', { name: copy.customize.primaryButton }))
+      await press(user, copy.customize.primaryButton)
       await settleOnConfirm()
     } finally {
       window.history.replaceState({}, '', '/')
@@ -224,14 +220,14 @@ describe('staying in control on C3', () => {
     await user.click(
       screen.getByRole('button', { name: copy.commitmentTypeLabels.capital_expansion }),
     )
-    await user.click(screen.getByRole('button', { name: copy.customize.primaryButton }))
+    await press(user, copy.customize.primaryButton)
     await settleOnConfirm()
   }
 
   test('"Edit my inputs" returns to C1 with the selection intact', async () => {
     const user = userEvent.setup()
     await toConfirm(user)
-    await user.click(screen.getByRole('button', { name: copy.confirm.editLink }))
+    await press(user, copy.confirm.editLink)
 
     expect(screen.getByRole('heading', { name: copy.customize.headline })).toBeInTheDocument()
     expect(
@@ -242,7 +238,7 @@ describe('staying in control on C3', () => {
   test('"Use the standard example" runs the canned scenario instead', async () => {
     const user = userEvent.setup()
     await toConfirm(user)
-    await user.click(screen.getByRole('button', { name: copy.confirm.secondaryButton }))
+    await press(user, copy.confirm.secondaryButton)
 
     expect(screen.getByText('Fund a $12M regional expansion program')).toBeInTheDocument()
   })

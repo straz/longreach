@@ -8,57 +8,8 @@
   color: var(--muted);
 }
 
-.lr-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
-  font-size: 0.9375rem;
-  text-align: left;
-}
-
-.lr-table thead th {
-  background: var(--surface-sunken);
-  border-bottom: 1px solid var(--rule-strong);
-  color: var(--muted);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: var(--space-3) var(--space-4);
-}
-
-.lr-table tbody th,
-.lr-table tbody td {
-  border-bottom: 1px solid var(--rule);
-  padding: var(--space-4);
-  vertical-align: top;
-  font-weight: 400;
-}
-
-.lr-table tbody th {
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.lr-table tbody td {
-  color: var(--muted);
-}
-
-.lr-table tbody tr:last-child th,
-.lr-table tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-/* Column labels are for the stacked card layout only. */
-.lr-table__label {
-  display: none;
-}
-
-.lr-table__value {
-  display: block;
+.lr-comparables__body + .lr-comparables__body {
+  margin-top: var(--space-3);
 }
 
 /* The pattern card. This is the line the visitor should remember. */
@@ -101,57 +52,3 @@
  * S1 over 3000px long. At 768px the four columns fit with no overflow and the
  * table is 439px tall against roughly 2400px of stacked cards. Below 700px the
  * columns get too narrow to be worth keeping and the cards win. */
-@media (max-width: 700px) {
-  .lr-table,
-  .lr-table tbody,
-  .lr-table tbody tr,
-  .lr-table tbody th,
-  .lr-table tbody td {
-    display: block;
-    width: 100%;
-  }
-
-  .lr-table {
-    background: none;
-    border: 0;
-    box-shadow: none;
-  }
-
-  /* Not merely hidden: overflow does not clip a table-header-group, so a
-     visually-hidden header would still lay its cells out past the right edge.
-     The column names come from data-label down here. */
-  .lr-table thead {
-    display: none;
-  }
-
-  .lr-table tbody tr {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-card);
-    margin-bottom: var(--space-3);
-    padding: var(--space-2) 0;
-  }
-
-  .lr-table tbody th,
-  .lr-table tbody td {
-    border-bottom: 0;
-    padding: var(--space-3) var(--space-4);
-    white-space: normal;
-  }
-
-  .lr-table tbody th {
-    font-family: var(--serif);
-    font-size: 1.0625rem;
-  }
-
-  .lr-table__label {
-    display: block;
-    color: var(--muted-light);
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 0.125rem;
-  }
-}
