@@ -1,0 +1,91 @@
+# Commitment, rationale, evidence shift, capital-still-in-play figure and
+# flexibility window transcribed from docs/README.md §"portfolio_allocation_v1".
+# Conditions and authority from docs/SCENARIO_CONTENT.md; comparables and the
+# capital components are authored. All figures are illustrative.
+#
+# Note the flexibility-window sentence ends differently here than in the other
+# templates — "before the next allocation lock-in and governance cycle", with
+# no "create a material lock-in" tail. That is why the full sentence is stored
+# rather than composed. See docs/PLAN.md §4.2.
+
+id: portfolio_allocation_v1
+type: investment_allocation
+title: Thematic Portfolio Allocation
+amountLabel: "$25M"
+activeCommitmentText: Maintain a $25M thematic portfolio allocation
+authority: Investment Committee
+
+# How the receipt names the commitment. docs/README.md §S1 shows the card as
+# "Fund a $12M regional expansion program" but §S3's receipt row as
+# "$12M regional expansion program" — the leading verb phrase is dropped.
+# check-content.ts asserts this is a suffix of activeCommitmentText.
+receiptCommitmentText: $25M thematic portfolio allocation
+
+rationale:
+  - The allocation was expected to benefit from a stated macro condition.
+  - The relevant valuation and earnings environment was expected to remain supportive.
+  - The allocation was expected to remain suitable for the portfolio’s risk posture.
+
+conditions:
+  - id: macro
+    label: Macro environment supports the allocation
+    watchedEvidence: Specified macro series
+    reconsiderationCondition: Condition moves outside the decision range
+    why: "The allocation was expected to benefit from a stated macro condition."
+    status: new_evidence
+  - id: valuation
+    label: Valuation supports expected return
+    watchedEvidence: Valuation range
+    reconsiderationCondition: Valuation moves materially beyond the authorization range
+    why: "The relevant valuation and earnings environment was expected to remain supportive."
+    status: within_range
+  - id: risk
+    label: Risk remains aligned
+    watchedEvidence: Portfolio risk metrics
+    reconsiderationCondition: Risk posture moves outside agreed tolerance
+    why: "The allocation was expected to remain suitable for the portfolio’s risk posture."
+    status: within_range
+
+evidenceShiftConditionId: macro
+evidenceShiftStatement: A macro condition supporting the allocation has moved materially from the range present at authorization.
+evidenceShiftInterpretation: >-
+  The commitment is not automatically invalid. One condition that shaped its
+  original scope has moved. The relevant question is whether the current scope
+  remains the best use of the capital still in play.
+
+# AUTHORED, NOT SPEC. docs/SCENARIO_CONTENT.md gives only "$15.0M still in
+# play" against a $25M allocation. Split as the tranche not yet deployed (9.0)
+# plus held positions that can still be resized within the mandate (6.0);
+# 10.0 covers positions not practical to change before the next governance
+# cycle. See docs/PLAN.md R4.
+plannedUncommittedCapital: 9000000
+practicallyChangeableCapital: 6000000
+irreversiblyCommittedCapital: 10000000
+expectedCapitalStillInPlayLabel: "$15.0M"
+
+flexibilityWindowDays: 21
+lockInDescription: the next allocation lock-in and governance cycle
+flexibilityWindowText: 21 days before the next allocation lock-in and governance cycle
+
+comparableCommitments:
+  - year: "2023"
+    title: Sector allocation
+    relevantCondition: Macro condition
+    evidenceShift: The stated macro condition moved outside the decision range
+    whatHappenedNext: The allocation was revisited before the next governance cycle
+    changedBeforeScheduledReview: true
+    reviewedAfterLockIn: false
+  - year: "2024"
+    title: Thematic sleeve
+    relevantCondition: Valuation
+    evidenceShift: Valuation moved beyond the authorization range
+    whatHappenedNext: The position was staged and remaining capital was redirected
+    changedBeforeScheduledReview: false
+    reviewedAfterLockIn: false
+  - year: "2025"
+    title: Concentrated holding
+    relevantCondition: Risk posture
+    evidenceShift: Risk posture moved outside the agreed tolerance
+    whatHappenedNext: Review occurred after the governance cycle had closed
+    changedBeforeScheduledReview: true
+    reviewedAfterLockIn: true

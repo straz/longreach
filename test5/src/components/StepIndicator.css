@@ -1,0 +1,173 @@
+/* A chevron rail. Each item is a rectangle with a notch cut from its left edge
+   and a point on its right, so the sequence reads as direction of travel. */
+
+.lr-steps {
+  margin-bottom: var(--space-6);
+}
+
+.lr-steps__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.lr-steps__item {
+  flex: 1 1 0;
+  min-width: 8rem;
+  background: var(--surface);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  /* Point on the right, matching notch on the left, so neighbours interlock. */
+  clip-path: polygon(
+    0 0,
+    calc(100% - 0.875rem) 0,
+    100% 50%,
+    calc(100% - 0.875rem) 100%,
+    0 100%,
+    0.875rem 50%
+  );
+}
+
+.lr-steps__item:first-child {
+  clip-path: polygon(0 0, calc(100% - 0.875rem) 0, 100% 50%, calc(100% - 0.875rem) 100%, 0 100%);
+}
+
+/* Start is an exit, not a step of the example: narrower, and it does not
+   claim an equal share of the rail. */
+.lr-steps__item--start {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.lr-steps__item--start .lr-steps__link {
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+  color: var(--muted);
+}
+
+.lr-steps__item--start .lr-steps__link:hover {
+  color: var(--accent);
+}
+
+.lr-steps__item:last-child {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0.875rem 50%);
+}
+
+.lr-steps__link,
+.lr-steps__label {
+  display: block;
+  width: 100%;
+  background: none;
+  border: 0;
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-5);
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Visited: a real control, and it says so on hover and focus. */
+.lr-steps__link {
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.lr-steps__link:hover {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+/* The clip-path would crop a normal outline, so the focus ring is drawn
+   inside the shape. */
+.lr-steps__link:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--accent);
+  color: var(--accent);
+}
+
+/* A step already seen reads as available: full-strength label on the surface,
+   where one not yet reached is dimmed on a sunken ground. */
+.lr-steps__item--seen .lr-steps__link {
+  color: var(--navy);
+}
+
+.lr-steps__item--seen {
+  background: var(--surface);
+}
+
+.lr-steps__item--current {
+  background: var(--accent-light);
+  border-color: var(--accent-rule);
+}
+
+.lr-steps__item--current .lr-steps__label {
+  color: var(--accent);
+}
+
+.lr-steps__item--upcoming {
+  background: var(--surface-sunken);
+}
+
+.lr-steps__item--upcoming .lr-steps__label {
+  color: var(--muted-light);
+}
+
+@media (max-width: 560px) {
+  /* Below roughly 400px the four labels cannot all fit, and no type size fixes
+     that: "COMPARABLES" alone wants ~100px. Rather than truncate a step name,
+     each chevron keeps its content width and the rail scrolls. It still fills
+     the width whenever there is room, because the items may grow but not
+     shrink past their text. */
+  .lr-steps__list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .lr-steps__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lr-steps__item {
+    flex: 1 1 auto;
+    min-width: max-content;
+    /* Shallower notch, so more of each chevron is usable for its label. */
+    clip-path: polygon(
+      0 0,
+      calc(100% - 0.5rem) 0,
+      100% 50%,
+      calc(100% - 0.5rem) 100%,
+      0 100%,
+      0.5rem 50%
+    );
+  }
+
+  .lr-steps__item:first-child {
+    clip-path: polygon(0 0, calc(100% - 0.5rem) 0, 100% 50%, calc(100% - 0.5rem) 100%, 0 100%);
+  }
+
+  .lr-steps__item:last-child {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0.5rem 50%);
+  }
+
+  .lr-steps__link,
+  .lr-steps__label {
+    padding: var(--space-3) var(--space-1) var(--space-3) var(--space-3);
+    /* 11px, not 10: the space for four chevrons comes out of tracking and
+       padding rather than out of legibility. */
+    font-size: 0.6875rem;
+    letter-spacing: 0;
+  }
+
+  .lr-steps__item--start .lr-steps__link {
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
+  }
+}

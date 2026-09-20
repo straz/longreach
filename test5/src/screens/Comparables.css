@@ -1,0 +1,169 @@
+.lr-comparables__headline {
+  font-size: clamp(1.625rem, 3.6vw, 2.25rem);
+  margin-bottom: var(--space-4);
+}
+
+.lr-comparables__body {
+  max-width: var(--measure);
+  color: var(--muted);
+}
+
+.lr-comparables__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.lr-comparables__heading .lr-section__title {
+  margin-bottom: 0;
+}
+
+.lr-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  font-size: 0.9375rem;
+  text-align: left;
+}
+
+.lr-table thead th {
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--rule-strong);
+  color: var(--muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: var(--space-3) var(--space-4);
+}
+
+.lr-table tbody th,
+.lr-table tbody td {
+  border-bottom: 1px solid var(--rule);
+  padding: var(--space-4);
+  vertical-align: top;
+  font-weight: 400;
+}
+
+.lr-table tbody th {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.lr-table tbody td {
+  color: var(--muted);
+}
+
+.lr-table tbody tr:last-child th,
+.lr-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Column labels are for the stacked card layout only. */
+.lr-table__label {
+  display: none;
+}
+
+.lr-table__value {
+  display: block;
+}
+
+/* The pattern card. This is the line the visitor should remember. */
+.lr-pattern {
+  margin-top: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--accent-rule);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+}
+
+.lr-pattern__heading {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-3);
+}
+
+.lr-pattern__statement {
+  font-family: var(--serif);
+  font-size: clamp(1.125rem, 2.4vw, 1.375rem);
+  line-height: 1.35;
+  max-width: 48ch;
+  margin-bottom: var(--space-3);
+}
+
+.lr-pattern__implication {
+  max-width: var(--measure);
+  color: var(--muted);
+}
+
+/* Cards below 700px, the real table above it.
+ *
+ * This was 860px, which handed an iPad in portrait the phone layout and made
+ * S1 over 3000px long. At 768px the four columns fit with no overflow and the
+ * table is 439px tall against roughly 2400px of stacked cards. Below 700px the
+ * columns get too narrow to be worth keeping and the cards win. */
+@media (max-width: 700px) {
+  .lr-table,
+  .lr-table tbody,
+  .lr-table tbody tr,
+  .lr-table tbody th,
+  .lr-table tbody td {
+    display: block;
+    width: 100%;
+  }
+
+  .lr-table {
+    background: none;
+    border: 0;
+    box-shadow: none;
+  }
+
+  /* Not merely hidden: overflow does not clip a table-header-group, so a
+     visually-hidden header would still lay its cells out past the right edge.
+     The column names come from data-label down here. */
+  .lr-table thead {
+    display: none;
+  }
+
+  .lr-table tbody tr {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+    margin-bottom: var(--space-3);
+    padding: var(--space-2) 0;
+  }
+
+  .lr-table tbody th,
+  .lr-table tbody td {
+    border-bottom: 0;
+    padding: var(--space-3) var(--space-4);
+    white-space: normal;
+  }
+
+  .lr-table tbody th {
+    font-family: var(--serif);
+    font-size: 1.0625rem;
+  }
+
+  .lr-table__label {
+    display: block;
+    color: var(--muted-light);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.125rem;
+  }
+}

@@ -1,0 +1,136 @@
+.lr-modal__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--space-5);
+  overflow-y: auto;
+  background: var(--scrim);
+  animation: lr-scrim-in 160ms ease-out;
+}
+
+@keyframes lr-scrim-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.lr-modal {
+  width: 100%;
+  max-width: 34rem;
+  margin: auto;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-raised);
+}
+
+.lr-modal__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.lr-modal__headline {
+  flex: 1;
+  font-size: 1.375rem;
+}
+
+.lr-modal__close {
+  background: none;
+  border: 0;
+  padding: 0 var(--space-1);
+  color: var(--muted);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.lr-modal__close:hover {
+  color: var(--text);
+}
+
+.lr-modal__body {
+  margin-top: var(--space-4);
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.lr-modal__deliverables {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: var(--surface-sunken);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+}
+
+.lr-modal__deliverables li {
+  padding-left: var(--space-5);
+  position: relative;
+  margin-bottom: var(--space-2);
+}
+
+.lr-modal__deliverables li:last-child {
+  margin-bottom: 0;
+}
+
+.lr-modal__deliverables li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.625rem;
+  width: 0.5rem;
+  height: 1px;
+  background: var(--accent);
+}
+
+.lr-modal__form {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+}
+
+.lr-modal__form .lr-button {
+  justify-self: start;
+}
+
+.lr-field__label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin-bottom: var(--space-2);
+}
+
+.lr-field__input {
+  width: 100%;
+  font: inherit;
+  font-size: 0.9375rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.625rem;
+}
+
+.lr-field__input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.lr-field__helper {
+  margin-top: var(--space-2);
+  color: var(--muted-light);
+  font-size: 0.75rem;
+}
+
+.lr-modal__success {
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  background: var(--accent-light);
+  border: 1px solid var(--accent-rule);
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-size: 0.9375rem;
+}

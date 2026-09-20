@@ -1,0 +1,106 @@
+# How a selected commitment type becomes a scenario template.
+#
+# The menu selection on C1 is the fallback source of truth: with no pasted
+# text, this map alone decides which template the custom path uses
+# (docs/README.md §C1, docs/ARCHITECTURE.md §"Template routing").
+#
+# The mock recognizer's keyword lists and clarity weights are here too, so the
+# routing rules can be tuned without touching src/jev/mock.ts.
+
+# Every CommitmentType must appear. Checked by scripts/check-content.ts.
+typeToScenario:
+  market_expansion: regional_expansion_v1
+  technology_transformation: technology_program_v1
+  acquisition_integration: integration_v1
+  capital_expansion: capacity_expansion_v1
+  investment_allocation: portfolio_allocation_v1
+  strategic_other: strategic_other_v1
+
+# Used when a type has no template in the selected pack, and as the recognizer's
+# silent fallback (docs/README.md acceptance criterion 7).
+fallbackScenario: strategic_other_v1
+
+limits:
+  # docs/README.md §C1: "one short text description (500 characters maximum)".
+  briefContextMaxChars: 500
+
+  # docs/README.md §C1 says "up to 32K tokens; use approximate char limit
+  # locally if needed". 32,000 tokens at ~4 characters per token. The browser
+  # cannot count tokens, so this is the approximation (docs/PLAN.md R6); when
+  # the Worker lands it enforces its own body cap independently.
+  sourceTextMaxChars: 128000
+
+# --------------------------------------------------------------- recognizer
+# All of this is read by src/jev/mock.ts. Transcribed from docs/README.md
+# §"Mock classifier requirements".
+#
+# Matching is by whole word, case-insensitively. Substring matching would be
+# wrong here: "AI" is inside "said", "available" and "detail", and would route
+# half the English language to the technology template.
+#
+# Where several categories match, the one with the most matches wins; ties go
+# to whichever is declared first. The evidence-shift lists are therefore in the
+# spec's own order, which is load-bearing — "Vendor cost is rising and
+# implementation is two months late" matches cost, schedule and execution
+# equally, and the spec's worked example expects cost.
+
+commitmentKeywords:
+  technology_transformation:
+    [software, system, data, AI, cloud, ERP, migration, implementation, platform, automation]
+  acquisition_integration:
+    [acquisition, merger, acquired, integration, synergy, migration, retention]
+  capital_expansion:
+    [plant, facility, capacity, construction, equipment, factory, expansion]
+  investment_allocation:
+    [portfolio, fund, allocation, investment, security, asset, holding]
+  market_expansion:
+    [customer, market, region, launch, product, sales, demand, CAC]
+
+evidenceShiftKeywords:
+  cost: [cost, budget, overrun, expense, price]
+  schedule: [delay, timeline, late, schedule, milestone]
+  demand: [demand, adoption, revenue, bookings, growth]
+  economics: [margin, return, CAC, unit economics, profitability]
+  customer_retention: [retention, churn, customer loss]
+  regulatory: [regulation, compliance, policy, approval]
+  execution: [implementation, delivery, quality, operational]
+
+clarityScore:
+  start: 2
+  commitmentKeyword: 2
+  evidenceShiftKeyword: 2
+  currencyAmount: 2
+  timingWord: 1
+  longWithClauses: 1
+  longMinChars: 120
+  min: 1
+  max: 10
+
+# For the "add 1 if a date/timing word is present" rule.
+timingWords:
+  [day, days, week, weeks, month, months, quarter, quarters, year, years,
+   deadline, timeline, schedule, date, Q1, Q2, Q3, Q4, January, February,
+   March, April, May, June, July, August, September, October, November,
+   December]
+
+# Jev may override the commitment category the visitor selected, but only when
+# there is text to classify and the reading is clear enough
+# (docs/ARCHITECTURE.md §"Template routing"). Below this score the menu
+# selection stands, because a weak reading of a short note is a worse guide
+# than what the visitor actually picked.
+commitmentCategoryOverrideMinScore: 5
+
+# "Context recognized" on C3, keyed by the evidence shift rather than generated
+# from the visitor's words. This is the whole reason the demo cannot appear to
+# have discovered a fact about their business (docs/PLAN.md R3, §6.3): every
+# sentence here is pre-authored and says only what kind of condition moved.
+# All are well under the 20-word limit the recognizer contract sets.
+contextSummaries:
+  cost: Cost has moved from the range used at authorization
+  schedule: Timing has moved from the plan used at authorization
+  demand: Demand has moved from the range used at authorization
+  economics: Decision economics have moved from the authorized range
+  execution: Delivery has moved from the plan used at authorization
+  customer_retention: Customer retention has moved from the planning range
+  regulatory: A regulatory condition has moved from the authorized position
+  unclear: A decision refresh may be useful

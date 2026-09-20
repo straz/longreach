@@ -1,0 +1,88 @@
+# Commitment, rationale, evidence shift, capital-still-in-play figure and
+# flexibility window transcribed from docs/README.md §"integration_v1".
+# Conditions and authority from docs/SCENARIO_CONTENT.md, which specifies only
+# that the comparables "show a mix of early refresh, staged response, and
+# review after lock-in" — those three rows are authored to that brief, as are
+# the capital components. All figures are illustrative.
+
+id: integration_v1
+type: acquisition_integration
+title: Post-Acquisition Integration Plan
+amountLabel: "$45M"
+activeCommitmentText: Fund a $45M post-acquisition integration plan
+authority: Integration Steering Committee
+
+# How the receipt names the commitment. docs/README.md §S1 shows the card as
+# "Fund a $12M regional expansion program" but §S3's receipt row as
+# "$12M regional expansion program" — the leading verb phrase is dropped.
+# check-content.ts asserts this is a suffix of activeCommitmentText.
+receiptCommitmentText: $45M post-acquisition integration plan
+
+rationale:
+  - Customer retention was expected to remain within the planning range during migration.
+  - Target operating synergies were expected to be achievable on the original timeline.
+  - The integration sequence was expected to preserve core-service continuity.
+
+conditions:
+  - id: retention
+    label: Customer retention supports migration sequencing
+    watchedEvidence: Top-account retention
+    reconsiderationCondition: Retention remains below the planned range for a reporting cycle
+    why: "Customer retention was expected to remain within the planning range during migration."
+    status: new_evidence
+  - id: synergies
+    label: Synergies support current scope
+    watchedEvidence: Synergy realization forecast
+    reconsiderationCondition: Forecast shifts materially below the authorized case
+    why: "Target operating synergies were expected to be achievable on the original timeline."
+    status: within_range
+  - id: continuity
+    label: Timing preserves operating continuity
+    watchedEvidence: Migration milestones
+    reconsiderationCondition: Critical migration sequence slips by more than 30 days
+    why: "The integration sequence was expected to preserve core-service continuity."
+    status: within_range
+
+evidenceShiftConditionId: retention
+evidenceShiftStatement: Customer retention during migration has moved below the range used to set the current integration scope.
+evidenceShiftInterpretation: >-
+  The commitment is not automatically invalid. One condition that shaped its
+  original scope has moved. The relevant question is whether the current scope
+  remains the best use of the capital still in play.
+
+# AUTHORED, NOT SPEC. docs/SCENARIO_CONTENT.md gives only "$18.2M still in
+# play" against a $45M plan. Split as later migration waves not yet begun
+# (11.2) plus in-flight workstreams still resequenceable (7.0); 26.8 covers
+# completed migration work and signed consolidation commitments.
+# See docs/PLAN.md R4.
+plannedUncommittedCapital: 11200000
+practicallyChangeableCapital: 7000000
+irreversiblyCommittedCapital: 26800000
+expectedCapitalStillInPlayLabel: "$18.2M"
+
+flexibilityWindowDays: 30
+lockInDescription: system-consolidation and workforce commitments
+flexibilityWindowText: 30 days before system-consolidation and workforce commitments create a material lock-in
+
+comparableCommitments:
+  - year: "2023"
+    title: Platform acquisition
+    relevantCondition: Customer retention
+    evidenceShift: Retention moved below the planned migration range
+    whatHappenedNext: Migration sequence was revisited while later waves were still open
+    changedBeforeScheduledReview: true
+    reviewedAfterLockIn: false
+  - year: "2024"
+    title: Regional carve-out
+    relevantCondition: Synergy timing
+    evidenceShift: Synergy realization moved later than the authorized case
+    whatHappenedNext: Integration was staged and remaining capital was redirected
+    changedBeforeScheduledReview: false
+    reviewedAfterLockIn: false
+  - year: "2025"
+    title: Systems consolidation
+    relevantCondition: Service continuity
+    evidenceShift: Migration sequence slipped past the planned window
+    whatHappenedNext: Review occurred after consolidation commitments were in place
+    changedBeforeScheduledReview: true
+    reviewedAfterLockIn: true

@@ -1,0 +1,125 @@
+.lr-receipt-screen__headline {
+  font-size: clamp(1.625rem, 3.6vw, 2.25rem);
+  margin-bottom: var(--space-6);
+}
+
+/* The receipt reads as a document, not a dashboard tile. */
+.lr-receipt {
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-top: 3px solid var(--navy);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+}
+
+.lr-receipt__title {
+  font-size: 1.25rem;
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: var(--space-2);
+}
+
+.lr-receipt__rows {
+  margin: 0;
+}
+
+.lr-receipt__row {
+  display: grid;
+  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+  gap: var(--space-5);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.lr-receipt__row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.lr-receipt__row dt {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-top: 0.1875rem;
+}
+
+.lr-receipt__row dd {
+  margin: 0;
+  max-width: var(--measure);
+}
+
+.lr-receipt__figure {
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  line-height: 1.1;
+}
+
+.lr-receipt__badge {
+  display: block;
+  width: fit-content;
+  margin-bottom: var(--space-2);
+  padding: 0.1875rem 0.5rem;
+  background: var(--accent-light);
+  border: 1px solid var(--accent-rule);
+  border-radius: 2px;
+  color: var(--accent);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.lr-callout {
+  margin-top: var(--space-6);
+  padding-left: var(--space-5);
+  border-left: 2px solid var(--accent);
+  max-width: var(--measure);
+}
+
+.lr-callout p {
+  font-family: var(--serif);
+  font-size: 1.0625rem;
+  line-height: 1.45;
+}
+
+.lr-callout p + p {
+  margin-top: var(--space-2);
+  color: var(--muted);
+}
+
+.lr-possible {
+  max-width: var(--measure);
+  color: var(--muted);
+}
+
+.lr-possible li {
+  padding-left: var(--space-5);
+  position: relative;
+  margin-bottom: var(--space-2);
+}
+
+.lr-possible li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6875rem;
+  width: 0.5rem;
+  height: 1px;
+  background: var(--accent);
+}
+
+.lr-receipt-screen__supporting {
+  margin-top: var(--space-4);
+  max-width: var(--measure);
+  color: var(--muted-light);
+  font-size: 0.8125rem;
+}
+
+@media (max-width: 720px) {
+  .lr-receipt__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+  }
+}

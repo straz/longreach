@@ -1,0 +1,21 @@
+# Which scenario packs exist and which one loads by default.
+#
+# A pack is a named set of scenario templates. Selecting one with ?pack=<id>
+# is how an alternate set of illustrative content gets demoed without a code
+# change (docs/PLAN.md §4.4). Adding a template means dropping a .yml into
+# scenarios/ and listing it in a pack here.
+
+defaultPack: standard
+
+packs:
+  standard:
+    label: Standard illustrative set
+    # The canned default: what the zero-input path loads from S0.
+    defaultScenario: regional_expansion_v1
+    templates:
+      - regional_expansion_v1
+      - technology_program_v1
+      - integration_v1
+      - capacity_expansion_v1
+      - portfolio_allocation_v1
+      - strategic_other_v1

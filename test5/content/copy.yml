@@ -1,0 +1,252 @@
+# Every string the screens render, transcribed verbatim from docs/README.md
+# §"Screen specification". The spec marks these as exact visible copy, so they
+# live here rather than in .tsx: tone is reviewed and changed as content.
+#
+# Two rules when editing:
+#   1. Nothing from docs/README.md §"Never use user-facing phrases" may appear.
+#      The Phase 3 tone check greps the built bundle for them.
+#   2. Structural wording stays fixed across scenarios. Only the template's
+#      own nouns, amounts and conditions vary (docs/README.md §S1
+#      "Custom scenario behavior").
+
+# docs/README.md §"App flow" writes these as "1 Conditions", "2 Comparables",
+# "3 Receipt". The numbers are dropped because the rail is a chevron sequence
+# whose shape already carries the order, and "1 1 CONDITIONS" is what numbering
+# them twice looks like.
+stepIndicator:
+  - Conditions
+  - Comparables
+  - Receipt
+
+# The leading chevron. Restarts the example and returns to the landing screen.
+stepIndicatorStart: Start
+
+landing:
+  eyebrow: LONGREACH DECISION REFRESH
+  headline: Keep important commitments current as conditions change.
+  body: >-
+    Major commitments are made using the best evidence available at the time.
+    Longreach records the conditions behind a commitment, notices meaningful
+    evidence shifts, and brings forward lessons from similar decisions.
+  primaryButton: See a 30-second example
+  secondaryButton: Customize this example
+  microcopy: No sign-up. The standard example uses illustrative data.
+  footer: Illustrative demonstration — not investment, legal, accounting, or operating advice.
+
+customize:
+  headline: Make the example closer to a commitment you recognize.
+  body: >-
+    Choose a commitment type. Then, if useful, add one sentence or paste a
+    short decision note. Longreach will create an illustrative decision-refresh
+    example based on your context.
+  commitmentTypeLabel: What kind of commitment is this?
+  briefContextLabel: What has changed, or what would you want to keep current?
+  briefContextHelper: Optional — one sentence is enough.
+  briefContextPlaceholder: “We approved a systems integration plan, but implementation costs and the timeline are both moving.”
+  briefContextGuidance: Up to 500 characters.
+  advancedTitle: Or paste a decision note
+  advancedHelper: Longreach will identify the most relevant commitment pattern. Up to 32,000 tokens.
+  advancedPlaceholder: Paste a memo, project summary, approval note, investment rationale, or other decision context.
+  primaryButton: Create my example
+  secondaryButton: Use the standard example instead
+  # Not from the spec, which does not supply a validation message. Worded to
+  # avoid repeating the opening of `body` above, and to name what to do rather
+  # than what the visitor got wrong.
+  commitmentTypeRequired: Select a commitment type to continue.
+  privacy: Your text is used only to generate this demonstration.
+  sourceTextTooLong: >-
+    This note is longer than the demonstration can process. Please paste the
+    most relevant section or use a short summary.
+
+recognizing:
+  headline: Building an illustrative decision-refresh example
+  statusRows:
+    - Identifying the commitment type
+    - Finding the decision context
+    - Selecting relevant decision conditions
+    - Matching an illustrative comparable pattern
+  footer: >-
+    Longreach is organizing your context into an example. It is not evaluating
+    whether the original decision was good or bad.
+  # docs/README.md §C2 asks for roughly 800-1400ms even when the mocked
+  # response is immediate, so the step reads as considered rather than as a
+  # flash. One number, because the screen is held for exactly this long: a
+  # min/max pair would imply a variation the app does not have.
+  holdMs: 900
+
+confirm:
+  headline: Here is the example Longreach will use.
+  commitmentTypeLabel: "Commitment type:"
+  contextRecognizedLabel: "Context recognized:"
+  focusLabel: "Focus of this example:"
+  primaryButton: Use this example
+  secondaryButton: Use the standard example
+  editLink: Edit my inputs
+
+  # UNRESOLVED — docs/PLAN.md R5 and open question 1. docs/README.md §C3 gives
+  # two bands; docs/specification-analysis.md §"Post-processing rules" gives
+  # three. Both are here so the choice is a content edit, not a rebuild.
+  # `activeBandSet` selects which list the app reads.
+  #
+  # The score itself is never shown. It selects wording only, and never reads
+  # as a judgment of the visitor (docs/specification-analysis.md).
+  activeBandSet: readme
+  bandSets:
+    readme:
+      - maxScore: 3
+        text: >-
+          We used a broad example because the available context was limited.
+          You can still see how Longreach works.
+      - maxScore: 10
+        text: >-
+          This is an illustrative example based on the context you provided.
+          You can adjust it later in a pilot using your organization’s actual
+          commitments and evidence.
+    specAnalysis:
+      - maxScore: 3
+        text: We found limited detail, so we used a broad illustrative example.
+      - maxScore: 7
+        text: We created an illustrative example based on the context you provided.
+      - maxScore: 10
+        text: We created an illustrative example using the commitment and condition described.
+
+conditions:
+  headline: Every major commitment is made in a moment. Conditions keep moving.
+  commitmentCardLabel: Active commitment
+  rationaleSectionTitle: Why it was authorized
+  conditionsSectionTitle: Decision conditions Longreach keeps current
+  # One table now carries the rationale and the conditions together. Headers
+  # are short because each column is a single idea; the fuller spec phrasings
+  # ("Evidence Longreach watches") read as noise repeated down three rows.
+  conditionColumnLabels:
+    status: Status
+    why: Why
+    watchedEvidence: Evidence
+    reconsiderationCondition: Reconsideration condition
+  statusLabels:
+    within_range: Within expected range
+    new_evidence: New evidence available
+  initialButton: Show the evidence shift
+  revealHeadline: New evidence has changed one decision condition.
+  nextButton: See similar commitments
+
+comparables:
+  headline: You have encountered this pattern before.
+  body: >-
+    Longreach compares active commitments with prior decisions that relied on
+    similar conditions, faced similar evidence shifts, or approached the same
+    type of lock-in.
+  # The Illustrative pill sits beside this, so the word is not repeated here.
+  sectionTitle: Comparable commitments
+  illustrativeBadge: Illustrative
+  tableHeaders:
+    - Commitment
+    - Relevant condition
+    - What changed
+    - What happened next
+  patternHeading: Comparable pattern
+  # {early} and {total} are filled by comparablePattern() in src/compute.ts.
+  # docs/README.md §"Comparable pattern": no percentage in this experience.
+  patternStatement: >-
+    In {early} of {total} comparable commitments, the relevant operating
+    condition changed before the next scheduled review.
+  patternImplication: >-
+    The opportunity is not to hold more meetings. It is to refresh the
+    commitment when the condition that matters has changed—while context is
+    fresh and flexibility remains.
+  button: See the decision refresh
+
+receipt:
+  headline: A decision refresh is timely.
+  receiptTitle: Decision Refresh Receipt
+  rowLabels:
+    activeCommitment: Active commitment
+    evidenceShift: Evidence shift
+    capitalStillInPlay: Capital still in play
+    flexibilityWindow: Flexibility window
+    comparableLearning: Comparable learning
+    suggestedDecision: Suggested decision
+  comparableLearningValue: >-
+    In comparable commitments, meaningful evidence shifts appeared before the
+    next scheduled review
+  # Shown only when an evidence shift exists, capital still in play is
+  # positive, and the flexibility window is positive. Longreach presents the
+  # decision set; it never selects one action (docs/README.md §"Suggested
+  # action").
+  suggestedDecisionValue: >-
+    Bring the original commitment back to the accountable authority to
+    reaffirm, stage, resize, redirect, or renew the current scope
+  calloutLines:
+    - Longreach does not second-guess the original decision.
+    - >-
+      It keeps the decision current as evidence changes—and makes the outcome
+      more useful when the next similar commitment appears.
+  possibleSectionTitle: What becomes possible
+  possibleBullets:
+    - Notice meaningful change before the calendar says it is time to review.
+    - Revisit the original commitment without reconstructing its history.
+    - Use comparable decisions to improve the next allocation of capital.
+  primaryButton: Try it
+  primarySupportingText: >-
+    In a 30-day pilot, Longreach maps active commitments, their decision
+    conditions, evidence shifts, flexibility windows, and comparable patterns.
+  secondaryButton: Restart the example
+  footer: Illustrative demonstration — figures and prior commitments are sample data.
+  disclosureLabel: How is this estimated?
+  disclosureBody: >-
+    In this illustration, capital still in play includes planned spend that can
+    still be delayed, resized, redirected, or renegotiated before the next
+    material lock-in. It excludes spend already incurred and commitments that
+    are no longer practical to change.
+
+pilotModal:
+  headline: Apply Decision Refresh to five live commitments.
+  body: >-
+    In 30 days, Longreach can help your team identify the decision conditions
+    behind five active commitments, surface meaningful evidence shifts, map the
+    capital still in play, and compare each commitment with relevant prior
+    decisions.
+  deliverables:
+    - A commitment receipt for each selected decision
+    - A shared view of decision conditions and evidence shifts
+    - A flexibility-window view of capital still in play
+    - A comparable-decision pattern summary
+    - A decision-refresh readout for the accountable authority
+  fieldLabels:
+    name: Name
+    workEmail: Work email
+    organization: Organization
+    startingCommitment: Which commitment would you start with?
+  startingCommitmentHelper: Optional — one sentence is enough.
+  submitButton: Request a pilot conversation
+  # docs/README.md §"Pilot modal": an inline success state, and no claim that
+  # an email was sent. v1 has no backend; the row is kept in localStorage
+  # (docs/PLAN.md §5.1).
+  successMessage: Thank you. Your pilot conversation request has been captured for this demonstration.
+
+# Display names. The pill order is the order docs/README.md §C1 lists.
+commitmentTypeLabels:
+  market_expansion: Market expansion or new product
+  technology_transformation: Technology or AI program
+  acquisition_integration: Acquisition or integration
+  capital_expansion: Capital project or capacity expansion
+  investment_allocation: Investment or portfolio allocation
+  strategic_other: Other strategic commitment
+
+# Shown on C3 as "Focus of this example".
+evidenceShiftCategoryLabels:
+  economics: Decision economics
+  demand: Demand
+  cost: Cost
+  schedule: Schedule and timing
+  execution: Execution and delivery
+  customer_retention: Customer retention
+  regulatory: Regulatory and policy
+  unclear: A broad set of conditions
+
+# docs/README.md §"Flexibility window band".
+flexibilityWindowBands:
+  immediate: Immediate
+  open: Open
+  developing: Developing
+  longerDated: Longer-dated

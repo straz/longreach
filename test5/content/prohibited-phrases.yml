@@ -1,0 +1,31 @@
+# Phrases that must never reach a visitor, from docs/README.md §"Customer-facing
+# vocabulary" — "Never use user-facing phrases such as".
+#
+# The premise of the product is adaptive management: the decision was sensible
+# with the evidence available then. Every phrase below implies the executive
+# got it wrong, or that a model is handing down a verdict. Either one loses the
+# room.
+#
+# scripts/check-tone.ts greps the built bundle for these, so a phrase added
+# here is enforced from the next build. Matching is case-insensitive and
+# whitespace-collapsed; trailing punctuation is left off so that "AI says:" and
+# "AI says…" both match.
+
+phrases:
+  - what would prove you wrong
+  - your assumption failed
+  - the thesis is broken
+  - the decision is indefensible
+  - the project is failing
+  - AI says
+  - the model recommends
+
+# Checked against the same sources. These are not from the spec's list: they
+# are the same accusation in other words, and are easy to reach for when
+# editing copy under time pressure.
+alsoAvoid:
+  - second-guess the executive
+  - the wrong decision
+  - a bad decision
+  - you should have
+  - the AI recommends

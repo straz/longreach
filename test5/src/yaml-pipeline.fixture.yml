@@ -1,0 +1,9 @@
+# Fixture for yaml-pipeline.test.ts. Proves the build-time YAML transform is
+# wired up before Phase 2 authors real content against it. Not app content.
+id: fixture
+nested:
+  list:
+    - one
+    - two
+  number: 7600000
+  flag: true

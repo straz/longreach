@@ -1,0 +1,81 @@
+# Transcribed verbatim from docs/README.md §"Required default template".
+# This is the canned default: the zero-input path every visitor sees.
+# All figures are illustrative. See docs/SCENARIO_CONTENT.md.
+
+id: regional_expansion_v1
+type: market_expansion
+title: Regional Expansion Program
+amountLabel: "$12M"
+activeCommitmentText: Fund a $12M regional expansion program
+authority: Growth and Capital Committee
+
+# How the receipt names the commitment. docs/README.md §S1 shows the card as
+# "Fund a $12M regional expansion program" but §S3's receipt row as
+# "$12M regional expansion program" — the leading verb phrase is dropped.
+# check-content.ts asserts this is a suffix of activeCommitmentText.
+receiptCommitmentText: $12M regional expansion program
+
+rationale:
+  - Demand was expected to exceed current capacity.
+  - Customer-acquisition economics were expected to remain within range.
+  - The launch was expected to reach operating break-even by month 12.
+
+conditions:
+  - id: demand
+    label: Demand supports the planned expansion
+    watchedEvidence: Booked demand trend
+    reconsiderationCondition: Demand remains 20% below plan for two consecutive months
+    why: "Demand was expected to exceed current capacity."
+    status: within_range
+  - id: cac
+    label: Customer-acquisition economics support the current scope
+    watchedEvidence: Customer-acquisition cost
+    reconsiderationCondition: CAC remains above the agreed range for six weeks
+    why: "Customer-acquisition economics were expected to remain within range."
+    status: new_evidence
+  - id: timing
+    label: Launch timing preserves the program’s economics
+    watchedEvidence: Launch-plan milestone status
+    reconsiderationCondition: Launch timing moves more than 45 days
+    why: "The launch was expected to reach operating break-even by month 12."
+    status: within_range
+
+evidenceShiftConditionId: cac
+evidenceShiftStatement: Customer-acquisition cost has remained above the agreed range for six weeks.
+evidenceShiftInterpretation: >-
+  The commitment is not automatically invalid. One condition that shaped its
+  original scope has moved. The relevant question is whether the current scope
+  remains the best use of the capital still in play.
+
+# 5.0 + 2.6 = $7.6M still in play; + 4.4 irreversible = $12M authorized.
+plannedUncommittedCapital: 5000000
+practicallyChangeableCapital: 2600000
+irreversiblyCommittedCapital: 4400000
+expectedCapitalStillInPlayLabel: "$7.6M"
+
+flexibilityWindowDays: 45
+lockInDescription: regional launch contracts and hiring commitments
+flexibilityWindowText: 45 days before regional launch contracts and hiring commitments create a material lock-in
+
+comparableCommitments:
+  - year: "2023"
+    title: Market expansion
+    relevantCondition: Acquisition economics
+    evidenceShift: CAC moved outside the intended range
+    whatHappenedNext: A review occurred after incremental spend had already increased
+    changedBeforeScheduledReview: true
+    reviewedAfterLockIn: false
+  - year: "2024"
+    title: Service rollout
+    relevantCondition: Demand ramp
+    evidenceShift: Demand remained below the planned range
+    whatHappenedNext: Scope was staged and remaining capital was redirected
+    changedBeforeScheduledReview: false
+    reviewedAfterLockIn: false
+  - year: "2025"
+    title: Regional buildout
+    relevantCondition: Launch timing
+    evidenceShift: Launch timing moved by 60 days
+    whatHappenedNext: Review occurred after a major operational lock-in
+    changedBeforeScheduledReview: true
+    reviewedAfterLockIn: true

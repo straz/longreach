@@ -1,0 +1,86 @@
+# Commitment, rationale, evidence shift, capital-still-in-play figure and
+# flexibility window transcribed from docs/README.md §"capacity_expansion_v1".
+# Conditions and authority from docs/SCENARIO_CONTENT.md; comparables and the
+# capital components are authored. All figures are illustrative.
+
+id: capacity_expansion_v1
+type: capital_expansion
+title: Capacity Expansion Program
+amountLabel: "$60M"
+activeCommitmentText: Fund a $60M capacity expansion program
+authority: Capital Allocation Committee
+
+# How the receipt names the commitment. docs/README.md §S1 shows the card as
+# "Fund a $12M regional expansion program" but §S3's receipt row as
+# "$12M regional expansion program" — the leading verb phrase is dropped.
+# check-content.ts asserts this is a suffix of activeCommitmentText.
+receiptCommitmentText: $60M capacity expansion program
+
+rationale:
+  - Demand was expected to justify phase-two capacity.
+  - Construction and equipment costs were expected to remain within the authorized range.
+  - The timing of the expansion was expected to preserve customer-service levels.
+
+conditions:
+  - id: demand
+    label: Demand supports phase-two capacity
+    watchedEvidence: Demand ramp
+    reconsiderationCondition: Demand remains below the authorized range for two periods
+    why: "Demand was expected to justify phase-two capacity."
+    status: new_evidence
+  - id: build_cost
+    label: Build cost supports current scope
+    watchedEvidence: Cost-to-complete forecast
+    reconsiderationCondition: Cost estimate moves above range at the next estimate revision
+    why: "Construction and equipment costs were expected to remain within the authorized range."
+    status: within_range
+  - id: timing
+    label: Timing preserves capacity value
+    watchedEvidence: Construction milestone plan
+    reconsiderationCondition: Procurement deadline moves beyond the planning range
+    why: "The timing of the expansion was expected to preserve customer-service levels."
+    status: within_range
+
+evidenceShiftConditionId: demand
+evidenceShiftStatement: Demand ramp has remained below the range used to authorize phase two.
+evidenceShiftInterpretation: >-
+  The commitment is not automatically invalid. One condition that shaped its
+  original scope has moved. The relevant question is whether the current scope
+  remains the best use of the capital still in play.
+
+# AUTHORED, NOT SPEC. docs/SCENARIO_CONTENT.md gives only "$28.0M still in
+# play" against a $60M program. Split as phase-two scope not yet procured
+# (19.0) plus equipment orders still resizeable before the procurement
+# deadline (9.0); 32.0 covers completed phase-one build and placed orders.
+# See docs/PLAN.md R4.
+plannedUncommittedCapital: 19000000
+practicallyChangeableCapital: 9000000
+irreversiblyCommittedCapital: 32000000
+expectedCapitalStillInPlayLabel: "$28.0M"
+
+flexibilityWindowDays: 75
+lockInDescription: phase-two equipment and construction commitments
+flexibilityWindowText: 75 days before phase-two equipment and construction commitments create a material lock-in
+
+comparableCommitments:
+  - year: "2023"
+    title: Plant expansion
+    relevantCondition: Demand ramp
+    evidenceShift: Demand held below the authorized range for two periods
+    whatHappenedNext: Phase two was resized before equipment orders were placed
+    changedBeforeScheduledReview: true
+    reviewedAfterLockIn: false
+  - year: "2024"
+    title: Distribution capacity
+    relevantCondition: Build cost
+    evidenceShift: Cost to complete moved above the authorized range
+    whatHappenedNext: Scope was staged and remaining capital was redirected
+    changedBeforeScheduledReview: false
+    reviewedAfterLockIn: false
+  - year: "2025"
+    title: Equipment upgrade
+    relevantCondition: Procurement timing
+    evidenceShift: Procurement deadline moved beyond the planning range
+    whatHappenedNext: Review occurred after long-lead equipment had been ordered
+    changedBeforeScheduledReview: true
+    reviewedAfterLockIn: true

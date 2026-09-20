@@ -1,0 +1,124 @@
+.lr-customize {
+  max-width: 44rem;
+}
+
+.lr-customize__headline {
+  font-size: clamp(1.625rem, 3.6vw, 2.25rem);
+  margin-bottom: var(--space-4);
+}
+
+.lr-customize__body {
+  max-width: var(--measure);
+  color: var(--muted);
+}
+
+.lr-fieldset {
+  margin: var(--space-6) 0 var(--space-5);
+  border: 0;
+  padding: 0;
+}
+
+.lr-fieldset__legend {
+  padding: 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin-bottom: var(--space-3);
+}
+
+.lr-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.lr-pill {
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  padding: 0.4375rem 0.875rem;
+  font-size: 0.875rem;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.lr-pill:hover {
+  border-color: var(--muted);
+}
+
+.lr-pill--selected {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* The selected pill is not distinguished by colour alone. */
+.lr-pill--selected::before {
+  content: '✓ ';
+}
+
+.lr-field {
+  margin-bottom: var(--space-5);
+}
+
+.lr-textarea {
+  display: block;
+  width: 100%;
+  font: inherit;
+  font-size: 0.9375rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  resize: vertical;
+}
+
+.lr-textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.lr-field__helper {
+  color: var(--muted-light);
+  font-size: 0.75rem;
+  margin-bottom: var(--space-2);
+}
+
+.lr-textarea + .lr-field__helper {
+  margin-top: var(--space-2);
+  margin-bottom: 0;
+}
+
+.lr-advanced {
+  margin-bottom: var(--space-5);
+  padding: var(--space-4);
+  background: var(--surface-sunken);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.lr-advanced__summary {
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.lr-advanced[open] .lr-advanced__summary {
+  margin-bottom: var(--space-3);
+}
+
+.lr-error {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--shift-soft);
+  border-left: 2px solid var(--shift-strong);
+  color: var(--shift);
+  font-size: 0.875rem;
+}
+
+.lr-customize__privacy {
+  margin-top: var(--space-4);
+  color: var(--muted-light);
+  font-size: 0.75rem;
+}

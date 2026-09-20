@@ -1,0 +1,86 @@
+# Commitment, rationale, evidence shift, capital-still-in-play figure and
+# flexibility window transcribed from docs/README.md §"technology_program_v1".
+# Conditions, authority and comparables from docs/SCENARIO_CONTENT.md.
+# The three capital components are authored (see note below); the spec supplies
+# only their total. All figures are illustrative.
+
+id: technology_program_v1
+type: technology_transformation
+title: Enterprise AI Deployment Program
+amountLabel: "$20M"
+activeCommitmentText: Fund a $20M enterprise AI deployment program
+authority: Technology Investment Committee
+
+# How the receipt names the commitment. docs/README.md §S1 shows the card as
+# "Fund a $12M regional expansion program" but §S3's receipt row as
+# "$12M regional expansion program" — the leading verb phrase is dropped.
+# check-content.ts asserts this is a suffix of activeCommitmentText.
+receiptCommitmentText: $20M enterprise AI deployment program
+
+rationale:
+  - The deployment was expected to reduce service costs.
+  - Workflow adoption was expected to reach the target operating groups.
+  - Implementation could occur without material disruption to core systems.
+
+conditions:
+  - id: implementation_cost
+    label: The program remains within the authorized implementation range
+    watchedEvidence: Implementation cost forecast
+    reconsiderationCondition: Projected cost remains above range for two successive forecast updates
+    why: "The deployment was expected to reduce service costs."
+    status: new_evidence
+  - id: delivery_timing
+    label: Delivery timing preserves expected value
+    watchedEvidence: Integrated delivery plan
+    reconsiderationCondition: Critical milestones move more than 45 days
+    why: "Implementation could occur without material disruption to core systems."
+    status: within_range
+  - id: adoption
+    label: Adoption supports the current deployment scope
+    watchedEvidence: Pilot adoption trend
+    reconsiderationCondition: Adoption remains below the planned operating range for two reporting cycles
+    why: "Workflow adoption was expected to reach the target operating groups."
+    status: within_range
+
+evidenceShiftConditionId: implementation_cost
+evidenceShiftStatement: Implementation cost and timeline have moved outside the range used to authorize the current scope.
+evidenceShiftInterpretation: >-
+  The commitment is not automatically invalid. One condition that shaped its
+  original scope has moved. The relevant question is whether the current scope
+  remains the best use of the capital still in play.
+
+# AUTHORED, NOT SPEC. docs/SCENARIO_CONTENT.md gives only "$11.4M still in
+# play" against a $20M program. Split as later-phase work not yet started
+# (7.4) plus in-flight spend still renegotiable (4.0); 8.6 is already
+# committed to vendor and integration contracts. See docs/PLAN.md R4.
+plannedUncommittedCapital: 7400000
+practicallyChangeableCapital: 4000000
+irreversiblyCommittedCapital: 8600000
+expectedCapitalStillInPlayLabel: "$11.4M"
+
+flexibilityWindowDays: 60
+lockInDescription: data-integration and vendor commitments
+flexibilityWindowText: 60 days before data-integration and vendor commitments create a material lock-in
+
+comparableCommitments:
+  - year: "2023"
+    title: ERP modernization
+    relevantCondition: Implementation cost
+    evidenceShift: Integration costs moved above planning range
+    whatHappenedNext: Scope review occurred after major vendor commitments
+    changedBeforeScheduledReview: true
+    reviewedAfterLockIn: true
+  - year: "2024"
+    title: Workflow automation
+    relevantCondition: Adoption
+    evidenceShift: Adoption lagged the planned range
+    whatHappenedNext: Rollout was staged and funding redirected
+    changedBeforeScheduledReview: false
+    reviewedAfterLockIn: false
+  - year: "2025"
+    title: AI service pilot
+    relevantCondition: Delivery timeline
+    evidenceShift: Timeline moved by 75 days
+    whatHappenedNext: Review occurred after operating teams had been reorganized
+    changedBeforeScheduledReview: true
+    reviewedAfterLockIn: true

@@ -1,0 +1,36 @@
+.lr-landing {
+  max-width: 44rem;
+  padding-top: var(--space-6);
+}
+
+.lr-eyebrow {
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  margin-bottom: var(--space-4);
+}
+
+.lr-landing__headline {
+  font-size: clamp(2rem, 5vw, 2.875rem);
+  margin-bottom: var(--space-5);
+}
+
+.lr-landing__body {
+  max-width: var(--measure);
+  color: var(--muted);
+  font-size: 1.0625rem;
+}
+
+.lr-landing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.lr-landing__microcopy {
+  margin-top: var(--space-4);
+  color: var(--muted-light);
+  font-size: 0.8125rem;
+}

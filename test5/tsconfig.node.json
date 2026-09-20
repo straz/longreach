@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "skipLibCheck": true,
+
+    /* Bundler mode.
+       test4 uses "module": "nodenext" here, but @rollup/plugin-yaml ships a
+       single `types` entry in its exports map with no "type": "module", so
+       under nodenext TS reads its .d.ts as CJS while the import condition
+       resolves to the ESM build. The default export then types as a namespace
+       and `yaml()` fails with TS2349 even though it runs fine. Bundler
+       resolution also describes reality better: vite.config.ts and scripts/
+       are loaded by Vite and by Node's type-stripping loader, both of which
+       take explicit file extensions — which this project writes anyway. */
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["vite.config.ts", "scripts"]
+}

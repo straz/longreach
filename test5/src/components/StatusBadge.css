@@ -1,0 +1,29 @@
+.lr-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid;
+  border-radius: 2px;
+  padding: 0.1875rem 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.lr-status--within_range {
+  background: var(--accent-light);
+  border-color: var(--accent-rule);
+  color: var(--accent);
+}
+
+.lr-status--new_evidence {
+  background: var(--shift-soft);
+  border-color: var(--shift-rule);
+  color: var(--shift);
+  font-weight: 500;
+}
+
+.lr-status__glyph {
+  font-size: 0.625rem;
+  line-height: 1;
+}

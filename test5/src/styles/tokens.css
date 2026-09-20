@@ -1,0 +1,111 @@
+/* Design tokens for Longreach Decision Refresh.
+ *
+ * The palette and type are test4's, so the demos in this repo read as one
+ * product: off-white ground, white surfaces, dark navy ink, muted slate
+ * secondary text, and a single restrained green for "current / within range".
+ *
+ * Two differences from test4, both deliberate:
+ *
+ * - Roboto Slab is self-hosted rather than loaded from Google Fonts. This demo
+ *   has to work with the network off (docs/PLAN.md §2), and a CDN webfont would
+ *   break that. It is one 34KB variable file covering 300-700.
+ *
+ * - There is an amber "evidence shift" ramp alongside test4's --danger. The
+ *   spec is explicit that a moved condition must not be styled as a failure
+ *   (docs/README.md §S1), so --danger is kept for real errors only.
+ */
+
+@font-face {
+  font-family: 'Roboto Slab';
+  font-style: normal;
+  /* One variable file serves the whole range. */
+  font-weight: 100 900;
+  font-display: swap;
+  /* Relative, so Vite hashes it and applies the base path: the deployed
+     path stays in vite.config.ts alone. */
+  src: url('./fonts/roboto-slab.woff2') format('woff2');
+}
+
+:root {
+  /* test4's palette */
+  --bg: #f8f9fa;
+  --surface: #ffffff;
+  --surface-sunken: #f2f4f7;
+  --navy: #1a2332;
+  --text: #1a2332;
+  --muted: #6b7f96;
+  --muted-light: #8fa0b3;
+  --rule: #d4dce8;
+  --rule-strong: #b9c5d6;
+  --accent: #2d6e2d;
+  --accent-light: #eaf3ea;
+  --accent-rule: #a9c7a9;
+  --danger: #8a3b1f;
+  --danger-light: #f6ece5;
+
+  /* Evidence shift. Amber, never red: nothing has failed. */
+  --shift: #8a5712;
+  --shift-soft: #fdf4e6;
+  --shift-rule: #e4c894;
+  --shift-strong: #c98a22;
+
+  --on-navy: #f8f9fa;
+  --on-navy-muted: #a8b8cb;
+
+  --serif: 'Roboto Slab', Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --radius: 6px;
+  --radius-lg: 10px;
+
+  --shadow-card: 0 1px 2px rgba(26, 35, 50, 0.05), 0 1px 12px rgba(26, 35, 50, 0.04);
+  --shadow-raised: 0 8px 32px rgba(26, 35, 50, 0.18);
+  --scrim: rgba(26, 35, 50, 0.55);
+
+  --measure: 62ch;
+  --page-max: 1100px;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12161c;
+    --surface: #1a2029;
+    --surface-sunken: #161c24;
+    --navy: #e8ecf1;
+    --text: #e8ecf1;
+    --muted: #93a2b5;
+    --muted-light: #7d8b9d;
+    --rule: #2c3542;
+    --rule-strong: #3d4857;
+    --accent: #6fbf73;
+    --accent-light: #1c2e1c;
+    --accent-rule: #37603a;
+    --danger: #d98a68;
+    --danger-light: #2e2119;
+
+    --shift: #e0ab5c;
+    --shift-soft: #2a2317;
+    --shift-rule: #5a4a2a;
+    --shift-strong: #c98a22;
+
+    /* The nav bar and commitment card invert with the palette: on dark, the
+       "navy" token is near-white, so text on it must be dark. */
+    --on-navy: #12161c;
+    --on-navy-muted: #4a5666;
+
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-raised: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --scrim: rgba(0, 0, 0, 0.65);
+  }
+}
