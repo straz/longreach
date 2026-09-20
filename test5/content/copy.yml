@@ -14,10 +14,10 @@
 # whose shape already carries the order, and "1 1 CONDITIONS" is what numbering
 # them twice looks like.
 # Shown in the footer on every screen. "Contact us" is the link text; the
-# address sits beside it so the whole call to action is a content edit.
+# destination sits beside it so the whole call to action is a content edit.
 contact:
   linkLabel: Contact us
-  email: info@longreach.ai
+  url: https://www.longreach.ai/try-us/
   suffix: for more info and a free trial
 
 stepIndicator:

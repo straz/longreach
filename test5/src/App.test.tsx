@@ -441,13 +441,13 @@ describe('the receipt owner', () => {
 describe('the contact call to action', () => {
   const CONTACT = 'Contact us for more info and a free trial'
 
-  test('is a mailto link, on every screen', async () => {
+  test('points at the live try-us page, on every screen', async () => {
     const user = userEvent.setup()
     render(<App />)
 
     async function expectContactPresent(where: string) {
       const link = screen.getByRole('link', { name: copy.contact.linkLabel })
-      expect(link, where).toHaveAttribute('href', `mailto:${copy.contact.email}`)
+      expect(link, where).toHaveAttribute('href', copy.contact.url)
       expect(link.parentElement?.textContent?.replace(/\s+/g, ' ').trim(), where).toBe(CONTACT)
     }
 
@@ -466,6 +466,16 @@ describe('the contact call to action', () => {
     render(<App />)
     await user.click(screen.getByRole('button', { name: copy.landing.secondaryButton }))
     expect(screen.getByRole('link', { name: copy.contact.linkLabel })).toBeInTheDocument()
+  })
+
+  test('is an https link off-site, not a mailto', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: copy.landing.primaryButton }))
+
+    const link = screen.getByRole('link', { name: copy.contact.linkLabel })
+    expect(link.getAttribute('href')).toBe('https://www.longreach.ai/try-us/')
+    expect(link.getAttribute('href')).not.toMatch(/^mailto:/)
   })
 
   test('appears once, not once per screen section', async () => {

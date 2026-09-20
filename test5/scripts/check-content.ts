@@ -602,11 +602,13 @@ requirePath('copy.yml', copy, 'comparables.tableHeaders', 4)
 requirePath('copy.yml', copy, 'receipt.calloutLines', 2)
 requirePath('copy.yml', copy, 'receipt.possibleBullets', 3)
 
+// The footer's call to action points off-site, so a typo here is a dead end
+// on every screen rather than on one.
 const contactCopy = copy.contact as Record<string, unknown> | undefined
-const contactEmail = contactCopy?.email
+const contactUrl = contactCopy?.url
 check(
-  isNonEmptyString(contactEmail) && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(contactEmail),
-  'copy.yml: "contact.email" must be an email address',
+  isNonEmptyString(contactUrl) && /^https:\/\/[^\s]+$/.test(contactUrl),
+  'copy.yml: "contact.url" must be an https URL',
 )
 
 const comparablesCopy = copy.comparables as Record<string, unknown> | undefined

@@ -66,7 +66,7 @@ export interface ClarityBand {
 export interface Copy {
   contact: {
     linkLabel: string
-    email: string
+    url: string
     suffix: string
   }
   stepIndicator: string[]

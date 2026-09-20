@@ -44,7 +44,7 @@ export function AppShell({
       <footer className="lr-shell__footer">
         <div className="lr-shell__footer-inner">
           <p className="lr-contact">
-            <a href={`mailto:${copy.contact.email}`}>{copy.contact.linkLabel}</a>{' '}
+            <a href={copy.contact.url}>{copy.contact.linkLabel}</a>{' '}
             {copy.contact.suffix}
           </p>
           <p className="lr-shell__disclaimer">{footer}</p>
