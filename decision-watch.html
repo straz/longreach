@@ -61,7 +61,10 @@ button { cursor: pointer; }
 .tabs .meet { margin-left: auto; font-size: 14px; color: var(--ink-2); padding-bottom: 10px; }
 .tabs .meet b { color: var(--ink); }
 
-.strip { background: var(--surface); border-bottom: 1px solid var(--line); padding-block: 8px; padding-inline: 20px; display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; }
+.strip { background: var(--surface); border-bottom: 1px solid var(--line); padding-block: 8px; padding-inline: 20px; display: grid; grid-template-columns: auto 1fr auto auto; gap: 14px; align-items: center; }
+.play { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); display: grid; place-items: center; padding: 0; }
+.play:hover { border-color: var(--ink); }
+.play[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
 .strip .lbl { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
 .strip .date { font-weight: 700; font-size: 15px; min-width: 7.5em; text-align: right; }
 .track { position: relative; height: 34px; }
@@ -212,6 +215,15 @@ table.rm td .up { color: var(--contra); font-weight: 700; }
 .scard:hover { border-color: var(--line-strong); }
 .scard .t { font-family: var(--serif); font-size: 17px; }
 .scard .c { font-size: 13px; color: var(--ink-3); }
+.summary-page { max-width: 900px; }
+.sum-eyebrow { font-size: 12.5px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+.sum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px 28px; margin-top: 18px; }
+.sum-grid h2 { font-size: 12px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; margin: 0 0 6px; }
+.sum-list { list-style: none; margin: 0; padding: 0; }
+.sum-list li { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--line-soft); font-size: 15px; }
+.sum-click { cursor: pointer; }
+.sum-click:hover { background: var(--canvas); }
+.meta { color: var(--ink-3); font-size: 13.5px; white-space: nowrap; }
 
 /* Drawer */
 .scrim { position: fixed; inset: 0; background: rgba(20,20,20,.28); z-index: 20; }
@@ -261,7 +273,7 @@ svg text { font-family: var(--sans); fill: var(--ink-3); }
   .arow { grid-template-columns: 1fr auto; }
   .arow .hide-sm { display: none; }
   .tabs .meet { margin-left: 0; width: 100%; padding-bottom: 8px; }
-  .strip { grid-template-columns: 1fr auto; }
+  .strip { grid-template-columns: 1fr auto auto; }
   .strip .lbl { display: none; }
   .pos { grid-template-columns: 80px minmax(0,1fr); }
   .pos > :last-child { grid-column: 1 / -1; }
@@ -561,7 +573,7 @@ const S = {
   panel:null, library:false, edit:false, draft:[], draftNote:'',
   conv:{}, reviews:[...REVIEWS], judged:[...JUDGED], sugStatus:{}, extraHistory:{},
   filters:{ contradicting:true, weakening:true, triggers:true, expiring:true, ai:false },
-  modal:null, expanded:null,
+  modal:null, expanded:null, dview:'summary',
 };
 
 /* ============================ UTIL ============================ */
@@ -827,6 +839,7 @@ function renderStrip() {
       <input type="range" id="asof" min="0" max="${total}" value="${cur}" aria-label="As of date: drag to replay how gaps opened">
       ${ticks.map(t => `<span class="tick" style="left:${pct(t)}">${MON[+t.slice(5,7)-1]}</span>`).join('')}
     </div>
+    <button class="play" id="playBtn" data-act="play" aria-pressed="${!!anim}" aria-label="${anim ? 'Pause replay' : 'Play replay from the start'}">${anim ? ICON_PAUSE : ICON_PLAY}</button>
     <span class="date num" id="asofLbl">${fd(S.asOf)}</span>`;
 }
 function renderSide() {
@@ -1030,11 +1043,13 @@ function renderDecision() {
   const presented = lm ? [...hist].reverse().find(x => x.d <= lm) : null;
   const gapsSince = lm ? collectGaps([s], S.asOf).filter(g => g.state!=='ai' && g.opened && g.opened > lm).length : 0;
   const draft = S.draft.filter(d => d.s===s);
+  h += `<div class="viewbar"><div class="seg" role="group" aria-label="Strategy views"><button aria-pressed="${S.dview==='summary'}" data-act="dview" data-v="summary">Summary</button><button aria-pressed="${S.dview==='sheet'}" data-act="dview" data-v="sheet">Strategy sheet</button></div></div>`;
+  if (S.dview==='summary') return h + renderSummary(s);
   if (S.edit) h += `<div class="draftbar"><b>Draft</b><span>${draft.length} change${draft.length===1?'':'s'}</span><input id="draftNote" placeholder="Note for this snapshot (why)" value="${esc(S.draftNote)}"><button class="btn primary small" data-act="saveSnap" ${draft.length?'':'disabled'}>Save snapshot</button><button class="btn small" data-act="discard">Discard</button></div>`;
   h += `<article class="sheet"><div class="sheet-hd"><div><h1 class="pg">${esc(st.name)}</h1>
       <div class="lineage">${esc(cl.name)} · ${esc(st.domain)}${st.forked ? ` · forked from ${esc(st.forked)}` : ''}</div>
       <div class="lineage">Current snapshot: ${cur ? fd(cur.d) : '—'}${presented ? ` · presented to client ${fds(lm)} (snapshot of ${fds(presented.d)})` : ''}${lm ? ` · <b style="color:${gapsSince?'var(--contra)':'var(--ink-2)'}">${gapsSince} gap${gapsSince===1?'':'s'} opened since</b>` : ''}</div></div>
-    <div class="btns"><button class="btn ${S.edit?'':'primary'}" data-act="edit">${S.edit ? 'Stop editing' : 'Edit'}</button><button class="btn" data-act="summary">Client summary</button></div></div>`;
+    <div class="btns"><button class="btn ${S.edit?'':'primary'}" data-act="edit">${S.edit ? 'Stop editing' : 'Edit'}</button></div></div>`;
   h += `<section class="sec"><h2>Thesis</h2><p class="thesis">${esc(st.thesis)}</p></section>`;
   h += `<section class="sec"><h2>Positions</h2>` + st.positions.map(p => {
     const sts = p.relies.map(k => evalAsm(s, k, S.asOf).state);
@@ -1083,6 +1098,27 @@ function renderDecision() {
     : `<div class="it"><div class="d">${fd(x.d)} · snapshot <span style="font-weight:400;color:var(--ink-3)">(${esc(x.trigger)})</span></div><div>${esc(x.note)}</div><ul>${x.changes.map(c => `<li>${esc(c)}</li>`).join('')}</ul></div>`).join('') + `</div></section>`;
   h += `</article>`;
   return h;
+}
+function renderSummary(s) {
+  const st = STRATS[s], cl = CLIENTS[st.client];
+  const lm = lastMeeting(st.client, S.asOf), nm = nextMeeting(st.client, S.asOf);
+  const posLine = p => { const sts = p.relies.map(k => evalAsm(s, k, S.asOf).state); const c = sts.filter(x => x==='contradicting').length, w = sts.filter(x => x==='weakening').length;
+    return c ? stateChip('contradicting', c>1 ? ` (${c})` : '') : w ? stateChip('weakening', w>1 ? ` (${w})` : '') : stateChip('supported'); };
+  const counting = st.asms.filter(x => x.nec).map(x => ({ x, a: asmDef(s, x.key), e: evalAsm(s, x.key, S.asOf) }));
+  const moved = lm ? collectGaps([s], S.asOf).filter(g => g.state!=='ai' && g.opened && g.opened > lm) : [];
+  const movedText = g => g.kind==='asm' ? asmDef(s, g.key).plain : g.kind==='trigger' ? `Break trigger close: ${g.t.text}.` : `${g.p.text} ends ${fd(g.p.expires)}.`;
+  return `<article class="sheet summary-page">
+    <div class="sum-eyebrow">Client summary · ${esc(cl.name)} · as of ${fd(S.asOf)}</div>
+    <h1 class="pg">${esc(st.name)}</h1>
+    <p class="thesis" style="margin-top:10px">${esc(st.thesis)}</p>
+    <div class="sum-grid">
+      <section><h2>What we hold</h2><ul class="sum-list">${st.positions.map(p => `<li><span><b>${esc(p.stance)}</b> · ${esc(p.subj)}</span>${posLine(p)}</li>`).join('')}</ul></section>
+      <section><h2>What we are counting on</h2><ul class="sum-list">${counting.map(({ x, a, e }) => `<li role="button" tabindex="0" class="sum-click" data-act="panel" data-s="${s}" data-k="${x.key}"><span>${esc(a.plain)}</span>${stateChip(e.state)}</li>`).join('')}</ul></section>
+      <section><h2>${lm ? `What has moved since we met on ${fds(lm)}` : 'What has moved'}</h2>${moved.length ? `<ul class="sum-list">${moved.map(g => `<li><span>${esc(movedText(g))}</span><span class="meta">since ${fds(g.opened)}</span></li>`).join('')}</ul>` : '<p class="meta">Nothing has moved against the strategy since then.</p>'}</section>
+      <section><h2>What we will watch${nm ? ` before ${fds(nm)}` : ''}</h2><ul class="sum-list">${st.watch.map(i => `<li><span>${esc(IND[i].name)}</span></li>`).join('')}</ul></section>
+    </div>
+    <div class="btns" style="margin-top:18px"><button class="btn primary" data-act="present">Record as presented${nm ? ` on ${fds(nm)}` : ''}</button><button class="btn" data-act="dview" data-v="sheet">See the full strategy sheet →</button></div>
+  </article>`;
 }
 function renderTemplate() {
   const rows = [
@@ -1175,15 +1211,6 @@ function renderModal() {
     <p><b>Watch</b> is where you see how it plays out. It follows reported facts as they come in, shows the trends, and points out gaps where reality is moving away from what the strategy assumed or predicted.</p>
     <p>You may meet your clients on a schedule, perhaps quarterly, but gaps can open much faster than that. Decision Watch helps you stay ahead of the curve and reconsider a strategy while there is still time to do something about it.</p>
     <p style="color:var(--ink-3);font-size:13.5px">This mockup mixes cited public facts from one article with fictional data from fictional sources. Every synthetic record is marked SYNTHETIC.</p>`;
-  if (S.modal==='summary') {
-    const s = S.strat, st = STRATS[s];
-    inner = `<div style="font-size:12.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em">Client summary · ${esc(CLIENTS[st.client].name)} · as of ${fd(S.asOf)}</div>
-      <h2>${esc(st.name)}</h2><p class="thesis" style="font-size:17px">${esc(st.thesis)}</p>
-      <h3 style="font-size:14px;margin-bottom:4px">What we hold</h3><ul>${st.positions.map(p => `<li>${esc(p.stance)}: ${esc(p.subj)}</li>`).join('')}</ul>
-      <h3 style="font-size:14px;margin-bottom:4px">What we are counting on</h3><ul>${st.asms.filter(x => x.nec).map(x => { const a = asmDef(s,x.key); const e = evalAsm(s,x.key,S.asOf); return `<li>${esc(a.plain)} ${isGap(e.state) ? `<b style="color:var(--contra)">(${LABEL[e.state].toLowerCase()} since ${fds(gapRun(s,x.key,S.asOf).opened || S.asOf)})</b>` : ''}</li>`; }).join('')}</ul>
-      <h3 style="font-size:14px;margin-bottom:4px">What we will watch before the next meeting</h3><ul>${st.watch.map(i => `<li>${esc(IND[i].name)}</li>`).join('')}</ul>
-      <div class="btns" style="margin-top:14px"><button class="btn primary" data-act="present">Record as presented at the next meeting</button><button class="btn" data-act="closeModal">Close</button></div>`;
-  }
   el.innerHTML = `<div class="modal"><div class="box" role="dialog" aria-modal="true">${inner}${S.modal==='about' ? '<div class="btns"><button class="btn" data-act="closeModal">Close</button></div>' : ''}</div></div>`;
 }
 
@@ -1202,6 +1229,37 @@ function toast(msg) {
   clearTimeout(toast.h); toast.h = setTimeout(() => t.innerHTML = '', 3200);
 }
 
+/* ============================ REPLAY ============================ */
+const ICON_PLAY = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5 L10.5 6 L3 10.5 Z" fill="currentColor"/></svg>';
+const ICON_PAUSE = '<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2.5" y="1.5" width="2.5" height="9" fill="currentColor"/><rect x="7" y="1.5" width="2.5" height="9" fill="currentColor"/></svg>';
+const REPLAY_MS = 9000;
+let anim = null;
+function setPlayButton() {
+  const b = document.getElementById('playBtn'); if (!b) return;
+  b.innerHTML = anim ? ICON_PAUSE : ICON_PLAY;
+  b.setAttribute('aria-pressed', String(!!anim));
+  b.setAttribute('aria-label', anim ? 'Pause replay' : 'Play replay from the start');
+}
+function setAsOfDay(d) {
+  S.asOf = addDays(START, d);
+  const r = document.getElementById('asof'); if (r) r.value = d;
+  const l = document.getElementById('asofLbl'); if (l) l.textContent = fd(S.asOf);
+  update({ strip:false });
+}
+function playReplay() {
+  const total = days(START, END); const t0 = performance.now(); let last = -1;
+  anim = { raf: 0 };
+  setPlayButton();
+  const step = now => {
+    if (!anim) return;
+    const k = Math.min(1, (now - t0) / REPLAY_MS); const d = Math.round(k * total);
+    if (d !== last) { last = d; setAsOfDay(d); }
+    if (k < 1) anim.raf = requestAnimationFrame(step); else stopReplay();
+  };
+  anim.raf = requestAnimationFrame(step);
+}
+function stopReplay() { if (anim) cancelAnimationFrame(anim.raf); anim = null; setPlayButton(); }
+
 /* ============================ EVENTS ============================ */
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-act]');
@@ -1210,18 +1268,18 @@ document.addEventListener('click', e => {
   switch (act) {
     case 'tab': S.tab = v; S.library = false; if (S.strat==='template') S.strat='all'; break;
     case 'view': S.view = v; break;
-    case 'strat': S.strat = v; S.library = false; break;
+    case 'strat': S.strat = v; S.library = false; S.dview = 'summary'; S.edit = false; break;
     case 'template': S.strat = 'template'; S.library = false; break;
     case 'library': S.library = !S.library; S.panel = null; break;
     case 'about': S.modal = 'about'; break;
-    case 'summary': S.modal = 'summary'; break;
+    case 'dview': S.dview = v; if (v==='summary') S.edit = false; break;
     case 'closeModal': S.modal = null; break;
-    case 'present': { const st = STRATS[S.strat]; const nm = nextMeeting(st.client, S.asOf); S.modal = null; toast(nm ? `Recorded: this snapshot will be presented to ${CLIENTS[st.client].short} on ${fds(nm)}.` : 'No upcoming meeting.'); break; }
+    case 'present': { const st = STRATS[S.strat]; const nm = nextMeeting(st.client, S.asOf); toast(nm ? `Recorded: this snapshot will be presented to ${CLIENTS[st.client].short} on ${fds(nm)}.` : 'No upcoming meeting.'); break; }
     case 'filter': S.filters[v] = !S.filters[v]; break;
     case 'panel': S.panel = { s:b.dataset.s, key:b.dataset.k }; break;
     case 'close': S.panel = null; break;
     case 'edit': S.edit = !S.edit; break;
-    case 'openDecision': S.tab = 'decision'; S.strat = b.dataset.s; S.panel = null; S.library = false; break;
+    case 'openDecision': S.tab = 'decision'; S.dview = 'sheet'; S.strat = b.dataset.s; S.panel = null; S.library = false; break;
     case 'review': S.reviews.push({ s:b.dataset.s, key:b.dataset.k, d:S.asOf, outcome:'No change', note:'Reviewed in Watch.' }); toast('Recorded your review. The gap moves to Reviewed until new evidence arrives.'); break;
     case 'lower': { const s = b.dataset.s, k = b.dataset.k, a = asmDef(s, k); const to = a.conv==='high' ? 'medium' : 'low'; setConv(s, k, a.conv, to); S.reviews.push({ s, key:k, d:S.asOf, outcome:'Changed the strategy', note:`Conviction ${a.conv} → ${to} (in draft).` }); toast(`Added to draft: conviction ${a.conv} → ${to}. Save a snapshot in Decision.`); break; }
     case 'judge': { const s = b.dataset.s, k = b.dataset.k; S.judged.push({ s, key:k, obs:b.dataset.o, stance:v, d:S.asOf, origin:'analyst', note: b.dataset.ai ? 'Agreed with the AI stance.' : '', basedOn: b.dataset.ai ? 'ai' : null }); toast(b.dataset.ai ? 'Recorded as your judgment, based on the AI stance. The AI record stays as it was.' : 'Recorded your judgment.'); break; }
@@ -1236,13 +1294,14 @@ document.addEventListener('click', e => {
       S.draft = S.draft.filter(d => d.s!==s); S.draftNote=''; S.edit = false; toast('Snapshot saved.'); break; }
     case 'discard': { const s = S.strat; S.draft.filter(d => d.s===s && d.from).forEach(d => delete S.conv[s+':'+d.key]); S.draft = S.draft.filter(d => d.s!==s); S.edit = false; break; }
     case 'toast': toast(v); return;
+    case 'play': if (anim) stopReplay(); else playReplay(); return;
     default: return;
   }
   update({ strip: act==='strat' || act==='tab' || act==='library' });
 });
 document.addEventListener('keydown', e => {
   if (e.key==='Escape') { if (S.modal) S.modal = null; else if (S.panel) S.panel = null; else return; update({ strip:false }); }
-  if ((e.key==='Enter' || e.key===' ') && e.target.matches('.arow[role=button], .gap[role=button]')) { e.preventDefault(); e.target.click(); }
+  if ((e.key==='Enter' || e.key===' ') && e.target.matches('.arow[role=button], .gap[role=button], .sum-click')) { e.preventDefault(); e.target.click(); }
 });
 function setConv(s, k, from, to) {
   const ex = S.draft.find(d => d.s===s && d.key===k);
@@ -1251,11 +1310,11 @@ function setConv(s, k, from, to) {
 }
 document.addEventListener('change', e => {
   if (e.target.id==='clientSel') { S.client = e.target.value; S.strat = 'all'; S.panel = null; update(); }
-  if (e.target.id==='stratSel') { S.strat = e.target.value; update(); }
+  if (e.target.id==='stratSel') { S.strat = e.target.value; S.dview = 'summary'; S.edit = false; update(); }
   if (e.target.dataset.act==='conv') { const s = e.target.dataset.s, k = e.target.dataset.k; setConv(s, k, asmDef(s,k).conv, e.target.value); update({ strip:false }); }
 });
 document.addEventListener('input', e => {
-  if (e.target.id==='asof') { S.asOf = addDays(START, +e.target.value); document.getElementById('asofLbl').textContent = fd(S.asOf); update({ strip:false }); }
+  if (e.target.id==='asof') { stopReplay(); S.asOf = addDays(START, +e.target.value); document.getElementById('asofLbl').textContent = fd(S.asOf); update({ strip:false }); }
   if (e.target.id==='draftNote') S.draftNote = e.target.value;
 });
 // Close the modal only when the backdrop itself is clicked.
