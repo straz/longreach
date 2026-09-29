@@ -1,0 +1,1265 @@
+<title>Decision Watch Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;600&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Light only, by choice: the test6/test7 design system has no dark theme.
+   Every color is set explicitly so the page reads the same on any host. */
+:root {
+  color-scheme: light;
+  --ink: #141414;
+  --ink-2: #4d4c4a;
+  --ink-3: #6e6d6b;
+  --line-strong: #abaaa8;
+  --line: #d9d8d5;
+  --line-soft: #e8e6e2;
+  --canvas: #f5f3f0;
+  --surface: #ffffff;
+  --action: #368727;
+  --action-dark: #1e6f1d;
+  --action-soft: #eaf3e7;
+  /* Gaps are amber, never red: nothing has failed. */
+  --contra: #8a5712;
+  --contra-soft: #fbeedd;
+  --weak: #b9852c;
+  --weak-soft: #fdf6e8;
+  --weak-text: #7a5a1c;
+  --ok: #56666e;
+  --ok-soft: #eef1f2;
+  --analyst: #2f5f73;
+  --ai: #5a4a9e;
+  --ai-soft: #f3f0fb;
+  --derived: #5f5e5c;
+  --serif: 'Roboto Slab', Georgia, serif;
+  --sans: 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { background: var(--canvas); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.45; }
+button, select, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Shell */
+.app { display: grid; grid-template-rows: auto auto auto 1fr auto; min-height: 100%; }
+.hdr { background: var(--surface); border-bottom: 1px solid var(--line); padding-block: 10px; padding-inline: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; }
+.brand { display: flex; align-items: baseline; gap: 10px; }
+.brand .firm { font-family: var(--serif); font-weight: 600; color: var(--action-dark); font-size: 19px; }
+.brand .prod { font-family: var(--serif); font-size: 17px; }
+.brand .pow { font-size: 12px; color: var(--ink-3); }
+.hdr .ctl { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--ink-2); }
+.hdr select { border: 1px solid var(--line-strong); border-radius: 6px; padding: 4px 8px; background: var(--surface); color: var(--ink); max-width: 260px; }
+.hdr .spacer { flex: 1; }
+.linkbtn { background: none; border: none; color: var(--action-dark); font-weight: 600; padding: 4px 2px; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line-strong); }
+.who { font-size: 14px; color: var(--ink-2); }
+
+.tabs { background: var(--surface); border-bottom: 1px solid var(--line); padding-inline: 20px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 4px 24px; }
+.tab { background: none; border: none; border-bottom: 3px solid transparent; padding: 10px 2px 8px; font-size: 16px; font-weight: 600; color: var(--ink-2); display: flex; gap: 8px; align-items: center; }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--action); }
+.badge { background: var(--contra); color: #fff; border-radius: 10px; font-size: 12px; padding: 0 7px; line-height: 18px; }
+.tabs .meet { margin-left: auto; font-size: 14px; color: var(--ink-2); padding-bottom: 10px; }
+.tabs .meet b { color: var(--ink); }
+
+.strip { background: var(--surface); border-bottom: 1px solid var(--line); padding-block: 8px; padding-inline: 20px; display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; }
+.strip .lbl { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
+.strip .date { font-weight: 700; font-size: 15px; min-width: 7.5em; text-align: right; }
+.track { position: relative; height: 34px; }
+.track input[type=range] { position: absolute; left: 0; right: 0; top: 4px; width: 100%; accent-color: var(--action); margin: 0; }
+.track .tick { position: absolute; top: 22px; font-size: 10.5px; color: var(--ink-3); transform: translateX(-50%); white-space: nowrap; pointer-events: none; }
+.track .mk { position: absolute; top: 0; width: 2px; height: 8px; transform: translateX(-1px); pointer-events: none; }
+.track .mk.meeting { background: var(--analyst); height: 10px; }
+.track .mk.snap { background: var(--ink-3); }
+
+.body { display: grid; grid-template-columns: 270px minmax(0, 1fr); min-height: 0; }
+.side { background: var(--surface); border-right: 1px solid var(--line); padding-block: 14px; padding-inline: 12px; display: flex; flex-direction: column; gap: 4px; }
+.side h3 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin: 10px 8px 4px; font-weight: 600; }
+.side .client { font-size: 12.5px; color: var(--ink-3); margin: 8px 8px 2px; }
+.sitem { text-align: left; background: none; border: 1px solid transparent; border-radius: 8px; padding: 7px 8px; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: center; }
+.sitem:hover { background: var(--canvas); }
+.sitem[aria-current="true"] { background: var(--action-soft); border-color: #cfe2c9; }
+.sitem .nm { font-weight: 600; font-size: 14.5px; }
+.sitem .sub { grid-column: 1 / -1; font-size: 12.5px; color: var(--ink-3); }
+.counts { display: flex; gap: 6px; font-size: 12.5px; font-weight: 700; }
+.c-contra { color: var(--contra); }
+.c-weak { color: var(--weak-text); }
+.newbtn { margin-top: 8px; border: 1px dashed var(--line-strong); background: none; border-radius: 8px; padding: 7px 8px; text-align: left; color: var(--ink-2); }
+.side-picker { display: none; }
+
+.main { padding-block: 18px 40px; padding-inline: 24px; min-width: 0; }
+.foot { font-size: 12.5px; color: var(--ink-3); padding-block: 10px; padding-inline: 20px; border-top: 1px solid var(--line); background: var(--surface); }
+
+/* Watch */
+.viewbar { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; margin-bottom: 14px; }
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { border: none; background: none; padding: 6px 14px; font-weight: 600; color: var(--ink-2); border-right: 1px solid var(--line); }
+.seg button:last-child { border-right: none; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+h1.pg { font-family: var(--serif); font-weight: 500; font-size: 24px; margin: 0; text-wrap: balance; }
+.summary { color: var(--ink-2); margin: 4px 0 12px; }
+.summary b { color: var(--ink); }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; align-items: center; }
+.filters .fl { font-size: 13px; color: var(--ink-3); margin-right: 4px; }
+.chip { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 14px; padding: 2px 11px; font-size: 13.5px; color: var(--ink-2); }
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+.list { display: flex; flex-direction: column; gap: 10px; }
+.gap { cursor: pointer; background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--line-strong); border-radius: 8px; padding: 12px 14px; display: grid; grid-template-columns: minmax(0, 1fr) 210px; gap: 6px 18px; text-align: left; width: 100%; }
+.gap:hover { border-color: var(--line-strong); }
+.gap.s-contradicting, .gap.s-missed, .gap.s-fired { border-left-color: var(--contra); }
+.gap.s-weakening, .gap.s-near, .gap.s-expiring { border-left-color: var(--weak); }
+.gap.s-ai { border-left-color: var(--ai); border-style: dashed; border-left-style: solid; }
+.gap.is-new .stmt { font-weight: 700; }
+.gap .top { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.gap .stmt { font-size: 16px; font-weight: 600; grid-column: 1; }
+.gap .meta { font-size: 13.5px; color: var(--ink-3); }
+.gap .line2 { font-size: 13.5px; color: var(--ink-2); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.gap > * { grid-column: 1; }
+.gap .viz { grid-column: 2; grid-row: 1 / span 8; align-self: start; }
+.gap .viz .cap { font-size: 12px; color: var(--ink-3); text-align: right; }
+.state { display: inline-flex; align-items: center; gap: 5px; font-weight: 700; font-size: 13px; border-radius: 4px; padding: 1px 7px; white-space: nowrap; }
+.state.contradicting, .state.missed, .state.fired { background: var(--contra-soft); color: var(--contra); }
+.state.weakening, .state.near, .state.expiring { background: var(--weak-soft); color: var(--weak-text); }
+.state.supported, .state.ontrack { background: var(--ok-soft); color: var(--ok); }
+.state.untested, .state.stale { background: var(--canvas); color: var(--ink-3); }
+.state.ai { background: var(--ai-soft); color: var(--ai); }
+.life { font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; border-radius: 3px; padding: 1px 6px; }
+.life.new { background: var(--ink); color: #fff; }
+.life.reopened { background: var(--contra); color: #fff; }
+.life.reviewed { background: none; color: var(--ink-3); border: 1px solid var(--line); text-transform: none; letter-spacing: 0; font-weight: 600; }
+.shared { font-size: 12.5px; color: var(--ink-2); background: var(--canvas); border-radius: 4px; padding: 1px 7px; }
+.empty { padding: 26px; text-align: center; color: var(--ink-3); background: var(--surface); border: 1px dashed var(--line-strong); border-radius: 8px; }
+
+/* Provenance marks */
+.pv { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; letter-spacing: .02em; border: 1px solid var(--line-strong); color: var(--ink-2); border-radius: 3px; padding: 0 5px; white-space: nowrap; background: var(--surface); }
+.pv.ext { border-color: var(--line-strong); }
+.pv.analyst { border-color: var(--analyst); color: var(--analyst); }
+.pv.ai { border-color: var(--ai); color: var(--ai); border-style: dashed; background: var(--ai-soft); }
+.pv.derived { border-style: dotted; color: var(--derived); }
+.pv.syn { border-color: var(--line); color: var(--ink-3); font-style: italic; background: repeating-linear-gradient(135deg, var(--surface) 0 4px, var(--canvas) 4px 8px); }
+
+/* Trends */
+.grid-charts { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+.card h4 { margin: 0 0 2px; font-size: 15px; }
+.card .sub { font-size: 12.5px; color: var(--ink-3); }
+.card .trend { font-size: 13px; color: var(--ink-2); margin-top: 4px; }
+
+/* Evidence */
+.ev { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; }
+.ev.fresh { border-left: 4px solid var(--ink); }
+.ev .row1 { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 13px; color: var(--ink-3); }
+.ev .src { font-weight: 700; color: var(--ink); }
+.ev q { font-size: 15px; quotes: "\201C" "\201D"; }
+.touches { display: flex; flex-wrap: wrap; gap: 6px; }
+.touch { border: 1px solid var(--line); background: var(--canvas); border-radius: 6px; padding: 3px 8px; font-size: 13px; text-align: left; display: inline-flex; gap: 6px; align-items: center; }
+.touch:hover { border-color: var(--line-strong); }
+
+/* Coming up */
+.cu { display: grid; grid-template-columns: 110px 1fr; gap: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.cu > div { padding: 9px 14px; border-bottom: 1px solid var(--line-soft); }
+.cu .d { font-weight: 700; font-size: 14px; }
+.cu .d small { display: block; font-weight: 400; color: var(--ink-3); }
+.cu .k { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; }
+
+/* Decision */
+.sheet { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; max-width: 1060px; }
+.sheet-hd { display: flex; flex-wrap: wrap; gap: 10px 16px; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 6px; }
+.sheet-hd .lineage { color: var(--ink-3); font-size: 14px; margin-top: 4px; }
+.btn { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 20px; padding: 6px 14px; font-weight: 600; }
+.btn.primary { background: var(--action); border-color: var(--action); color: #fff; }
+.btn.small { padding: 3px 10px; font-size: 13px; }
+.btn.ai { border-style: dashed; border-color: var(--ai); color: var(--ai); background: var(--ai-soft); }
+.btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.sec { padding-top: 16px; }
+.sec > h2 { font-size: 12px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; margin: 0 0 8px; }
+.thesis { font-family: var(--serif); font-size: 19px; max-width: 60ch; margin: 0; }
+.pos { display: grid; grid-template-columns: 90px minmax(0,1fr) auto; gap: 6px 14px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line-soft); }
+.stance { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border: 1px solid var(--ink); border-radius: 3px; padding: 1px 6px; text-align: center; justify-self: start; }
+.bet { margin: 14px 0 4px; }
+.bet .role { font-size: 12px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+.bet .txt { font-weight: 600; }
+.arow { display: grid; grid-template-columns: 92px minmax(0,1fr) 88px 130px 150px; gap: 6px 12px; align-items: center; padding: 7px 8px; border-radius: 6px; width: 100%; text-align: left; background: none; border: 1px solid transparent; }
+.arow:hover { background: var(--canvas); }
+.arow .nec { font-size: 12.5px; color: var(--ink-3); }
+.arow .nec b { color: var(--ink); font-weight: 600; }
+.arow .conv { font-size: 13.5px; }
+.arow.changed { background: var(--action-soft); }
+.arow.ai-sug { border: 1px dashed var(--ai); background: var(--ai-soft); }
+.old { text-decoration: line-through; color: var(--ink-3); margin-right: 4px; }
+table.rm { border-collapse: collapse; font-size: 14px; }
+table.rm th, table.rm td { border: 1px solid var(--line); padding: 5px 10px; text-align: center; }
+table.rm th { font-weight: 600; background: var(--canvas); font-size: 13px; }
+table.rm td.h { text-align: left; font-weight: 600; }
+table.rm td .up { color: var(--contra); font-weight: 700; }
+.lvl5 { background: var(--contra-soft); }
+.lvl4 { background: var(--weak-soft); }
+.scroll-x { overflow-x: auto; }
+.draftbar { position: sticky; top: 0; z-index: 5; background: var(--ink); color: #fff; border-radius: 8px; padding: 8px 14px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 12px; }
+.draftbar input { border-radius: 6px; border: none; padding: 4px 8px; min-width: 0; flex: 1 1 220px; color: var(--ink); }
+.draftbar .btn { background: var(--surface); color: var(--ink); border-color: var(--surface); }
+.draftbar .btn.primary { background: var(--action); color: #fff; border-color: var(--action); }
+.tl { border-left: 2px solid var(--line); margin-left: 6px; padding-left: 16px; display: flex; flex-direction: column; gap: 12px; }
+.tl .it { position: relative; }
+.tl .it::before { content: ""; position: absolute; left: -22px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--ink-3); }
+.tl .it.meeting::before { background: var(--analyst); }
+.tl .it .d { font-weight: 700; font-size: 14px; }
+.tl .it ul { margin: 4px 0 0; padding-left: 18px; color: var(--ink-2); font-size: 14px; }
+.plist { display: flex; flex-direction: column; gap: 6px; }
+.prow { font-size: 14px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.scard { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; text-align: left; display: flex; flex-direction: column; gap: 6px; }
+.scard:hover { border-color: var(--line-strong); }
+.scard .t { font-family: var(--serif); font-size: 17px; }
+.scard .c { font-size: 13px; color: var(--ink-3); }
+
+/* Drawer */
+.scrim { position: fixed; inset: 0; background: rgba(20,20,20,.28); z-index: 20; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(640px, 100%); background: var(--surface); z-index: 21; box-shadow: -8px 0 30px rgba(0,0,0,.14); display: flex; flex-direction: column; }
+.drawer .dh { padding: 16px 20px 12px; border-bottom: 1px solid var(--line); display: flex; gap: 12px; align-items: flex-start; }
+.drawer .dh h2 { font-family: var(--serif); font-weight: 500; font-size: 20px; margin: 0; text-wrap: balance; }
+.drawer .dh .x { margin-left: auto; border: none; background: none; font-size: 22px; line-height: 1; color: var(--ink-3); padding: 2px 6px; }
+.drawer .db { overflow-y: auto; padding: 14px 20px 30px; display: flex; flex-direction: column; gap: 18px; }
+.drawer h3 { font-size: 12px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 6px; }
+.plain { color: var(--ink-2); margin: 4px 0 0; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13.5px; color: var(--ink-2); margin-top: 8px; }
+.evgroup { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.evgroup > summary { list-style: none; cursor: pointer; padding: 8px 12px; background: var(--canvas); display: flex; gap: 10px; align-items: center; font-weight: 600; font-size: 14px; }
+.evgroup > summary::-webkit-details-marker { display: none; }
+.evgroup > summary::before { content: "▸"; color: var(--ink-3); }
+.evgroup[open] > summary::before { content: "▾"; }
+.evi { padding: 8px 12px; border-top: 1px solid var(--line-soft); display: grid; grid-template-columns: 96px minmax(0,1fr); gap: 4px 10px; font-size: 13.5px; }
+.evi .when { color: var(--ink-3); }
+.evi .what { display: flex; flex-direction: column; gap: 4px; }
+.evi .tags { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.judge { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-top: 2px; }
+.judge button { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 4px; padding: 1px 8px; font-size: 12.5px; }
+.judge button:hover { border-color: var(--ink); }
+.rel li { margin-bottom: 4px; }
+.rel { margin: 0; padding-left: 18px; font-size: 14px; }
+.aibox { border: 1px dashed var(--ai); background: var(--ai-soft); border-radius: 8px; padding: 10px 12px; font-size: 14px; display: flex; flex-direction: column; gap: 8px; }
+.toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 8px 16px; border-radius: 20px; z-index: 40; font-size: 14px; }
+
+/* Modal */
+.modal { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; background: rgba(20,20,20,.35); padding: 16px; }
+.modal .box { background: var(--surface); border-radius: 10px; max-width: 720px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 22px 26px; }
+.modal h2 { font-family: var(--serif); font-weight: 500; margin: 0 0 8px; }
+.modal p { max-width: 64ch; }
+
+svg text { font-family: var(--sans); fill: var(--ink-3); }
+
+@media (max-width: 860px) {
+  .body { grid-template-columns: 1fr; }
+  .side { display: none; }
+  .side-picker { display: block; margin-bottom: 12px; }
+  .side-picker select { width: 100%; padding: 6px 8px; border: 1px solid var(--line-strong); border-radius: 6px; background: var(--surface); }
+  .main { padding-inline: 16px; }
+  .hdr, .tabs, .strip, .foot { padding-inline: 16px; }
+  .gap { grid-template-columns: 1fr; }
+  .gap .viz { grid-column: 1; grid-row: auto; }
+  .gap > * { grid-column: 1; }
+  .arow { grid-template-columns: 1fr auto; }
+  .arow .hide-sm { display: none; }
+  .tabs .meet { margin-left: 0; width: 100%; padding-bottom: 8px; }
+  .strip { grid-template-columns: 1fr auto; }
+  .strip .lbl { display: none; }
+  .pos { grid-template-columns: 80px minmax(0,1fr); }
+  .pos > :last-child { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app" id="app">
+  <header class="hdr" id="hdr"></header>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="strip" id="strip"></div>
+  <div class="body">
+    <aside class="side" id="side"></aside>
+    <main class="main" id="main"></main>
+  </div>
+  <footer class="foot">For Verity Investments analysts. Mockup: mixes cited public facts (from Devansh, AI Made Simple, Sep 27 2026) with fictional demonstration data from fictional sources. Not investment advice.</footer>
+</div>
+<div id="drawer"></div>
+<div id="modal"></div>
+<div id="toast"></div>
+
+<script>
+/* ============================ DATA ============================ */
+const START = '2026-09-28', END = '2027-03-31';
+
+const SOURCES = {
+  devansh:   { name: 'AI Made Simple (Devansh)', type: 'newsletter', fictional: false, analyst: 'medium', ai: 'medium' },
+  keystone:  { name: 'Keystone Filings Digest', type: 'filings summary', fictional: true, analyst: 'high', ai: 'high' },
+  northgate: { name: 'Northgate Research GPU Index', type: 'data vendor', fictional: true, analyst: 'medium', ai: 'medium' },
+  meridian:  { name: 'Meridian Credit Wire', type: 'news', fictional: true, analyst: 'medium', ai: 'low' },
+  harborview:{ name: 'Harborview Markets Daily', type: 'news', fictional: true, analyst: 'low', ai: 'medium' },
+  gridline:  { name: 'Gridline Energy Report', type: 'newsletter', fictional: true, analyst: 'medium', ai: 'medium' },
+};
+
+const IND = {
+  cwTop3:      { name: 'CoreWeave top-3 customer share of revenue', unit: '%', dp: 1 },
+  h100:        { name: 'H100 rental price', unit: '$/GPU-hr', dp: 2, pre: '$' },
+  cwCapex:     { name: 'CoreWeave capex ÷ operating cash flow', unit: '×', dp: 1 },
+  oracleCapex: { name: 'Oracle capex ÷ operating cash flow', unit: '×', dp: 2 },
+  oracleRpo:   { name: 'Oracle RPO converting within 12 months', unit: '%', dp: 1 },
+  anthropicRR: { name: 'Anthropic run-rate revenue', unit: '$B', dp: 0, pre: '$', post: 'B' },
+  gcBacklog:   { name: 'Google Cloud backlog', unit: '$B', dp: 0, pre: '$', post: 'B' },
+  nvContingent:{ name: 'Nvidia contingent guarantees ÷ annual operating cash flow', unit: '%', dp: 0 },
+  apldIG:      { name: 'Applied Digital revenue from investment-grade tenants', unit: '%', dp: 0 },
+  cwYield:     { name: 'CoreWeave 9.625% unsecured notes, yield', unit: '%', dp: 1 },
+  ppa:         { name: 'ERCOT data-center PPA price', unit: '$/MWh', dp: 0, pre: '$' },
+  dcDemand:    { name: 'US data-center power demand growth', unit: '%/yr', dp: 0 },
+};
+
+// Observations. Real ones quote the Devansh article; the rest are synthetic, from fictional sources.
+const OBS = [
+  { id:'r1', pub:'2026-09-27', src:'devansh', kind:'fact', ind:'cwTop3', v:72, valid:'2026-06-30', ex:'The top three customers represent 72% of revenue.' },
+  { id:'r2', pub:'2026-09-27', src:'devansh', kind:'derived', ind:'cwCapex', v:3.8, valid:'2026-06-30', ex:'CoreWeave generated about $3.7B of operating cash in H1 while spending $14.1B on infrastructure.' },
+  { id:'r3', pub:'2026-09-27', src:'devansh', kind:'derived', ind:'oracleCapex', v:1.23, valid:'2026-08-31', ex:'Oracle spent $28.5B on capex against $23.1B of operating cash flow last quarter.' },
+  { id:'r4', pub:'2026-09-27', src:'devansh', kind:'fact', ind:'oracleRpo', v:13, valid:'2026-08-31', ex:'Oracle has $664B of RPO, but only 13% is expected to become revenue over the next 12 months.' },
+  { id:'r5', pub:'2026-09-27', src:'devansh', kind:'fact', ind:'anthropicRR', v:47, q:'at least', valid:'2026-06-30', ex:'Its run-rate revenue crossed $47B earlier this year.' },
+  { id:'r6', pub:'2026-09-27', src:'devansh', kind:'fact', ind:'gcBacklog', v:513.9, valid:'2026-06-30', ex:'Google Cloud had $513.9B of backlog at June-end.' },
+  { id:'r7', pub:'2026-09-27', src:'devansh', kind:'opinion', ind:'nvContingent', v:35, q:'approx', valid:'2026-07-26', ex:'50% recovery stress case: roughly $52.5B of gross exposure, around 35% of Nvidia’s annualized operating cash flow.' },
+  { id:'r8', pub:'2026-09-27', src:'devansh', kind:'fact', event:'funding round', subj:'OpenAI', ex:'OpenAI raised $122B in committed capital earlier this year and is already discussing another round at more than a $1.2T valuation.' },
+  { id:'r9', pub:'2026-09-27', src:'devansh', kind:'fact', event:'funding round', subj:'SoftBank / OpenAI', ex:'SoftBank is separately issuing $11B of bonds largely to fund its next OpenAI investment.' },
+  { id:'r10', pub:'2026-09-27', src:'devansh', kind:'stated premise', event:'financing plan', subj:'OpenAI', attributed:'OpenAI', ex:'OpenAI itself says its 20-year Ohio capacity commitments will be funded through a combination of future business cash flow and capital raised from investors.' },
+  { id:'r11', pub:'2026-09-27', src:'devansh', kind:'prediction', event:'guidance', subj:'OpenAI', attributed:'OpenAI (via FT)', ex:'OpenAI expects roughly $36B of revenue in 2026 while producing almost $278B of negative free cash flow between 2026–2030.' },
+  { id:'r12', pub:'2026-09-27', src:'devansh', kind:'fact', ind:'apldIG', v:70, q:'approx', valid:'2026-05-31', ex:'About 70% of contracted revenue backed by investment-grade hyperscalers.' },
+
+  // Synthetic: GPU prices, monthly
+  { id:'g1', pub:'2026-10-03', src:'northgate', kind:'fact', ind:'h100', v:2.10, valid:'2026-09-30', ex:'H100 on-demand index averaged $2.10/GPU-hr in September.', syn:true },
+  { id:'g2', pub:'2026-11-03', src:'northgate', kind:'fact', ind:'h100', v:2.01, valid:'2026-10-31', ex:'H100 index averaged $2.01/GPU-hr in October as Blackwell capacity came online.', syn:true },
+  { id:'g3', pub:'2026-12-02', src:'northgate', kind:'fact', ind:'h100', v:1.90, valid:'2026-11-30', ex:'H100 index fell to $1.90/GPU-hr in November.', syn:true },
+  { id:'g4', pub:'2027-01-05', src:'northgate', kind:'fact', ind:'h100', v:1.78, valid:'2026-12-31', ex:'December H100 average $1.78/GPU-hr; three-year contracts repricing lower at renewal.', syn:true },
+  { id:'g5', pub:'2027-02-03', src:'northgate', kind:'fact', ind:'h100', v:1.62, valid:'2027-01-31', ex:'January H100 average $1.62/GPU-hr, the steepest monthly drop in the index’s history.', syn:true },
+  { id:'g6', pub:'2027-03-03', src:'northgate', kind:'fact', ind:'h100', v:1.47, valid:'2027-02-28', ex:'February H100 average $1.47/GPU-hr; renewal quotes cluster near $1.40.', syn:true },
+
+  // Synthetic: quarterly results via a fictional filings digest
+  { id:'k1', pub:'2026-11-12', src:'keystone', kind:'fact', ind:'cwTop3', v:73.5, valid:'2026-09-30', ex:'CoreWeave Q3: top three customers 73.5% of revenue.', syn:true },
+  { id:'k2', pub:'2027-02-25', src:'keystone', kind:'fact', ind:'cwTop3', v:76.8, valid:'2026-12-31', ex:'CoreWeave Q4: top three customers 76.8% of revenue; largest customer 41%.', syn:true },
+  { id:'k3', pub:'2026-11-12', src:'keystone', kind:'derived', ind:'cwCapex', v:3.4, valid:'2026-09-30', ex:'CoreWeave Q3 capex $7.9B against $2.3B operating cash flow.', syn:true },
+  { id:'k4', pub:'2027-02-25', src:'keystone', kind:'derived', ind:'cwCapex', v:3.1, valid:'2026-12-31', ex:'CoreWeave Q4 capex $8.4B against $2.7B operating cash flow.', syn:true },
+  { id:'k5', pub:'2026-12-11', src:'keystone', kind:'derived', ind:'oracleCapex', v:1.41, valid:'2026-11-30', ex:'Oracle Q2 FY27 capex $31.2B against $22.1B operating cash flow.', syn:true },
+  { id:'k6', pub:'2027-03-12', src:'keystone', kind:'derived', ind:'oracleCapex', v:1.58, valid:'2027-02-28', ex:'Oracle Q3 FY27 capex $34.0B against $21.5B operating cash flow; prepayments lower.', syn:true },
+  { id:'k7', pub:'2026-12-11', src:'keystone', kind:'fact', ind:'oracleRpo', v:12.4, valid:'2026-11-30', ex:'Oracle: 12.4% of RPO expected to be recognized in the next 12 months.', syn:true },
+  { id:'k8', pub:'2027-03-12', src:'keystone', kind:'fact', ind:'oracleRpo', v:11.9, valid:'2027-02-28', ex:'Oracle: 11.9% of RPO expected to be recognized in the next 12 months.', syn:true },
+  { id:'k9', pub:'2026-10-29', src:'keystone', kind:'fact', ind:'gcBacklog', v:552, valid:'2026-09-30', ex:'Google Cloud backlog $552B at quarter end.', syn:true },
+  { id:'k10', pub:'2027-02-04', src:'keystone', kind:'fact', ind:'gcBacklog', v:596, valid:'2026-12-31', ex:'Google Cloud backlog $596B at year end.', syn:true },
+  { id:'k11', pub:'2026-11-20', src:'keystone', kind:'derived', ind:'nvContingent', v:38, valid:'2026-10-26', ex:'Nvidia guarantee and capacity commitments equal to about 38% of annualized operating cash flow.', syn:true },
+  { id:'k12', pub:'2027-02-26', src:'keystone', kind:'derived', ind:'nvContingent', v:43, valid:'2027-01-25', ex:'Nvidia contingent commitments now about 43% of annualized operating cash flow after new backstops.', syn:true },
+  { id:'k13', pub:'2026-10-14', src:'keystone', kind:'fact', ind:'apldIG', v:69, valid:'2026-08-31', ex:'Applied Digital: 69% of contracted revenue from investment-grade tenants.', syn:true },
+  { id:'k14', pub:'2027-01-13', src:'keystone', kind:'fact', ind:'apldIG', v:69, valid:'2026-11-30', ex:'Applied Digital: investment-grade share of contracted revenue unchanged at 69%.', syn:true },
+  { id:'k15', pub:'2026-10-15', src:'keystone', kind:'fact', event:'construction update', subj:'Applied Digital', ex:'Applied Digital reports Polaris Forge 2 construction on schedule for Q3 2027 energization.', syn:true },
+  { id:'k16', pub:'2026-12-11', src:'keystone', kind:'fact', event:'filing note', subj:'Oracle', ex:'Oracle 10-Q: remaining customer prepayment for the Abilene phase 2 buildout expected to be fully applied by mid-June 2027.', syn:true },
+
+  // Synthetic: credit and news
+  { id:'y1', pub:'2026-10-01', src:'harborview', kind:'fact', ind:'cwYield', v:9.9, valid:'2026-09-30', ex:'CoreWeave 9.625% notes yield 9.9%.', syn:true },
+  { id:'y2', pub:'2026-11-02', src:'harborview', kind:'fact', ind:'cwYield', v:10.2, valid:'2026-10-31', ex:'CoreWeave 9.625% notes yield 10.2%.', syn:true },
+  { id:'y3', pub:'2026-12-01', src:'harborview', kind:'fact', ind:'cwYield', v:10.5, valid:'2026-11-30', ex:'CoreWeave 9.625% notes yield 10.5%.', syn:true },
+  { id:'y4', pub:'2027-01-04', src:'harborview', kind:'fact', ind:'cwYield', v:10.7, valid:'2026-12-31', ex:'CoreWeave 9.625% notes yield 10.7%.', syn:true },
+  { id:'y5', pub:'2027-02-01', src:'harborview', kind:'fact', ind:'cwYield', v:11.2, valid:'2027-01-31', ex:'CoreWeave 9.625% notes yield 11.2%, widest since issue.', syn:true },
+  { id:'y6', pub:'2027-03-01', src:'harborview', kind:'fact', ind:'cwYield', v:11.9, valid:'2027-02-28', ex:'CoreWeave 9.625% notes yield 11.9% after Q4 concentration disclosure.', syn:true },
+  { id:'m1', pub:'2026-11-20', src:'meridian', kind:'fact', ind:'anthropicRR', v:53, q:'approx', valid:'2026-10-31', ex:'Anthropic run-rate revenue about $53B, people familiar say.', syn:true },
+  { id:'h1', pub:'2027-02-02', src:'harborview', kind:'fact', ind:'anthropicRR', v:61, q:'approx', valid:'2027-01-31', ex:'Anthropic run-rate revenue near $61B.', syn:true },
+  { id:'m2', pub:'2026-12-09', src:'meridian', kind:'fact', event:'funding round', subj:'OpenAI', ex:'OpenAI’s next funding round slips to Q2; lead investors seek revised terms.', syn:true },
+  { id:'h2', pub:'2027-02-12', src:'harborview', kind:'fact', event:'funding round', subj:'OpenAI', ex:'OpenAI’s next raise now expected to close in Q3, at roughly half the size discussed in September.', syn:true },
+  { id:'m3', pub:'2027-02-10', src:'meridian', kind:'fact', event:'guarantee', subj:'Nvidia', ex:'Nvidia agrees to backstop about $22B of lease payments for a second neocloud campus.', syn:true },
+  { id:'m4', pub:'2027-03-18', src:'meridian', kind:'fact', event:'debt facility', subj:'OpenAI', ex:'OpenAI signs a $15B bridge facility with a bank group ahead of its delayed equity round.', syn:true },
+
+  // Synthetic: energy
+  { id:'e1', pub:'2026-10-05', src:'gridline', kind:'fact', ind:'ppa', v:92, valid:'2026-09-30', ex:'ERCOT data-center PPAs averaged $92/MWh in Q3.', syn:true },
+  { id:'e2', pub:'2027-01-06', src:'gridline', kind:'fact', ind:'ppa', v:89, valid:'2026-12-31', ex:'ERCOT data-center PPAs averaged $89/MWh in Q4.', syn:true },
+  { id:'e3', pub:'2027-03-04', src:'gridline', kind:'fact', ind:'ppa', v:84, valid:'2027-02-28', ex:'New ERCOT data-center PPAs signed in Jan–Feb averaged $84/MWh.', syn:true },
+  { id:'e4', pub:'2026-10-05', src:'gridline', kind:'fact', ind:'dcDemand', v:18, valid:'2026-09-30', ex:'US data-center electricity demand up 18% year on year.', syn:true },
+  { id:'e5', pub:'2027-01-06', src:'gridline', kind:'fact', ind:'dcDemand', v:19, valid:'2026-12-31', ex:'US data-center electricity demand up 19% year on year.', syn:true },
+  { id:'e6', pub:'2026-11-05', src:'gridline', kind:'fact', event:'queue update', subj:'ERCOT', ex:'ERCOT large-load interconnection queue passes 180 GW; restudies expected.', syn:true },
+  { id:'e7', pub:'2027-01-22', src:'gridline', kind:'fact', event:'delay', subj:'Applied Digital / ERCOT', ex:'ERCOT restudy pushes energization of the Polaris Forge 2 substation back about six months, to Q1 2028.', syn:true },
+];
+const OBS_BY_ID = Object.fromEntries(OBS.map(o => [o.id, o]));
+
+const ROLES = { modellabs:'Model labs', hyperscalers:'Hyperscalers', neoclouds:'Neoclouds', landlords:'Data-center landlords', chips:'Chip suppliers', lenders:'Lenders', offtakers:'Power offtakers', grid:'Grid and interconnection' };
+const BETS = {
+  modellabs: 'Usage and revenue grow fast enough to support huge compute commitments',
+  hyperscalers: 'Customers consume enough cloud to justify today’s capex',
+  neoclouds: 'Recover upfront costs before contracts and compute economics reset',
+  landlords: 'The physical infrastructure stays useful and the tenant keeps paying',
+  chips: 'Financing expands the market enough that extra sales outweigh contingent risk',
+  lenders: 'Get repaid before the rest of the structure deteriorates',
+  offtakers: 'AI load keeps growing and pays for new generation',
+  grid: 'The grid connects new load on schedule',
+};
+
+// Assumption library: shared definitions, keyed by origin (the template assumption).
+const LIB = {
+  openaiCapital: { bet:'modellabs', text:'OpenAI keeps raising outside capital on schedule', plain:'OpenAI can keep raising the money it needs to pay for the compute it has committed to.' },
+  anthropicRR:   { bet:'modellabs', text:'Anthropic run-rate revenue keeps rising', plain:'Anthropic’s revenue keeps growing, so its compute commitments look less stretched.', ind:'anthropicRR', rule:'up' },
+  oracleCapex:   { bet:'hyperscalers', text:'Oracle capex stays within 1.4× operating cash flow', plain:'Oracle can mostly pay for its buildout from its own cash, without ever-larger borrowing.', ind:'oracleCapex', rule:'atMost', th:1.4, tol:0.15 },
+  oracleRpo:     { bet:'hyperscalers', type:'prediction', text:'Oracle converts no more than 15% of RPO to revenue in the next 12 months', plain:'Most of Oracle’s backlog stays years away, so near-term revenue will not close the funding gap.', ind:'oracleRpo', rule:'atMost', th:15, tol:2, resolves:'2027-06-30' },
+  gcBacklog:     { bet:'hyperscalers', text:'Google Cloud backlog keeps growing', plain:'Demand for Google’s cloud keeps building.', ind:'gcBacklog', rule:'up' },
+  cwTop3:        { bet:'neoclouds', text:'CoreWeave’s top three customers stay at or below {th}% of revenue', plain:'CoreWeave does not become more dependent on a handful of customers.', ind:'cwTop3', rule:'atMost', th:75, tol:5 },
+  gpuPrice:      { bet:'neoclouds', text:'H100 rental prices stay at or above $1.70 per GPU-hour', plain:'Older GPUs still earn enough when their first contracts renew.', ind:'h100', rule:'atLeast', th:1.70, tol:0.20 },
+  cwCapex:       { bet:'neoclouds', text:'CoreWeave capex keeps falling toward its operating cash flow', plain:'CoreWeave needs less outside money each quarter.', ind:'cwCapex', rule:'down' },
+  seniorClaim:   { bet:'lenders', text:'Senior project lenders keep first claim on contract cash', plain:'Our project loans are paid before anyone else from the customer payments behind them.', reviewBy:'2027-03-01' },
+  nvContingent:  { bet:'chips', text:'Nvidia’s contingent guarantees stay under 40% of annual operating cash flow', plain:'Nvidia’s support for its customers stays small enough to absorb if some fail.', ind:'nvContingent', rule:'atMost', th:40, tol:5 },
+  pf2Schedule:   { bet:'landlords', text:'Polaris Forge 2 is energized on schedule (Q3 2027)', plain:'The new campus gets power on time, so rent starts when planned.' },
+  tenantIG:      { bet:'landlords', text:'Investment-grade tenants stay at or above 65% of Applied Digital contracted revenue', plain:'Most rent comes from tenants that are very likely to keep paying.', ind:'apldIG', rule:'atLeast', th:65, tol:5 },
+  dcLoad:        { bet:'grid', text:'New data-center load in ERCOT connects on schedule', plain:'The grid can connect the data centers our plants are built to serve.' },
+  ppa:           { bet:'offtakers', text:'Data-center PPA prices stay at or above $85/MWh', plain:'Data centers keep paying enough for power to make new plants pay off.', ind:'ppa', rule:'atLeast', th:85, tol:5 },
+  dcDemand:      { bet:'offtakers', text:'US data-center power demand grows at least 15% a year', plain:'AI keeps pushing up electricity demand.', ind:'dcDemand', rule:'atLeast', th:15, tol:3 },
+};
+
+const CLIENTS = {
+  harlow:   { name:'Harlow County Teachers’ Pension', short:'Harlow pension', meetings:['2026-10-15','2027-01-14','2027-04-15'] },
+  okafor:   { name:'Okafor Family Office', short:'Okafor family office', meetings:['2026-10-22','2027-01-21','2027-04-22'] },
+  lakemont: { name:'Lakemont University Endowment', short:'Lakemont endowment', meetings:['2026-10-29','2027-01-28','2027-04-29'] },
+};
+
+const STRATS = {
+  s1: { client:'harlow', name:'AI infrastructure credit', domain:'AI infrastructure', forked:'Devansh thesis v1',
+    thesis:'AI demand is real; the risk is in financing that depends on a few buyers. Lend where contracts and collateral come first.',
+    positions: [
+      { stance:'Lend', subj:'Senior secured GPU-backed project debt', relies:['openaiCapital','cwTop3','gpuPrice','seniorClaim'] },
+      { stance:'Avoid', subj:'CoreWeave unsecured notes', relies:['cwCapex','gpuPrice'] },
+      { stance:'Lend', subj:'Data-center construction loans, investment-grade tenants only', relies:['anthropicRR','openaiCapital'] },
+    ],
+    asms: [
+      { key:'openaiCapital', conv:'high', nec:true },
+      { key:'anthropicRR', conv:'medium', nec:false },
+      { key:'cwTop3', conv:'medium', nec:true },
+      { key:'gpuPrice', conv:'high', nec:true },
+      { key:'cwCapex', conv:'medium', nec:false },
+      { key:'seniorClaim', conv:'high', nec:true },
+    ],
+    triggers: [ { id:'t1', bet:'lenders', text:'CoreWeave unsecured yield passes 12%', ind:'cwYield', trip:12, leads:'Refinancing only at higher spreads; forced paydowns on renewal-risk facilities', related:['gpuPrice','cwTop3'] } ],
+    protections: [ { text:'Take-or-pay on the DDTL 5.5 supporting contracts', holder:'CoreWeave', expires:'2028-08-31', note:'The $2.6B facility matures about Aug 2030: roughly two years with no contracted support.' } ],
+    risk: [
+      { holder:'CoreWeave', type:'pricing', level:1 }, { holder:'CoreWeave', type:'funding', level:5 }, { holder:'CoreWeave', type:'counterparty', level:5 },
+      { holder:'CoreWeave', type:'renewal', level:4, prev:3, changed:'2027-01-10', driven:['gpuPrice'] }, { holder:'CoreWeave', type:'concentration', level:5, driven:['cwTop3'] },
+      { holder:'OpenAI', type:'funding', level:5, prev:4, changed:'2027-02-20', driven:['openaiCapital'] },
+      { holder:'Senior lenders', type:'counterparty', level:2, driven:['seniorClaim'] },
+    ],
+    watch: ['h100','cwTop3','cwYield','cwCapex','anthropicRR'],
+    history: [
+      { d:'2026-09-30', note:'Forked from Devansh thesis v1; set Harlow’s positions.', trigger:'manual', changes:['Added 3 positions','Kept 6 of 14 template assumptions'] },
+      { d:'2027-01-10', note:'Pre-meeting review.', trigger:'scheduled review', changes:['GPU price assumption: conviction medium → high','CoreWeave renewal risk 3 → 4'], keys:['gpuPrice'] },
+      { d:'2027-02-20', note:'OpenAI funding: raised risk after the round slipped; kept the lending position, limited new commitments to projects with investment-grade tenants.', trigger:'gap', changes:['OpenAI funding risk 4 → 5'], keys:['openaiCapital'] },
+    ],
+  },
+  s2: { client:'okafor', name:'AI stack equity', domain:'AI infrastructure', forked:'Devansh thesis v1',
+    thesis:'Own the suppliers whose balance sheets can absorb being wrong; stay light on those that need outside capital to deliver.',
+    positions: [
+      { stance:'Overweight', subj:'Nvidia and Broadcom', relies:['nvContingent','anthropicRR','openaiCapital'] },
+      { stance:'Overweight', subj:'Alphabet', relies:['gcBacklog'] },
+      { stance:'Underweight', subj:'Oracle', relies:['oracleCapex','oracleRpo','openaiCapital'] },
+    ],
+    asms: [
+      { key:'openaiCapital', conv:'medium', nec:true },
+      { key:'nvContingent', conv:'medium', nec:true },
+      { key:'oracleCapex', conv:'high', nec:true },
+      { key:'oracleRpo', conv:'medium', nec:false },
+      { key:'gcBacklog', conv:'medium', nec:false },
+      { key:'cwTop3', conv:'high', nec:false, th:80 },
+      { key:'anthropicRR', conv:'medium', nec:false },
+    ],
+    triggers: [],
+    protections: [ { text:'OpenAI prepayment covering Oracle’s Abilene phase 2 buildout', holder:'Oracle', expires:'2027-06-15', note:'After it is used up, Oracle funds the rest of phase 2 itself.', obs:'k16' } ],
+    risk: [
+      { holder:'Oracle', type:'demand', level:1 }, { holder:'Oracle', type:'funding', level:5, driven:['oracleCapex'] }, { holder:'Oracle', type:'counterparty', level:5, driven:['openaiCapital'] }, { holder:'Oracle', type:'balance sheet', level:4 },
+      { holder:'Nvidia', type:'counterparty', level:2, driven:['nvContingent'] }, { holder:'Nvidia', type:'spillover', level:2 },
+      { holder:'Alphabet', type:'funding', level:2 }, { holder:'Alphabet', type:'returns', level:3, driven:['gcBacklog'] },
+    ],
+    watch: ['oracleCapex','oracleRpo','nvContingent','gcBacklog','anthropicRR','cwTop3'],
+    history: [
+      { d:'2026-10-02', note:'Forked from Devansh thesis v1; set Okafor’s positions.', trigger:'manual', changes:['Added 3 positions','CoreWeave concentration threshold set to 80% (template: 75%)'], keys:['cwTop3'] },
+      { d:'2027-01-18', note:'Pre-meeting review: kept Oracle underweight.', trigger:'scheduled review', changes:['Added prediction: Oracle 12-month RPO conversion ≤ 15%'], keys:['oracleRpo'] },
+    ],
+  },
+  s3: { client:'lakemont', name:'AI data-center real assets', domain:'AI infrastructure', forked:'Devansh thesis v1',
+    thesis:'Buildings and power outlast chips; the risk is the tenant and the construction schedule.',
+    positions: [
+      { stance:'Hold', subj:'Co-investment in Polaris Forge 2 (Applied Digital)', relies:['pf2Schedule','tenantIG','cwTop3'] },
+      { stance:'Avoid', subj:'Single-tenant neocloud colocation', relies:['cwTop3','openaiCapital'] },
+    ],
+    asms: [
+      { key:'pf2Schedule', conv:'high', nec:true },
+      { key:'tenantIG', conv:'medium', nec:true },
+      { key:'cwTop3', conv:'medium', nec:false },
+      { key:'openaiCapital', conv:'medium', nec:false },
+    ],
+    triggers: [], protections: [],
+    risk: [
+      { holder:'Applied Digital', type:'construction', level:5, driven:['pf2Schedule'] }, { holder:'Applied Digital', type:'counterparty', level:3, driven:['tenantIG'] }, { holder:'Applied Digital', type:'obsolescence', level:2 },
+      { holder:'Core Scientific', type:'concentration', level:5, driven:['cwTop3'] },
+    ],
+    watch: ['apldIG','cwTop3'],
+    history: [ { d:'2026-10-05', note:'Forked from Devansh thesis v1; set Lakemont’s positions.', trigger:'manual', changes:['Added 2 positions','Kept 4 template assumptions'] } ],
+  },
+  s4: { client:'lakemont', name:'Power for data centers', domain:'Energy', forked:null,
+    thesis:'AI load growth supports new generation in ERCOT, if the grid can connect it on time.',
+    positions: [
+      { stance:'Hold', subj:'Gas peaker and storage portfolio in ERCOT', relies:['ppa','dcDemand','dcLoad'] },
+      { stance:'Lend', subj:'Transmission upgrade bonds', relies:['dcLoad'] },
+    ],
+    asms: [ { key:'dcLoad', conv:'high', nec:true }, { key:'ppa', conv:'medium', nec:true }, { key:'dcDemand', conv:'high', nec:true } ],
+    triggers: [], protections: [],
+    risk: [ { holder:'ERCOT generators', type:'pricing', level:3, driven:['ppa'] }, { holder:'Grid operator', type:'construction', level:4, driven:['dcLoad'] } ],
+    watch: ['ppa','dcDemand'],
+    history: [ { d:'2026-10-06', note:'New strategy (no template).', trigger:'manual', changes:['Added 2 positions and 3 assumptions'] } ],
+  },
+};
+
+// Stored evidence links. Analyst judgments and AI stances are separate lists.
+const JUDGED = [
+  ['s1','openaiCapital','r8','supports','2026-09-30'], ['s1','openaiCapital','r9','supports','2026-09-30'],
+  ['s2','openaiCapital','r8','supports','2026-10-02'], ['s3','openaiCapital','r8','supports','2026-10-05'],
+  ['s1','openaiCapital','m2','weakens','2026-12-10','Timing risk, not yet a funding problem.'],
+  ['s2','openaiCapital','m2','weakens','2026-12-12'], ['s3','openaiCapital','m2','weakens','2026-12-14'],
+  ['s1','openaiCapital','h2','contradicts','2027-02-14','Half the size, two quarters late. The schedule assumption no longer stands.'],
+  ['s3','openaiCapital','h2','contradicts','2027-02-15'],
+  ['s1','openaiCapital','r10','neutral','2026-09-30','Their own plan; confirms the dependency.'],
+  ['s3','pf2Schedule','k15','supports','2026-10-16'],
+  ['s3','pf2Schedule','e7','contradicts','2027-01-23','Six months late means rent starts Q1 2028.'],
+  ['s4','dcLoad','e6','weakens','2026-11-07','Queue growth makes restudies likely.'],
+  ['s4','dcLoad','e7','contradicts','2027-01-24'],
+].map(([s,key,obs,stance,d,note]) => ({ s, key, obs, stance, d, note, origin:'analyst' }));
+
+const AILINKS = [
+  ['s1','openaiCapital','h2','contradicts','2027-02-12','Reported size and timing both miss the plan the assumption relies on.'],
+  ['s2','openaiCapital','h2','contradicts','2027-02-12','Reported size and timing both miss the plan the assumption relies on.'],
+  ['s3','openaiCapital','h2','contradicts','2027-02-12','Reported size and timing both miss the plan the assumption relies on.'],
+  ['s1','openaiCapital','m4','weakens','2027-03-18','A bank bridge buys time but adds debt ahead of the equity round.'],
+  ['s1','seniorClaim','m4','weakens','2027-03-18','If OpenAI-linked project cash is pledged to the bridge lenders, senior project lenders may share their claim.'],
+  ['s3','pf2Schedule','e7','contradicts','2027-01-22','Energization date moves past the assumed quarter.'],
+  ['s4','dcLoad','e7','contradicts','2027-01-22','A named large-load project slips six months.'],
+  ['s2','nvContingent','m3','weakens','2027-02-10','A new $22B backstop adds to contingent exposure.'],
+].map(([s,key,obs,stance,d,note]) => ({ s, key, obs, stance, d, note, origin:'ai' }));
+
+const REVIEWS = [
+  { s:'s1', key:'openaiCapital', d:'2027-02-20', outcome:'Changed the strategy', note:'Raised OpenAI funding risk to 5; kept lending position.' },
+  { s:'s3', key:'pf2Schedule', d:'2027-01-28', outcome:'No change', note:'Discussed with the client; waiting for the ERCOT restudy before changing the position.' },
+  { s:'s4', key:'dcLoad', d:'2027-01-28', outcome:'No change', note:'Discussed with the client alongside the Polaris Forge 2 delay.' },
+];
+
+const AISUG = [
+  { id:'ai1', s:'s1', key:'gpuPrice', d:'2027-03-04', text:'The DDTL 5.5 contracts end about two years before the facility matures. With renewal quotes near $1.40, consider reviewing whether the senior secured position should exclude renewal-risk facilities.', cites:['g6','g5'] },
+  { id:'ai2', s:'s1', key:'openaiCapital', d:'2027-03-18', text:'Three of the last four reports point to a later, smaller round. Consider lowering conviction from high to medium.', cites:['h2','m2','m4'], action:{ type:'conv', to:'medium' } },
+  { id:'ai3', s:'s1', bet:'neoclouds', d:'2027-02-26', text:'Add an assumption: CoreWeave renewal pricing on 2024–25 H100 contracts stays at or above 70% of the original price.', newAsm:true },
+  { id:'ai4', s:'s2', key:'oracleCapex', d:'2027-03-12', text:'Oracle’s ratio passed 1.5× in the same quarter its prepayment support shrank. The prepayment protection ends Jun 15.', cites:['k6','k16'] },
+];
+
+const REPORTING = [
+  { d:'2027-05-12', text:'CoreWeave Q1 results', inds:['cwTop3','cwCapex'] },
+  { d:'2027-05-27', text:'Nvidia Q1 FY28 results', inds:['nvContingent'] },
+  { d:'2027-06-11', text:'Oracle Q4 FY27 results', inds:['oracleCapex','oracleRpo'] },
+  { d:'2027-04-03', text:'Northgate GPU index (March)', inds:['h100'] },
+  { d:'2027-04-06', text:'Gridline Q1 PPA survey', inds:['ppa','dcDemand'] },
+];
+
+/* ============================ STATE ============================ */
+const S = {
+  client:'all', strat:'all', tab:'watch', view:'gaps', asOf:END,
+  panel:null, library:false, edit:false, draft:[], draftNote:'',
+  conv:{}, reviews:[...REVIEWS], judged:[...JUDGED], sugStatus:{}, extraHistory:{},
+  filters:{ contradicting:true, weakening:true, triggers:true, expiring:true, ai:false },
+  modal:null, expanded:null,
+};
+
+/* ============================ UTIL ============================ */
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const T = s => Date.parse(s + 'T00:00:00Z');
+const days = (a, b) => Math.round((T(b) - T(a)) / 864e5);
+const addDays = (s, n) => new Date(T(s) + n * 864e5).toISOString().slice(0, 10);
+const fd = s => `${MON[+s.slice(5,7)-1]} ${+s.slice(8)}, ${s.slice(0,4)}`;
+const fds = s => `${MON[+s.slice(5,7)-1]} ${+s.slice(8)}`;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fv = (ind, v, q) => { const i = IND[ind]; const n = (i.pre||'') + v.toFixed(i.dp) + (i.post || (i.unit==='%'||i.unit==='%/yr' ? '%' : i.unit==='×' ? '×' : '')); return (q==='approx' ? '~' : q==='at least' ? '>' : '') + n; };
+const clientOf = s => STRATS[s].client;
+const scopeStrats = () => Object.keys(STRATS).filter(s => (S.client==='all' || clientOf(s)===S.client) && (S.strat==='all' || S.strat===s));
+const clientStrats = () => Object.keys(STRATS).filter(s => S.client==='all' || clientOf(s)===S.client);
+
+function asmDef(s, key) {
+  const lib = LIB[key]; const o = STRATS[s].asms.find(a => a.key===key) || {};
+  const th = o.th ?? lib.th;
+  return { ...lib, key, type: lib.type || 'assumption', conv: S.conv[s+':'+key] || o.conv || 'medium', baseConv: o.conv, nec: !!o.nec, th, tol: lib.tol,
+    text: lib.text.replace('{th}', th), qual: !lib.ind };
+}
+function ruleStance(a, v, prev) {
+  const near = Math.abs(a.th) * 0.03;
+  if (a.rule==='atLeast') { if (v >= a.th) return (v - a.th <= near && prev!=null && v < prev) ? 'weakens' : 'supports'; return (a.th - v <= a.tol) ? 'weakens' : 'contradicts'; }
+  if (a.rule==='atMost')  { if (v <= a.th) return (a.th - v <= near && prev!=null && v > prev) ? 'weakens' : 'supports'; return (v - a.th <= a.tol) ? 'weakens' : 'contradicts'; }
+  if (prev==null) return 'supports';
+  if (a.rule==='up') return v > prev ? 'supports' : v===prev ? 'weakens' : 'contradicts';
+  if (a.rule==='down') return v < prev ? 'supports' : v===prev ? 'weakens' : 'contradicts';
+}
+const obsFor = (ind, asOf) => OBS.filter(o => o.ind===ind && o.pub <= asOf).sort((a,b) => a.valid.localeCompare(b.valid) || a.pub.localeCompare(b.pub));
+const STATE_OF = { supports:'supported', weakens:'weakening', contradicts:'contradicting' };
+
+function evalAsm(s, key, asOf) {
+  const a = asmDef(s, key);
+  let rule = [], judged = [], ai = [], state, newest = null;
+  if (!a.qual) {
+    const os = obsFor(a.ind, asOf);
+    rule = os.map((o, i) => ({ obs:o.id, stance: ruleStance(a, o.v, i ? os[i-1].v : null), d:o.pub, origin:'derived' }));
+    if (rule.length) { newest = rule[rule.length-1]; state = STATE_OF[newest.stance]; if (a.type==='prediction' && state==='supported') state = 'ontrack'; }
+  }
+  judged = S.judged.filter(l => l.s===s && l.key===key && l.d <= asOf).sort((x,y) => x.d.localeCompare(y.d));
+  ai = AILINKS.filter(l => l.s===s && l.key===key && l.d <= asOf).sort((x,y) => x.d.localeCompare(y.d));
+  if (a.qual) {
+    const nn = judged.filter(l => l.stance!=='neutral');
+    if (nn.length) { newest = nn[nn.length-1]; state = STATE_OF[newest.stance]; }
+  }
+  if (!state) state = (a.reviewBy && a.reviewBy < asOf) ? 'stale' : 'untested';
+  // AI marker: newest AI stance after the newest analyst/rule link, if it differs
+  let aiMarker = null;
+  const lastAi = ai[ai.length-1];
+  if (lastAi && lastAi.stance!=='neutral' && (!newest || lastAi.d >= newest.d) && STATE_OF[lastAi.stance] !== state) aiMarker = lastAi;
+  return { a, state, rule, judged, ai, newest, aiMarker };
+}
+const isGap = st => st==='contradicting' || st==='weakening' || st==='missed';
+
+function gapRun(s, key, asOf) {
+  const a = asmDef(s, key);
+  const dates = new Set();
+  if (!a.qual) OBS.filter(o => o.ind===a.ind && o.pub<=asOf).forEach(o => dates.add(o.pub));
+  S.judged.filter(l => l.s===s && l.key===key && l.d<=asOf).forEach(l => dates.add(l.d));
+  const ds = [...dates].sort();
+  let prev = null, opened = null, lastChange = null;
+  for (const d of ds) {
+    const st = evalAsm(s, key, d).state;
+    if (st !== prev) { lastChange = d; if (isGap(st) && !isGap(prev)) opened = d; if (!isGap(st)) opened = null; }
+    prev = st;
+  }
+  return { opened, lastChange };
+}
+function lifecycle(s, key, run, asOf) {
+  const rs = S.reviews.filter(r => r.s===s && r.key===key && r.d<=asOf).sort((a,b) => a.d.localeCompare(b.d));
+  const last = rs[rs.length-1];
+  if (last && run.lastChange && last.d >= run.lastChange) return { life:'reviewed', review:last };
+  if (last && run.opened && last.d >= run.opened) return { life:'reopened', review:last };
+  return { life:'new', review:null };
+}
+function nextMeeting(client, asOf) { return CLIENTS[client].meetings.find(m => m > asOf) || null; }
+function lastMeeting(client, asOf) { return [...CLIENTS[client].meetings].reverse().find(m => m <= asOf) || null; }
+
+function collectGaps(strats, asOf) {
+  const out = [];
+  for (const s of strats) {
+    const st = STRATS[s];
+    for (const x of st.asms) {
+      const ev = evalAsm(s, x.key, asOf);
+      if (isGap(ev.state)) {
+        const run = gapRun(s, x.key, asOf);
+        out.push({ kind:'asm', s, key:x.key, state:ev.state, ev, opened:run.opened, ...lifecycle(s, x.key, run, asOf) });
+      } else if (ev.aiMarker && ev.aiMarker.stance!=='supports') {
+        out.push({ kind:'asm', s, key:x.key, state:'ai', ev, opened:ev.aiMarker.d, life:'new', aiOnly:true });
+      }
+    }
+    for (const t of st.triggers) {
+      const os = obsFor(t.ind, asOf); const last = os[os.length-1];
+      if (!last) continue;
+      const near = v => v >= t.trip*0.9;
+      if (near(last.v)) {
+        let opened = last.pub; for (let i = os.length-1; i>=0 && near(os[i].v); i--) opened = os[i].pub;
+        out.push({ kind:'trigger', s, t, state: last.v >= t.trip ? 'fired' : 'near', value:last, opened, life: 'new' });
+      }
+    }
+    for (const p of st.protections) {
+      const left = days(asOf, p.expires);
+      if (left >= 0 && left <= 90) out.push({ kind:'protection', s, p, state:'expiring', left, opened: addDays(p.expires, -90), life:'new' });
+    }
+  }
+  const rank = g => ({ contradicting:0, missed:0, fired:0, near:1, weakening:2, expiring:3, ai:4 })[g.state];
+  const convR = c => ({ high:0, medium:1, low:2 })[c] ?? 1;
+  out.sort((x,y) => rank(x)-rank(y) || ((x.life==='reviewed'?1:0) - (y.life==='reviewed'?1:0)) || ((x.ev?.a.nec?0:1) - (y.ev?.a.nec?0:1)) || (convR(x.ev?.a.conv) - convR(y.ev?.a.conv)) || (y.opened||'').localeCompare(x.opened||''));
+  return out;
+}
+function countsFor(s, asOf) {
+  let c = 0, w = 0;
+  for (const x of STRATS[s].asms) { const st = evalAsm(s, x.key, asOf).state; if (st==='contradicting') c++; else if (st==='weakening') w++; }
+  return { c, w };
+}
+
+/* ============================ SMALL VIEWS ============================ */
+const GLYPH = { contradicting:'▲', weakening:'▼', missed:'✕', near:'◆', fired:'◆', expiring:'⏱', supported:'✓', ontrack:'✓', untested:'○', stale:'○', ai:'◇' };
+const LABEL = { contradicting:'Contradicting', weakening:'Weakening', missed:'Missed', near:'Trigger near', fired:'Trigger reached', expiring:'Protection expiring', supported:'Supported', ontrack:'On track', untested:'Untested', stale:'Stale', ai:'AI suggests' };
+const stateChip = (st, extra='') => `<span class="state ${st}"><span aria-hidden="true">${GLYPH[st]}</span>${LABEL[st]}${extra}</span>`;
+const STANCE_WORD = { supports:'supports', weakens:'weakens', contradicts:'contradicts', neutral:'not relevant' };
+
+function pvObs(o) {
+  const src = SOURCES[o.src];
+  const kind = o.kind==='derived' ? 'derived from reported facts' : o.kind;
+  let h = `<span class="pv ${o.kind==='derived'?'derived':'ext'}" title="Origin: external. Source: ${esc(src.name)}${o.attributed?'. Claim attributed to '+esc(o.attributed):''}">${o.kind==='derived'?'DERIVED':'EXT'} · ${esc(kind)} · ${esc(src.name)}</span>`;
+  if (o.syn) h += ` <span class="pv syn" title="Invented for the demo, from a fictional source">SYNTHETIC</span>`;
+  return h;
+}
+const pvAnalyst = d => `<span class="pv analyst">ANALYST · Priya Raman${d?' · '+fds(d):''}</span>`;
+const pvAI = (d, adopted) => `<span class="pv ai">AI · opinion · ${adopted?'adopted':'unreviewed'}${d?' · '+fds(d):''}</span>`;
+const pvRule = `<span class="pv derived" title="Computed from the reported value and your threshold">DERIVED · ext fact + analyst threshold</span>`;
+
+/* ---------- Charts ---------- */
+const D0 = '2026-06-01', D1 = '2027-07-01';
+const C0 = '2026-08-15', C1 = '2027-05-15';
+function xs(d, x0, w, compact) { const a = compact ? C0 : D0, b = compact ? C1 : D1; return x0 + (T(d) - T(a)) / (T(b) - T(a)) * w; }
+const STANCE_COLOR = { supports:'var(--ok)', weakens:'var(--weak)', contradicts:'var(--contra)', neutral:'var(--ink-3)' };
+function glyph(cx, cy, stance, r, title) {
+  const c = STANCE_COLOR[stance];
+  const t = title ? `<title>${esc(title)}</title>` : '';
+  if (stance==='contradicts') return `<path d="M${cx},${cy-r*1.2} L${cx+r*1.1},${cy+r*0.8} L${cx-r*1.1},${cy+r*0.8} Z" fill="${c}" stroke="#fff" stroke-width="1">${t}</path>`;
+  if (stance==='weakens') return `<path d="M${cx},${cy+r*1.2} L${cx+r*1.1},${cy-r*0.8} L${cx-r*1.1},${cy-r*0.8} Z" fill="${c}" stroke="#fff" stroke-width="1">${t}</path>`;
+  if (stance==='neutral') return `<circle cx="${cx}" cy="${cy}" r="${r*0.8}" fill="#fff" stroke="${c}" stroke-width="1.5">${t}</circle>`;
+  return `<circle cx="${cx}" cy="${cy}" r="${r*0.85}" fill="${c}" stroke="#fff" stroke-width="1">${t}</circle>`;
+}
+let clipN = 0;
+function gapChart({ ind, a, links, asOf, markers = [], w = 560, h = 230, compact = false, thresholds = null }) {
+  const L = compact ? 4 : 44, R = compact ? 4 : 64, Tp = compact ? 6 : 14, B = compact ? 6 : 26;
+  const pw = w - L - R, ph = h - Tp - B;
+  const os = obsFor(ind, asOf);
+  const ths = thresholds || (a && a.th!=null ? [{ v:a.th, tol:a.tol, rule:a.rule, label:'' }] : []);
+  const vals = os.map(o => o.v); ths.forEach(t => { vals.push(t.v); if (t.tol!=null && !thresholds) vals.push(t.rule==='atLeast' ? t.v - t.tol*1.4 : t.v + t.tol*1.4); });
+  if (!vals.length) return '';
+  let lo = Math.min(...vals), hi = Math.max(...vals); const pad = (hi - lo || Math.abs(hi) || 1) * 0.15; lo -= pad; hi += pad;
+  const y = v => Tp + (hi - v) / (hi - lo) * ph;
+  const x = d => xs(d, L, pw, compact);
+  const id = 'c' + (++clipN);
+  let g = '';
+  // future region
+  const xa = x(asOf);
+  g += `<rect x="${xa}" y="${Tp}" width="${Math.max(0, L+pw-xa)}" height="${ph}" fill="var(--canvas)"/>`;
+  if (!compact) {
+    for (let i = 0; i <= 3; i++) { const v = lo + (hi-lo)*(i+0.5)/4; g += `<line x1="${L}" x2="${L+pw}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line-soft)"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end" font-size="11">${esc(fv(ind, v))}</text>`; }
+    ['2026-07-01','2026-09-01','2026-11-01','2027-01-01','2027-03-01','2027-05-01'].forEach(d => { g += `<text x="${x(d)}" y="${h-8}" text-anchor="middle" font-size="11">${MON[+d.slice(5,7)-1]}${d.slice(5,7)==='01'?' ’'+d.slice(2,4):''}</text>`; });
+  }
+  // zones and gap fill (single threshold only)
+  if (!thresholds && a && a.th!=null) {
+    const ty = y(a.th), tt = y(a.rule==='atLeast' ? a.th - a.tol : a.th + a.tol);
+    const bad = a.rule==='atLeast' ? { y1: ty, y2: Tp+ph } : { y1: Tp, y2: ty };
+    const tolR = a.rule==='atLeast' ? { y1: ty, y2: tt } : { y1: tt, y2: ty };
+    g += `<rect x="${L}" y="${bad.y1}" width="${pw}" height="${Math.max(0,bad.y2-bad.y1)}" fill="var(--contra-soft)"/>`;
+    g += `<rect x="${L}" y="${tolR.y1}" width="${pw}" height="${Math.max(0,tolR.y2-tolR.y1)}" fill="var(--weak-soft)"/>`;
+    if (os.length) {
+      const pts = os.map(o => `${x(o.valid)},${y(o.v)}`);
+      const poly = `${x(os[0].valid)},${ty} ${pts.join(' ')} ${x(os[os.length-1].valid)},${ty}`;
+      g += `<clipPath id="${id}"><rect x="${L}" y="${bad.y1}" width="${pw}" height="${Math.max(0,bad.y2-bad.y1)}"/></clipPath>`;
+      g += `<polygon points="${poly}" fill="var(--weak)" opacity=".45" clip-path="url(#${id})"/>`;
+    }
+    if (!compact) {
+      g += `<text x="${L+pw+6}" y="${(bad.y1+bad.y2)/2+4}" font-size="10.5">${a.rule==='atLeast'?'below':'above'}</text>`;
+    }
+  }
+  ths.forEach((t, i) => {
+    g += `<line x1="${L}" x2="${L+pw}" y1="${y(t.v)}" y2="${y(t.v)}" stroke="var(--ink-2)" stroke-dasharray="5 4" stroke-width="1.2"/>`;
+    if (!compact) g += `<text x="${L+pw+6}" y="${y(t.v)+4 + i*12}" font-size="11" style="fill:var(--ink-2)">${esc((t.rule==='atLeast'?'≥ ':'≤ ') + fv(ind, t.v))}${t.label?' '+esc(t.label):''}</text>`;
+  });
+  if (a && a.resolves && !compact) {
+    const rx = x(a.resolves); g += `<line x1="${rx}" x2="${rx}" y1="${Tp}" y2="${Tp+ph}" stroke="var(--ink-3)" stroke-dasharray="2 3"/><text x="${rx}" y="${Tp+10}" text-anchor="middle" font-size="10.5">resolves</text>`;
+  }
+  markers.forEach(m => {
+    if (m.d < (compact ? C0 : D0) || m.d > (compact ? C1 : D1)) return;
+    const mx = x(m.d);
+    if (m.kind==='meeting') g += `<line x1="${mx}" x2="${mx}" y1="${Tp}" y2="${Tp+ph}" stroke="var(--analyst)" stroke-dasharray="1 3" stroke-width="1.5"/>` + (compact ? '' : `<text x="${mx}" y="${Tp+ph-4}" text-anchor="middle" font-size="10" style="fill:var(--analyst)">mtg</text>`);
+    if (m.kind==='snap' && !compact) g += `<path d="M${mx-4},${Tp} L${mx+4},${Tp} L${mx},${Tp+6} Z" fill="var(--ink-3)"><title>Snapshot ${fds(m.d)}</title></path>`;
+  });
+  g += `<line x1="${xa}" x2="${xa}" y1="${Tp}" y2="${Tp+ph}" stroke="var(--ink)" stroke-width="1.2"/>`;
+  if (!compact) g += `<text x="${xa}" y="${Tp-3}" text-anchor="middle" font-size="10.5" style="fill:var(--ink)">as of</text>`;
+  if (os.length > 1) g += `<polyline points="${os.map(o => `${x(o.valid)},${y(o.v)}`).join(' ')}" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/>`;
+  os.forEach((o, i) => {
+    const l = links ? links.find(k => k.obs===o.id) : null;
+    const stance = l ? l.stance : 'neutral';
+    g += glyph(x(o.valid), y(o.v), stance, compact ? 3.2 : 5, `${fv(ind, o.v, o.q)} (${fds(o.valid)}), ${SOURCES[o.src].name}${o.syn?' [synthetic]':''}${l?': '+STANCE_WORD[stance]:''}`);
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" style="max-width:${w}px;display:block" role="img" aria-label="${esc(IND[ind].name)} over time">${g}</svg>`;
+}
+function stanceStrip(ev, asOf, { w = 560, compact = false, markers = [] } = {}) {
+  const L = compact ? 4 : 64, R = compact ? 4 : 12, h = compact ? 44 : 84;
+  const pw = w - L - R; const x = d => xs(d, L, pw, compact);
+  const rows = [['Analyst', ev.judged, compact ? 14 : 26], ['AI', ev.ai, compact ? 32 : 54]];
+  let g = `<rect x="${x(asOf)}" y="0" width="${Math.max(0, L+pw-x(asOf))}" height="${h}" fill="var(--canvas)"/>`;
+  rows.forEach(([lab, ls, yy]) => {
+    g += `<line x1="${L}" x2="${L+pw}" y1="${yy}" y2="${yy}" stroke="var(--line)"/>`;
+    if (!compact) g += `<text x="${L-8}" y="${yy+4}" text-anchor="end" font-size="11" style="fill:${lab==='AI'?'var(--ai)':'var(--analyst)'}">${lab}</text>`;
+    ls.forEach(l => g += glyph(x(l.d), yy, l.stance, compact ? 3.2 : 5.5, `${fds(l.d)}: ${STANCE_WORD[l.stance]}: ${OBS_BY_ID[l.obs].ex}`));
+  });
+  markers.forEach(m => { if (m.kind==='meeting') g += `<line x1="${x(m.d)}" x2="${x(m.d)}" y1="4" y2="${h-6}" stroke="var(--analyst)" stroke-dasharray="1 3" stroke-width="1.5"/>`; });
+  g += `<line x1="${x(asOf)}" x2="${x(asOf)}" y1="0" y2="${h}" stroke="var(--ink)" stroke-width="1.2"/>`;
+  if (!compact) ['2026-07-01','2026-09-01','2026-11-01','2027-01-01','2027-03-01','2027-05-01'].forEach(d => { g += `<text x="${x(d)}" y="${h-4}" text-anchor="middle" font-size="11">${MON[+d.slice(5,7)-1]}</text>`; });
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" style="max-width:${w}px;display:block" role="img" aria-label="Evidence judgments over time">${g}</svg>`;
+}
+function vizFor(s, key, asOf, compact) {
+  const ev = evalAsm(s, key, asOf); const a = ev.a;
+  const markers = CLIENTS[clientOf(s)].meetings.map(d => ({ d, kind:'meeting' })).concat(STRATS[s].history.map(h => ({ d:h.d, kind:'snap' })));
+  if (a.qual) return stanceStrip(ev, asOf, { w: compact ? 210 : 580, compact, markers });
+  return gapChart({ ind:a.ind, a, links:ev.rule, asOf, markers, w: compact ? 210 : 580, h: compact ? 54 : 240, compact });
+}
+
+/* ============================ RENDER ============================ */
+function renderHeader() {
+  const opts = [['all','All clients'], ...Object.entries(CLIENTS).map(([k,c]) => [k, c.name])];
+  document.getElementById('hdr').innerHTML = `
+    <div class="brand"><span class="firm">Verity</span><span class="prod">Decision Watch</span><span class="pow">powered by Longreach</span></div>
+    <label class="ctl" for="clientSel">Client <select id="clientSel">${opts.map(([k,n]) => `<option value="${k}" ${S.client===k?'selected':''}>${esc(n)}</option>`).join('')}</select></label>
+    <span class="spacer"></span>
+    <span class="who">Priya Raman</span>
+    <button class="linkbtn" data-act="library">${S.library ? 'Back to decisions' : 'Library'}</button>
+    <button class="linkbtn" data-act="about">About</button>`;
+}
+function renderTabs() {
+  const gaps = collectGaps(clientStrats(), S.asOf).filter(g => g.life!=='reviewed' && g.state!=='ai');
+  let meet = '';
+  const cls = S.client==='all' ? Object.keys(CLIENTS) : [S.client];
+  const nm = cls.map(c => ({ c, d: nextMeeting(c, S.asOf) })).filter(x => x.d).sort((a,b) => a.d.localeCompare(b.d))[0];
+  if (nm) meet = `Next client meeting: <b>${fds(nm.d)}</b> (${days(S.asOf, nm.d)} days)${S.client==='all' ? ' · ' + esc(CLIENTS[nm.c].short) : ''}`;
+  document.getElementById('tabs').innerHTML = S.library ? `<span class="tab" aria-selected="true">Library</span>` : `
+    <button class="tab" role="tab" aria-selected="${S.tab==='decision'}" data-act="tab" data-v="decision">Decision</button>
+    <button class="tab" role="tab" aria-selected="${S.tab==='watch'}" data-act="tab" data-v="watch">Watch ${gaps.length ? `<span class="badge" title="${gaps.length} gaps new or reopened since last review">${gaps.length}</span>` : ''}</button>
+    <span class="meet">${meet}</span>`;
+}
+function renderStrip() {
+  const total = days(START, END), cur = days(START, S.asOf);
+  const pct = d => (days(START, d) / total * 100).toFixed(2) + '%';
+  const meets = Object.entries(CLIENTS).filter(([k]) => S.client==='all' || k===S.client).flatMap(([k,c]) => c.meetings.filter(m => m>=START && m<=END));
+  const snaps = clientStrats().flatMap(s => STRATS[s].history.map(h => h.d)).filter(d => d>=START && d<=END);
+  const ticks = ['2026-10-01','2026-11-01','2026-12-01','2027-01-01','2027-02-01','2027-03-01'];
+  document.getElementById('strip').innerHTML = `
+    <span class="lbl">As of</span>
+    <div class="track">
+      ${meets.map(m => `<span class="mk meeting" style="left:${pct(m)}" title="Client meeting ${fds(m)}"></span>`).join('')}
+      ${snaps.map(m => `<span class="mk snap" style="left:${pct(m)}"></span>`).join('')}
+      <input type="range" id="asof" min="0" max="${total}" value="${cur}" aria-label="As of date: drag to replay how gaps opened">
+      ${ticks.map(t => `<span class="tick" style="left:${pct(t)}">${MON[+t.slice(5,7)-1]}</span>`).join('')}
+    </div>
+    <span class="date num" id="asofLbl">${fd(S.asOf)}</span>`;
+}
+function renderSide() {
+  const cl = S.client==='all' ? Object.keys(CLIENTS) : [S.client];
+  let h = `<h3>Strategies</h3><button class="sitem" data-act="strat" data-v="all" aria-current="${S.strat==='all'}"><span class="nm">All strategies</span><span class="sub">${S.client==='all' ? 'Priya’s whole book' : esc(CLIENTS[S.client].short)}</span></button>`;
+  for (const c of cl) {
+    if (S.client==='all') h += `<div class="client">${esc(CLIENTS[c].name)}</div>`;
+    for (const s of Object.keys(STRATS).filter(s => clientOf(s)===c)) {
+      const k = countsFor(s, S.asOf);
+      h += `<button class="sitem" data-act="strat" data-v="${s}" aria-current="${S.strat===s}"><span class="nm">${esc(STRATS[s].name)}</span>
+        <span class="counts">${k.c ? `<span class="c-contra" title="${k.c} contradicting">▲${k.c}</span>` : ''}${k.w ? `<span class="c-weak" title="${k.w} weakening">▼${k.w}</span>` : ''}</span>
+        <span class="sub">${esc(STRATS[s].domain)}</span></button>`;
+    }
+  }
+  h += `<h3>Templates</h3><button class="sitem" data-act="template"><span class="nm">Devansh thesis v1</span><span class="sub">Sep 28, 2026 · AI infrastructure</span></button>
+    <button class="newbtn" data-act="toast" data-v="New strategy: choose a client and domain, then start from a template or blank. (Not in this mockup.)">+ New strategy</button>`;
+  document.getElementById('side').innerHTML = h;
+}
+function sidePicker() {
+  const opts = [['all','All strategies'], ...clientStrats().map(s => [s, STRATS[s].name + ' · ' + CLIENTS[clientOf(s)].short])];
+  return `<div class="side-picker"><label class="fl" for="stratSel">Strategy</label> <select id="stratSel">${opts.map(([k,n]) => `<option value="${k}" ${S.strat===k?'selected':''}>${esc(n)}</option>`).join('')}</select></div>`;
+}
+function scopeTitle() {
+  if (S.strat!=='all') return `${STRATS[S.strat].name} · ${CLIENTS[clientOf(S.strat)].short}`;
+  return S.client==='all' ? 'All clients' : CLIENTS[S.client].name;
+}
+
+/* ---------- Watch ---------- */
+function renderWatch() {
+  const views = [['gaps','Gaps'],['trends','Trends'],['evidence','Evidence'],['coming','Coming up']];
+  let h = sidePicker() + `<div class="viewbar"><div class="seg" role="group" aria-label="Watch views">${views.map(([k,n]) => `<button aria-pressed="${S.view===k}" data-act="view" data-v="${k}">${n}</button>`).join('')}</div></div>`;
+  if (S.view==='gaps') h += renderGaps();
+  if (S.view==='trends') h += renderTrends();
+  if (S.view==='evidence') h += renderEvidence();
+  if (S.view==='coming') h += renderComing();
+  return h;
+}
+function renderGaps() {
+  const strats = scopeStrats();
+  const all = collectGaps(strats, S.asOf);
+  const f = S.filters;
+  const shown = all.filter(g =>
+    (g.state==='contradicting' || g.state==='missed') ? f.contradicting :
+    g.state==='weakening' ? f.weakening :
+    (g.state==='near' || g.state==='fired') ? f.triggers :
+    g.state==='expiring' ? f.expiring : g.state==='ai' ? f.ai : true);
+  const real = all.filter(g => g.state!=='ai');
+  const fresh = real.filter(g => g.life!=='reviewed').length;
+  const cl = [...new Set(strats.map(clientOf))];
+  const lm = cl.length===1 ? lastMeeting(cl[0], S.asOf) : null;
+  const nm = cl.length===1 ? nextMeeting(cl[0], S.asOf) : null;
+  const sinceMtg = lm ? real.filter(g => g.opened && g.opened > lm).length : null;
+  let h = `<h1 class="pg">Gaps · ${esc(scopeTitle())}</h1>
+    <p class="summary"><b>${real.length} open</b> (${fresh} new or reopened)${lm ? ` · <b>${sinceMtg}</b> opened since the last client meeting on ${fds(lm)}` : ''}${nm ? ` · next meeting ${fds(nm)} (${days(S.asOf, nm)} days)` : ''}</p>
+    <div class="filters"><span class="fl">Show</span>
+      ${[['contradicting','▲ Contradicting'],['weakening','▼ Weakening'],['triggers','◆ Triggers'],['expiring','⏱ Expiring'],['ai','◇ AI-only suggestions']].map(([k,n]) => `<button class="chip" aria-pressed="${f[k]}" data-act="filter" data-v="${k}">${n}</button>`).join('')}
+    </div>`;
+  if (!shown.length) return h + `<div class="empty">No gaps as of ${fd(S.asOf)} with these filters. Drag the As of slider forward to watch gaps open.</div>`;
+  h += `<div class="list">` + shown.map(g => gapRow(g, all)).join('') + `</div>`;
+  return h;
+}
+function lifeTag(g) {
+  if (g.state==='ai') return '';
+  if (g.life==='reviewed') return `<span class="life reviewed">Reviewed ${fds(g.review.d)}</span>`;
+  if (g.life==='reopened') return `<span class="life reopened">Reopened</span>`;
+  return `<span class="life new">New</span>`;
+}
+function timingText(s, opened) {
+  const c = clientOf(s); const nm = nextMeeting(c, S.asOf);
+  let t = opened ? `opened ${fds(opened)}` : '';
+  if (nm) t += `${t?' · ':''}next meeting ${fds(nm)}, in ${days(S.asOf, nm)} days`;
+  return t;
+}
+function gapRow(g, all) {
+  const st = STRATS[g.s]; const cname = CLIENTS[st.client].short;
+  if (g.kind==='trigger') {
+    return `<div class="gap s-${g.state} is-new" role="button" tabindex="0" data-act="toast" data-v="Break-trigger detail is not in this mockup. It would show the chain: ${esc(g.t.leads)}.">
+      <div class="top">${stateChip(g.state)}${lifeTag(g)}<span class="meta">${esc(st.name)} · ${esc(cname)} · ${ROLES[g.t.bet]}</span></div>
+      <div class="stmt">Break trigger: ${esc(g.t.text)}</div>
+      <div class="line2"><span>Now ${fv(g.t.ind, g.value.v)} (${fds(g.value.valid)}); trips at ${fv(g.t.ind, g.t.trip)}</span><span>${timingText(g.s, g.opened)}</span></div>
+      <div class="line2"><span>Leads to: ${esc(g.t.leads)}</span></div>
+      <div class="viz">${gapChart({ ind:g.t.ind, a:{ th:g.t.trip, tol:g.t.trip*0.1, rule:'atMost' }, links:obsFor(g.t.ind,S.asOf).map(o => ({ obs:o.id, stance: o.v>=g.t.trip ? 'contradicts' : o.v>=g.t.trip*0.9 ? 'weakens' : 'supports' })), asOf:S.asOf, w:210, h:54, compact:true })}<div class="cap">${esc(IND[g.t.ind].name)}</div></div>
+    </div>`;
+  }
+  if (g.kind==='protection') {
+    return `<div class="gap s-expiring is-new" role="button" tabindex="0" data-act="toast" data-v="Protection detail is not in this mockup.">
+      <div class="top">${stateChip('expiring', ` · ${g.left} days`)}<span class="meta">${esc(st.name)} · ${esc(cname)}</span></div>
+      <div class="stmt">${esc(g.p.text)} ends ${fd(g.p.expires)}</div>
+      <div class="line2"><span>Protects ${esc(g.p.holder)}. ${esc(g.p.note)}</span></div>
+      <div class="line2"><span>${timingText(g.s, null)}</span></div>
+      <div class="viz"></div>
+    </div>`;
+  }
+  const a = g.ev.a;
+  const pos = st.positions.filter(p => p.relies.includes(g.key));
+  const risks = st.risk.filter(r => (r.driven||[]).includes(g.key));
+  const cnt = (ls) => { const c = { supports:0, weakens:0, contradicts:0 }; ls.forEach(l => { if (c[l.stance]!=null) c[l.stance]++; }); return c; };
+  const rc = cnt(g.ev.rule.concat(g.ev.judged)), ac = cnt(g.ev.ai);
+  const others = all.filter(o => o!==g && o.kind==='asm' && o.key===g.key && o.s!==g.s);
+  const sharedTxt = S.strat==='all' && others.length ? `<span class="shared">Also a gap in ${others.map(o => esc(STRATS[o.s].name)).join(', ')}</span>` : '';
+  const aiNote = g.ev.aiMarker && g.state!=='ai' ? ` · <span style="color:var(--ai)">AI suggests: ${STATE_OF[g.ev.aiMarker.stance]}</span>` : '';
+  const newest = g.ev.newest; const nobs = newest ? OBS_BY_ID[newest.obs] : null;
+  const valTxt = !a.qual && nobs ? `${fv(a.ind, nobs.v, nobs.q)} (${fds(nobs.valid)}) · threshold ${a.rule==='atLeast'?'≥':'≤'} ${fv(a.ind, a.th)}, tolerance ${fv(a.ind, a.tol)}` : nobs ? `Latest: “${esc(nobs.ex)}”` : '';
+  return `<div class="gap s-${g.state} ${g.life!=='reviewed'?'is-new':''}" role="button" tabindex="0" data-act="panel" data-s="${g.s}" data-k="${g.key}">
+    <div class="top">${stateChip(g.state, g.state==='ai' ? ': ' + STATE_OF[g.ev.aiMarker.stance] : '')}${lifeTag(g)}<span class="meta">${a.conv} conviction · ${a.nec?'necessary':'supporting'}${a.type==='prediction'?' · prediction':''}</span>${sharedTxt}</div>
+    <div class="stmt">${esc(a.text)}</div>
+    <div class="meta">${esc(st.name)} · ${esc(cname)} · ${ROLES[a.bet]}</div>
+    <div class="line2"><span>${valTxt}</span></div>
+    <div class="line2"><span>${timingText(g.s, g.opened)}</span></div>
+    <div class="line2">${pos.length ? `<span>Affects: ${pos.map(p => `${esc(p.stance)} · ${esc(p.subj)}`).join('; ')}</span>` : ''}${risks.length ? `<span>Risk: ${risks.map(r => `${esc(r.holder)} ${r.type} ${r.level}`).join(', ')}</span>` : ''}</div>
+    <div class="line2"><span>Evidence: ${rc.contradicts} contradict · ${rc.weakens} weaken · ${rc.supports} support${g.ev.ai.length ? ` · AI: ${ac.contradicts+ac.weakens} against, ${ac.supports} for` : ''}${aiNote}</span></div>
+    <div class="viz">${vizFor(g.s, g.key, S.asOf, true)}<div class="cap">${a.qual ? 'analyst / AI judgments' : esc(IND[a.ind].name)}</div></div>
+  </div>`;
+}
+function renderTrends() {
+  const strats = scopeStrats();
+  const inds = [...new Set(strats.flatMap(s => STRATS[s].watch))];
+  let h = `<h1 class="pg">Trends · ${esc(scopeTitle())}</h1><p class="summary">Watchlist indicators. Dashed lines are the thresholds your assumptions set; shaded areas are gaps.</p><div class="grid-charts">`;
+  for (const ind of inds) {
+    const users = strats.flatMap(s => STRATS[s].asms.filter(x => LIB[x.key].ind===ind).map(x => ({ s, a: asmDef(s, x.key) })));
+    const th = users.filter(u => u.a.th!=null);
+    const uniq = [...new Map(th.map(u => [u.a.th, u])).values()];
+    const single = uniq.length===1 ? uniq[0] : null;
+    const os = obsFor(ind, S.asOf);
+    let trend = 'no data yet';
+    if (os.length > 1) { const d = os[os.length-1].v - os[os.length-2].v; trend = Math.abs(d) < 1e-9 ? 'Flat' : d > 0 ? 'Rising' : 'Falling'; trend += ` · latest ${fv(ind, os[os.length-1].v, os[os.length-1].q)} (${fds(os[os.length-1].valid)})`; }
+    else if (os.length) trend = `One reading: ${fv(ind, os[0].v, os[0].q)}`;
+    const links = single ? evalAsm(single.s, single.a.key, S.asOf).rule : null;
+    const chart = single
+      ? gapChart({ ind, a:single.a, links, asOf:S.asOf, w:380, h:170 })
+      : gapChart({ ind, a:null, links:null, asOf:S.asOf, w:380, h:170, thresholds: uniq.map(u => ({ v:u.a.th, rule:u.a.rule, label: CLIENTS[clientOf(u.s)].short.split(' ')[0] })) });
+    const trig = strats.flatMap(s => STRATS[s].triggers.filter(t => t.ind===ind));
+    const trigChart = !users.length && trig.length ? gapChart({ ind, a:{ th:trig[0].trip, tol:trig[0].trip*0.1, rule:'atMost' }, links:os.map(o => ({ obs:o.id, stance:o.v>=trig[0].trip?'contradicts':o.v>=trig[0].trip*0.9?'weakens':'supports' })), asOf:S.asOf, w:380, h:170 }) : null;
+    h += `<div class="card"><h4>${esc(IND[ind].name)}</h4><div class="sub">${users.length ? 'Used by: ' + [...new Set(users.map(u => STRATS[u.s].name))].map(esc).join(', ') : trig.length ? 'Break trigger: ' + esc(trig[0].text) : ''}</div>${trigChart || chart}<div class="trend">${trend}</div></div>`;
+  }
+  return h + `</div>`;
+}
+function touchesFor(o, strats) {
+  const out = [];
+  for (const s of strats) for (const x of STRATS[s].asms) {
+    const a = asmDef(s, x.key);
+    if (a.ind && a.ind===o.ind) { const ev = evalAsm(s, x.key, S.asOf); const l = ev.rule.find(r => r.obs===o.id); if (l) out.push({ s, key:x.key, stance:l.stance, origin:'derived' }); }
+    S.judged.filter(l => l.s===s && l.key===x.key && l.obs===o.id && l.d<=S.asOf).forEach(l => out.push({ s, key:x.key, stance:l.stance, origin:'analyst' }));
+    AILINKS.filter(l => l.s===s && l.key===x.key && l.obs===o.id && l.d<=S.asOf).forEach(l => out.push({ s, key:x.key, stance:l.stance, origin:'ai' }));
+  }
+  return out;
+}
+function renderEvidence() {
+  const strats = scopeStrats();
+  const os = OBS.filter(o => o.pub <= S.asOf).sort((a,b) => b.pub.localeCompare(a.pub));
+  let h = `<h1 class="pg">Evidence · ${esc(scopeTitle())}</h1><p class="summary">Newest observations first, with every assumption each one bears on. Marked rows came in during the last 14 days.</p><div class="list">`;
+  for (const o of os) {
+    const t = touchesFor(o, strats);
+    if (!t.length && S.strat!=='all') continue;
+    const src = SOURCES[o.src];
+    const fresh = days(o.pub, S.asOf) <= 14;
+    const val = o.ind ? `<b>${esc(IND[o.ind].name)}: ${fv(o.ind, o.v, o.q)}</b> for ${fd(o.valid)}` : `<b>Event: ${esc(o.event)}</b> · ${esc(o.subj)}`;
+    h += `<div class="ev ${fresh?'fresh':''}">
+      <div class="row1"><span class="src">${esc(src.name)}</span><span>published ${fd(o.pub)}</span>${pvObs(o)}
+        <span class="pv analyst" title="Priya's assessment of this source">Priya: ${src.analyst}</span><span class="pv ai" title="AI assessment of this source">AI: ${src.ai}</span></div>
+      <div>${val}</div>
+      <q>${esc(o.ex)}</q>
+      <div class="touches">${t.length ? t.map(x => `<button class="touch" data-act="panel" data-s="${x.s}" data-k="${x.key}">${glyph0(x.stance)}<span>${esc(asmDef(x.s,x.key).text)}</span><span class="pv ${x.origin==='ai'?'ai':x.origin==='analyst'?'analyst':'derived'}">${x.origin==='ai'?'AI':x.origin==='analyst'?'Priya':'rule'}</span><span style="color:var(--ink-3)">${esc(STRATS[x.s].name)}</span></button>`).join('') : '<span style="color:var(--ink-3);font-size:13px">Touches no assumption in this scope.</span>'}</div>
+    </div>`;
+  }
+  return h + `</div>`;
+}
+function glyph0(stance) { return `<svg width="12" height="12" viewBox="0 0 12 12" aria-label="${STANCE_WORD[stance]}">${glyph(6, 6.5, stance, 4.2)}</svg>`; }
+function renderComing() {
+  const strats = scopeStrats(); const cl = [...new Set(strats.map(clientOf))];
+  const items = [];
+  cl.forEach(c => { const m = nextMeeting(c, S.asOf); if (m) items.push({ d:m, k:'Client meeting', t:`${CLIENTS[c].name}: quarterly review` }); });
+  strats.forEach(s => {
+    STRATS[s].asms.forEach(x => { const a = asmDef(s, x.key); if (a.resolves && a.resolves >= S.asOf) items.push({ d:a.resolves, k:'Prediction resolves', t:`${a.text} (${STRATS[s].name})`, s, key:x.key }); });
+    STRATS[s].protections.forEach(p => { if (p.expires >= S.asOf) items.push({ d:p.expires, k:'Protection ends', t:`${p.text}. ${p.note}` }); });
+    STRATS[s].asms.forEach(x => { const st = evalAsm(s, x.key, S.asOf).state; if (st==='stale') items.push({ d:S.asOf, k:'Stale assumption', t:`${asmDef(s,x.key).text}: no evidence since review-by ${fds(LIB[x.key].reviewBy)} (${STRATS[s].name})`, s, key:x.key }); });
+  });
+  const inds = new Set(strats.flatMap(s => STRATS[s].watch));
+  REPORTING.filter(r => r.d >= S.asOf && r.inds.some(i => inds.has(i))).forEach(r => items.push({ d:r.d, k:'Reporting date', t:r.text }));
+  items.sort((a,b) => a.d.localeCompare(b.d));
+  let h = `<h1 class="pg">Coming up · ${esc(scopeTitle())}</h1><p class="summary">What will matter soon. Open this before a client meeting.</p><div class="cu">`;
+  items.forEach(i => { h += `<div class="d num">${fds(i.d)}<small>${i.d===S.asOf ? 'now' : 'in ' + days(S.asOf, i.d) + ' days'}</small></div><div><div class="k">${esc(i.k)}</div>${i.s ? `<button class="linkbtn" style="text-align:left" data-act="panel" data-s="${i.s}" data-k="${i.key}">${esc(i.t)}</button>` : esc(i.t)}</div>`; });
+  return h + `</div>`;
+}
+
+/* ---------- Decision ---------- */
+function renderDecision() {
+  let h = sidePicker();
+  if (S.strat==='all') {
+    const ss = clientStrats();
+    h += `<h1 class="pg">Strategies · ${esc(S.client==='all' ? 'All clients' : CLIENTS[S.client].name)}</h1><p class="summary">Choose a strategy to read or edit its thesis.</p><div class="cards">`;
+    ss.forEach(s => { const k = countsFor(s, S.asOf); const st = STRATS[s];
+      h += `<button class="scard" data-act="strat" data-v="${s}"><span class="c">${esc(CLIENTS[st.client].name)} · ${esc(st.domain)}</span><span class="t">${esc(st.name)}</span><span>${esc(st.thesis)}</span>
+        <span class="counts">${k.c ? `<span class="c-contra">▲ ${k.c} contradicting</span>` : ''}${k.w ? `<span class="c-weak">▼ ${k.w} weakening</span>` : ''}${!k.c && !k.w ? '<span style="color:var(--ok)">✓ no gaps</span>' : ''}</span></button>`; });
+    return h + `</div>`;
+  }
+  const s = S.strat, st = STRATS[s], cl = CLIENTS[st.client];
+  const hist = st.history.concat(S.extraHistory[s] || []).filter(x => x.d <= S.asOf);
+  const cur = hist[hist.length-1];
+  const lm = lastMeeting(st.client, S.asOf);
+  const presented = lm ? [...hist].reverse().find(x => x.d <= lm) : null;
+  const gapsSince = lm ? collectGaps([s], S.asOf).filter(g => g.state!=='ai' && g.opened && g.opened > lm).length : 0;
+  const draft = S.draft.filter(d => d.s===s);
+  if (S.edit) h += `<div class="draftbar"><b>Draft</b><span>${draft.length} change${draft.length===1?'':'s'}</span><input id="draftNote" placeholder="Note for this snapshot (why)" value="${esc(S.draftNote)}"><button class="btn primary small" data-act="saveSnap" ${draft.length?'':'disabled'}>Save snapshot</button><button class="btn small" data-act="discard">Discard</button></div>`;
+  h += `<article class="sheet"><div class="sheet-hd"><div><h1 class="pg">${esc(st.name)}</h1>
+      <div class="lineage">${esc(cl.name)} · ${esc(st.domain)}${st.forked ? ` · forked from ${esc(st.forked)}` : ''}</div>
+      <div class="lineage">Current snapshot: ${cur ? fd(cur.d) : '—'}${presented ? ` · presented to client ${fds(lm)} (snapshot of ${fds(presented.d)})` : ''}${lm ? ` · <b style="color:${gapsSince?'var(--contra)':'var(--ink-2)'}">${gapsSince} gap${gapsSince===1?'':'s'} opened since</b>` : ''}</div></div>
+    <div class="btns"><button class="btn ${S.edit?'':'primary'}" data-act="edit">${S.edit ? 'Stop editing' : 'Edit'}</button><button class="btn" data-act="summary">Client summary</button></div></div>`;
+  h += `<section class="sec"><h2>Thesis</h2><p class="thesis">${esc(st.thesis)}</p></section>`;
+  h += `<section class="sec"><h2>Positions</h2>` + st.positions.map(p => {
+    const sts = p.relies.map(k => evalAsm(s, k, S.asOf).state);
+    const c = sts.filter(x => x==='contradicting').length, w = sts.filter(x => x==='weakening').length;
+    return `<div class="pos"><span class="stance">${esc(p.stance)}</span><span><b>${esc(p.subj)}</b></span><span class="counts" style="font-weight:600;color:var(--ink-3)">relies on ${p.relies.length} assumptions ${c?`<span class="c-contra">▲${c}</span>`:''}${w?`<span class="c-weak">▼${w}</span>`:''}</span></div>`;
+  }).join('') + `</section>`;
+  h += `<section class="sec"><h2>Why: bets and assumptions</h2>`;
+  const bets = [...new Set(st.asms.map(x => LIB[x.key].bet))];
+  bets.forEach(b => {
+    h += `<div class="bet"><div class="role">${ROLES[b]}</div><div class="txt">“${esc(BETS[b])}”</div></div>`;
+    st.asms.filter(x => LIB[x.key].bet===b).forEach(x => {
+      const ev = evalAsm(s, x.key, S.asOf); const a = ev.a;
+      const ch = draft.find(d => d.key===x.key);
+      const convCell = S.edit
+        ? `<select data-act="conv" data-s="${s}" data-k="${x.key}" aria-label="Conviction">${['low','medium','high'].map(c => `<option ${a.conv===c?'selected':''}>${c}</option>`).join('')}</select>`
+        : `${ch ? `<span class="old">${ch.from}</span>` : ''}${a.conv}`;
+      h += `<div class="arow ${ch?'changed':''}" role="button" tabindex="0" data-act="panel" data-s="${s}" data-k="${x.key}">
+        <span class="nec">${a.nec ? '<b>● necessary</b>' : '○ supporting'}</span>
+        <span>${esc(a.text)}${a.type==='prediction' ? ` <span class="meta" style="color:var(--ink-3);font-size:13px">prediction, resolves ${fds(a.resolves)}</span>` : ''}</span>
+        <span class="conv hide-sm">${convCell}</span>
+        <span>${stateChip(ev.state)}</span>
+        <span class="hide-sm">${vizFor(s, x.key, S.asOf, true)}</span></div>`;
+    });
+    AISUG.filter(g => g.s===s && g.newAsm && g.bet===b && g.d<=S.asOf && !S.sugStatus[g.id]).forEach(g => {
+      h += `<div class="arow ai-sug"><span class="nec">${pvAI(g.d)}</span><span>${esc(g.text)}</span><span class="hide-sm"></span><span class="btns"><button class="btn small ai" data-act="sug" data-v="${g.id}" data-do="adopt">Adopt</button><button class="btn small" data-act="sug" data-v="${g.id}" data-do="dismiss">Dismiss</button></span><span class="hide-sm"></span></div>`;
+    });
+  });
+  h += `</section>`;
+  // Risk map
+  const holders = [...new Set(st.risk.map(r => r.holder))];
+  const types = [...new Set(st.risk.map(r => r.type))];
+  h += `<section class="sec"><h2>Risk map · your levels, 1–5; blank means no view</h2><div class="scroll-x"><table class="rm num"><tr><th></th>${types.map(t => `<th>${t}</th>`).join('')}</tr>` +
+    holders.map(ho => `<tr><td class="h">${esc(ho)}</td>${types.map(t => { const r = st.risk.find(x => x.holder===ho && x.type===t); if (!r) return '<td></td>';
+      const lv = r.changed && r.changed > S.asOf ? r.prev : r.level; const up = r.changed && r.changed <= S.asOf && r.level > r.prev;
+      return `<td class="lvl${lv}" title="${r.driven ? 'Driven by: ' + r.driven.map(k => asmDef(s,k).text).join('; ') : ''}${up ? ` (was ${r.prev} until ${fds(r.changed)})` : ''}">${lv}${up ? ' <span class="up" aria-label="raised">↑</span>' : ''}</td>`; }).join('')}</tr>`).join('') + `</table></div></section>`;
+  if (st.protections.length || st.triggers.length) {
+    h += `<section class="sec"><h2>Protections and break triggers</h2><div class="plist">` +
+      st.protections.map(p => `<div class="prow"><b>Protection:</b> ${esc(p.text)} · protects ${esc(p.holder)} · ends ${fd(p.expires)} ${days(S.asOf,p.expires)<=90 ? stateChip('expiring') : ''}<span style="color:var(--ink-3)">${esc(p.note)}</span></div>`).join('') +
+      st.triggers.map(t => { const os = obsFor(t.ind, S.asOf); const l = os[os.length-1]; return `<div class="prow"><b>Break trigger:</b> ${esc(t.text)} · now ${l ? fv(t.ind, l.v) : '—'} ${l && l.v >= t.trip*0.9 ? stateChip(l.v>=t.trip?'fired':'near') : ''} <span style="color:var(--ink-3)">leads to: ${esc(t.leads)}</span></div>`; }).join('') + `</div></section>`;
+  }
+  // History
+  const tl = hist.map(x => ({ ...x, type:'snap' })).concat(cl.meetings.filter(m => m <= S.asOf).map(m => ({ d:m, type:'meeting' })));
+  tl.sort((a,b) => b.d.localeCompare(a.d));
+  h += `<section class="sec"><h2>History</h2><div class="tl">` + tl.map(x => x.type==='meeting'
+    ? `<div class="it meeting"><div class="d">${fd(x.d)} · client meeting</div><div style="color:var(--ink-2);font-size:14px">Presented the snapshot of ${fds([...hist].reverse().find(y => y.d <= x.d)?.d || x.d)}.</div></div>`
+    : `<div class="it"><div class="d">${fd(x.d)} · snapshot <span style="font-weight:400;color:var(--ink-3)">(${esc(x.trigger)})</span></div><div>${esc(x.note)}</div><ul>${x.changes.map(c => `<li>${esc(c)}</li>`).join('')}</ul></div>`).join('') + `</div></section>`;
+  h += `</article>`;
+  return h;
+}
+function renderTemplate() {
+  const rows = [
+    ['Model labs', BETS.modellabs, 'fundraising slows before cash generation catches up'],
+    ['Hyperscalers', BETS.hyperscalers, 'customers consume less than promised + capex stays high + financing gets expensive'],
+    ['Neoclouds', BETS.neoclouds, 'contract protection expires while debt or capex obligations remain'],
+    ['Data-center landlords', BETS.landlords, 'the tenant, not the technology'],
+    ['Chip suppliers', BETS.chips, 'major customer failure + weak replacement demand + collapsing asset values'],
+    ['Lenders', BETS.lenders, 'borrower fails after equity, guarantees, trapped cash, and collateral are exhausted'],
+  ];
+  return sidePicker() + `<article class="sheet"><div class="sheet-hd"><div><h1 class="pg">Devansh thesis v1</h1><div class="lineage">Template · no client · base snapshot Sep 28, 2026 · adopted from <i>The AI Bubble Isn’t Where You Think It Is</i> (AI Made Simple, Sep 27, 2026)</div></div><div class="btns"><button class="btn primary" data-act="toast" data-v="Forking copies the template into a new client strategy. (Not in this mockup.)">Fork for a client</button></div></div>
+    <section class="sec"><h2>Thesis</h2><p class="thesis">The AI correction risk is in financing structures and shared customer concentration, not in AI demand itself.</p></section>
+    <section class="sec"><h2>Bets and break triggers</h2><div class="scroll-x"><table class="rm"><tr><th>Role</th><th>Bet</th><th>Break trigger</th></tr>${rows.map(r => `<tr><td class="h">${r[0]}</td><td style="text-align:left">${esc(r[1])}</td><td style="text-align:left">${esc(r[2])}</td></tr>`).join('')}</table></div></section>
+    <section class="sec"><h2>Used by</h2><p>${Object.values(STRATS).filter(x => x.forked).map(x => esc(x.name) + ' (' + esc(CLIENTS[x.client].short) + ')').join(' · ')}</p></section></article>`;
+}
+function renderLibrary() {
+  return `<h1 class="pg">Library · Sources</h1><p class="summary">How far to trust each source is an opinion, so Priya’s and the AI’s assessments are shown side by side and never merged. Players, obligations, indicators, and evidence entry are planned for the next mockup.</p>
+  <div class="scroll-x"><table class="rm"><tr><th>Source</th><th>Type</th><th>Observations</th><th>Priya</th><th>AI</th><th></th></tr>${Object.entries(SOURCES).map(([k, s]) => {
+    const n = OBS.filter(o => o.src===k && o.pub<=S.asOf).length;
+    const diff = s.analyst!==s.ai;
+    return `<tr><td class="h">${esc(s.name)}</td><td>${esc(s.type)}</td><td class="num">${n}</td><td><span class="pv analyst">${s.analyst}</span></td><td><span class="pv ai">${s.ai}</span></td><td>${s.fictional ? '<span class="pv syn">FICTIONAL SOURCE</span>' : '<span class="pv ext">real, cited</span>'} ${diff ? '<b style="color:var(--ai)">disagree</b>' : ''}</td></tr>`; }).join('')}</table></div>`;
+}
+
+/* ---------- Panel ---------- */
+function renderPanel() {
+  const el = document.getElementById('drawer');
+  if (!S.panel) { el.innerHTML = ''; return; }
+  const { s, key } = S.panel; const st = STRATS[s];
+  const ev = evalAsm(s, key, S.asOf); const a = ev.a;
+  const run = gapRun(s, key, S.asOf); const lc = isGap(ev.state) ? lifecycle(s, key, run, S.asOf) : null;
+  const pos = st.positions.filter(p => p.relies.includes(key));
+  const risks = st.risk.filter(r => (r.driven||[]).includes(key));
+  const trig = st.triggers.filter(t => (t.related||[]).includes(key));
+  const others = Object.keys(STRATS).filter(o => o!==s && STRATS[o].asms.some(x => x.key===key));
+  const sug = AISUG.filter(g => g.s===s && g.key===key && g.d<=S.asOf && !S.sugStatus[g.id]);
+  const reviews = S.reviews.filter(r => r.s===s && r.key===key && r.d<=S.asOf);
+  const hist = st.history.concat(S.extraHistory[s]||[]).filter(h => h.d<=S.asOf && (h.keys||[]).includes(key));
+
+  const evItem = (l, kind) => { const o = OBS_BY_ID[l.obs];
+    const tags = kind==='rule' ? pvRule : kind==='analyst' ? pvAnalyst(l.d) : pvAI(l.d);
+    return `<div class="evi"><div class="when num">${fds(o.pub)}${o.ind ? `<br><b>${fv(o.ind, o.v, o.q)}</b>` : ''}</div><div class="what">
+      <div class="tags">${glyph0(l.stance)} <b>${STANCE_WORD[l.stance]}</b> ${tags}</div>
+      <div>“${esc(o.ex)}”</div>
+      <div class="tags">${pvObs(o)} <span class="pv analyst">Priya rates source: ${SOURCES[o.src].analyst}</span></div>
+      ${l.note ? `<div style="color:var(--ink-2)"><i>${esc(l.note)}</i></div>` : ''}
+      ${kind==='ai' && a.qual && !ev.judged.some(j => j.obs===l.obs) ? `<div class="judge"><span>Your call:</span>${['supports','weakens','contradicts','neutral'].map(x => `<button data-act="judge" data-s="${s}" data-k="${key}" data-o="${l.obs}" data-v="${x}">${STANCE_WORD[x]}</button>`).join('')}<button class="btn small ai" data-act="judge" data-s="${s}" data-k="${key}" data-o="${l.obs}" data-v="${l.stance}" data-ai="1">Agree with AI</button></div>` : ''}
+    </div></div>`; };
+  const groups = [];
+  if (!a.qual) groups.push(['Rule evidence', 'derived from reported values and your threshold', ev.rule.slice().reverse(), 'rule']);
+  groups.push(['Your judgments', 'analyst', ev.judged.slice().reverse(), 'analyst']);
+  groups.push(['AI stances', 'opinions; they never set the state on their own', ev.ai.slice().reverse(), 'ai']);
+  const cnt = ls => { const c = {}; ls.forEach(l => c[l.stance] = (c[l.stance]||0)+1); return Object.entries(c).map(([k,v]) => `${v} ${STANCE_WORD[k]}`).join(' · ') || 'none'; };
+
+  el.innerHTML = `<div class="scrim" data-act="close"></div><aside class="drawer" role="dialog" aria-label="Assumption detail">
+    <div class="dh"><div><div class="facts" style="margin:0 0 6px">${stateChip(ev.state)}${lc ? lifeTag({ ...lc, state:ev.state }) : ''}<span>${esc(st.name)} · ${esc(CLIENTS[st.client].short)}</span></div>
+      <h2>${esc(a.text)}</h2><p class="plain">${esc(a.plain)}</p>
+      <div class="facts"><span>${a.type==='prediction' ? `Prediction, resolves ${fd(a.resolves)}` : 'Assumption'}</span><span>${a.conv} conviction</span><span>${a.nec?'necessary':'supporting'} for “${esc(BETS[a.bet])}”</span>${a.ind ? `<span>Expectation: ${esc(IND[a.ind].name)} ${a.rule==='atLeast'?'≥ '+fv(a.ind,a.th):a.rule==='atMost'?'≤ '+fv(a.ind,a.th):a.rule==='up'?'keeps rising':'keeps falling'}${a.tol!=null?`, tolerance ${fv(a.ind,a.tol)}`:''}</span>` : '<span>Qualitative: judged by you</span>'}</div>
+      ${ev.aiMarker ? `<div class="facts" style="color:var(--ai)">◇ AI suggests: ${STATE_OF[ev.aiMarker.stance]} (${fds(ev.aiMarker.d)}). This does not change the state until you decide.</div>` : ''}
+      ${run.opened && isGap(ev.state) ? `<div class="facts"><b>${timingText(s, run.opened)}</b></div>` : ''}
+    </div><button class="x" data-act="close" aria-label="Close">×</button></div>
+    <div class="db">
+      <section>${vizFor(s, key, S.asOf, false)}
+        <div class="facts" style="font-size:12.5px">${glyph0('supports')} supports ${glyph0('weakens')} weakens ${glyph0('contradicts')} contradicts · dotted lines are client meetings · shaded area is the gap</div></section>
+      <section><h3>Actions</h3><div class="btns">
+        <button class="btn primary" data-act="review" data-s="${s}" data-k="${key}">Mark reviewed: no change</button>
+        <button class="btn" data-act="lower" data-s="${s}" data-k="${key}" ${a.conv==='low'?'disabled':''}>Lower conviction</button>
+        <button class="btn" data-act="openDecision" data-s="${s}">Open in Decision</button>
+        <button class="btn" data-act="toast" data-v="Retiring asks for a reason and adds a change to the draft. (Not in this mockup.)">Retire…</button></div>
+        ${reviews.length ? `<div class="facts">${reviews.map(r => `${pvAnalyst(r.d)} ${esc(r.outcome)}: ${esc(r.note)}`).join('<br>')}</div>` : ''}</section>
+      ${sug.map(g => `<section class="aibox"><div>${pvAI(g.d)}</div><div>${esc(g.text)}</div>${g.cites ? `<div style="font-size:12.5px;color:var(--ink-3)">Cites: ${g.cites.map(c => SOURCES[OBS_BY_ID[c].src].name + ', ' + fds(OBS_BY_ID[c].pub)).join('; ')}</div>` : ''}<div class="btns"><button class="btn small ai" data-act="sug" data-v="${g.id}" data-do="adopt">Adopt</button><button class="btn small" data-act="sug" data-v="${g.id}" data-do="dismiss">Dismiss</button></div></section>`).join('')}
+      <section><h3>Evidence</h3><div style="display:flex;flex-direction:column;gap:8px">${groups.map(([t, sub, ls, kind], i) => `<details class="evgroup" ${i===0 || (a.qual && i<2) ? 'open' : ''}><summary>${esc(t)} <span style="font-weight:400;color:var(--ink-3)">${cnt(ls)} · ${esc(sub)}</span></summary>${ls.map(l => evItem(l, kind)).join('') || '<div class="evi"><div></div><div style="color:var(--ink-3)">None yet.</div></div>'}</details>`).join('')}</div></section>
+      <section><h3>What relies on it</h3><ul class="rel">
+        ${pos.map(p => `<li>Position: <b>${esc(p.stance)} · ${esc(p.subj)}</b></li>`).join('')}
+        <li>Bet (${ROLES[a.bet]}): “${esc(BETS[a.bet])}”</li>
+        ${risks.map(r => `<li>Risk level: ${esc(r.holder)} ${r.type} = ${r.changed && r.changed > S.asOf ? r.prev : r.level}</li>`).join('')}
+        ${trig.map(t => `<li>Break trigger: ${esc(t.text)} → ${esc(t.leads)}</li>`).join('')}
+        ${others.length ? `<li>Also held in: ${others.map(o => `<button class="linkbtn" data-act="panel" data-s="${o}" data-k="${key}">${esc(STRATS[o].name)} (${evalAsm(o,key,S.asOf).state})</button>`).join(', ')}</li>` : ''}
+      </ul></section>
+      ${hist.length ? `<section><h3>History</h3><ul class="rel">${hist.map(h => `<li>${fd(h.d)}: ${esc(h.changes.join('; '))}</li>`).join('')}</ul></section>` : ''}
+    </div></aside>`;
+}
+
+function renderModal() {
+  const el = document.getElementById('modal');
+  if (!S.modal) { el.innerHTML = ''; return; }
+  let inner = '';
+  if (S.modal==='about') inner = `<h2>About Decision Watch</h2>
+    <p><b>Decision Watch</b> helps Verity analysts keep each client’s investment strategies in step with what is actually happening.</p>
+    <p><b>Decision</b> is where you write and curate a strategy: what the client is invested in, the thesis behind it, and the assumptions and predictions it depends on. It is how you and your client agree on the direction ahead.</p>
+    <p><b>Watch</b> is where you see how it plays out. It follows reported facts as they come in, shows the trends, and points out gaps where reality is moving away from what the strategy assumed or predicted.</p>
+    <p>You may meet your clients on a schedule, perhaps quarterly, but gaps can open much faster than that. Decision Watch helps you stay ahead of the curve and reconsider a strategy while there is still time to do something about it.</p>
+    <p style="color:var(--ink-3);font-size:13.5px">This mockup mixes cited public facts from one article with fictional data from fictional sources. Every synthetic record is marked SYNTHETIC.</p>`;
+  if (S.modal==='summary') {
+    const s = S.strat, st = STRATS[s];
+    inner = `<div style="font-size:12.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em">Client summary · ${esc(CLIENTS[st.client].name)} · as of ${fd(S.asOf)}</div>
+      <h2>${esc(st.name)}</h2><p class="thesis" style="font-size:17px">${esc(st.thesis)}</p>
+      <h3 style="font-size:14px;margin-bottom:4px">What we hold</h3><ul>${st.positions.map(p => `<li>${esc(p.stance)}: ${esc(p.subj)}</li>`).join('')}</ul>
+      <h3 style="font-size:14px;margin-bottom:4px">What we are counting on</h3><ul>${st.asms.filter(x => x.nec).map(x => { const a = asmDef(s,x.key); const e = evalAsm(s,x.key,S.asOf); return `<li>${esc(a.plain)} ${isGap(e.state) ? `<b style="color:var(--contra)">(${LABEL[e.state].toLowerCase()} since ${fds(gapRun(s,x.key,S.asOf).opened || S.asOf)})</b>` : ''}</li>`; }).join('')}</ul>
+      <h3 style="font-size:14px;margin-bottom:4px">What we will watch before the next meeting</h3><ul>${st.watch.map(i => `<li>${esc(IND[i].name)}</li>`).join('')}</ul>
+      <div class="btns" style="margin-top:14px"><button class="btn primary" data-act="present">Record as presented at the next meeting</button><button class="btn" data-act="closeModal">Close</button></div>`;
+  }
+  el.innerHTML = `<div class="modal"><div class="box" role="dialog" aria-modal="true">${inner}${S.modal==='about' ? '<div class="btns"><button class="btn" data-act="closeModal">Close</button></div>' : ''}</div></div>`;
+}
+
+function renderMain() {
+  const m = document.getElementById('main');
+  if (S.library) m.innerHTML = renderLibrary();
+  else if (S.strat==='template') m.innerHTML = renderTemplate();
+  else m.innerHTML = S.tab==='watch' ? renderWatch() : renderDecision();
+}
+function update({ strip = true } = {}) {
+  clipN = 0;
+  renderHeader(); renderTabs(); if (strip) renderStrip(); renderSide(); renderMain(); renderPanel(); renderModal();
+}
+function toast(msg) {
+  const t = document.getElementById('toast'); t.innerHTML = `<div class="toast" role="status">${esc(msg)}</div>`;
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.innerHTML = '', 3200);
+}
+
+/* ============================ EVENTS ============================ */
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]');
+  if (!b || b.tagName==='SELECT') return;
+  const act = b.dataset.act, v = b.dataset.v;
+  switch (act) {
+    case 'tab': S.tab = v; S.library = false; if (S.strat==='template') S.strat='all'; break;
+    case 'view': S.view = v; break;
+    case 'strat': S.strat = v; S.library = false; break;
+    case 'template': S.strat = 'template'; S.library = false; break;
+    case 'library': S.library = !S.library; S.panel = null; break;
+    case 'about': S.modal = 'about'; break;
+    case 'summary': S.modal = 'summary'; break;
+    case 'closeModal': S.modal = null; break;
+    case 'present': { const st = STRATS[S.strat]; const nm = nextMeeting(st.client, S.asOf); S.modal = null; toast(nm ? `Recorded: this snapshot will be presented to ${CLIENTS[st.client].short} on ${fds(nm)}.` : 'No upcoming meeting.'); break; }
+    case 'filter': S.filters[v] = !S.filters[v]; break;
+    case 'panel': S.panel = { s:b.dataset.s, key:b.dataset.k }; break;
+    case 'close': S.panel = null; break;
+    case 'edit': S.edit = !S.edit; break;
+    case 'openDecision': S.tab = 'decision'; S.strat = b.dataset.s; S.panel = null; S.library = false; break;
+    case 'review': S.reviews.push({ s:b.dataset.s, key:b.dataset.k, d:S.asOf, outcome:'No change', note:'Reviewed in Watch.' }); toast('Recorded your review. The gap moves to Reviewed until new evidence arrives.'); break;
+    case 'lower': { const s = b.dataset.s, k = b.dataset.k, a = asmDef(s, k); const to = a.conv==='high' ? 'medium' : 'low'; setConv(s, k, a.conv, to); S.reviews.push({ s, key:k, d:S.asOf, outcome:'Changed the strategy', note:`Conviction ${a.conv} → ${to} (in draft).` }); toast(`Added to draft: conviction ${a.conv} → ${to}. Save a snapshot in Decision.`); break; }
+    case 'judge': { const s = b.dataset.s, k = b.dataset.k; S.judged.push({ s, key:k, obs:b.dataset.o, stance:v, d:S.asOf, origin:'analyst', note: b.dataset.ai ? 'Agreed with the AI stance.' : '', basedOn: b.dataset.ai ? 'ai' : null }); toast(b.dataset.ai ? 'Recorded as your judgment, based on the AI stance. The AI record stays as it was.' : 'Recorded your judgment.'); break; }
+    case 'sug': { const g = AISUG.find(x => x.id===v); S.sugStatus[v] = b.dataset.do;
+      if (b.dataset.do==='adopt' && g.action?.type==='conv') { const a = asmDef(g.s, g.key); setConv(g.s, g.key, a.conv, g.action.to); toast('Adopted: a new analyst change in the draft, based on the AI suggestion.'); }
+      else if (b.dataset.do==='adopt' && g.newAsm) { S.draft.push({ s:g.s, key:'new-'+g.id, from:'', to:'added', label:'Added assumption (based on AI suggestion): ' + g.text }); S.edit = true; toast('Added to draft as your assumption, based on the AI suggestion.'); }
+      else if (b.dataset.do==='adopt') toast('Adopted as your note, based on the AI suggestion.');
+      else toast('Dismissed. The AI suggestion stays in history as dismissed.');
+      break; }
+    case 'saveSnap': { const s = S.strat; const ch = S.draft.filter(d => d.s===s);
+      (S.extraHistory[s] = S.extraHistory[s] || []).push({ d:S.asOf, note: S.draftNote || 'Saved from draft.', trigger:'gap', changes: ch.map(d => d.label || `${asmDef(s,d.key).text}: conviction ${d.from} → ${d.to}`), keys: ch.map(d => d.key) });
+      S.draft = S.draft.filter(d => d.s!==s); S.draftNote=''; S.edit = false; toast('Snapshot saved.'); break; }
+    case 'discard': { const s = S.strat; S.draft.filter(d => d.s===s && d.from).forEach(d => delete S.conv[s+':'+d.key]); S.draft = S.draft.filter(d => d.s!==s); S.edit = false; break; }
+    case 'toast': toast(v); return;
+    default: return;
+  }
+  update({ strip: act==='strat' || act==='tab' || act==='library' });
+});
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') { if (S.modal) S.modal = null; else if (S.panel) S.panel = null; else return; update({ strip:false }); }
+  if ((e.key==='Enter' || e.key===' ') && e.target.matches('.arow[role=button], .gap[role=button]')) { e.preventDefault(); e.target.click(); }
+});
+function setConv(s, k, from, to) {
+  const ex = S.draft.find(d => d.s===s && d.key===k);
+  if (ex) { ex.to = to; if (ex.from===to) { S.draft = S.draft.filter(d => d!==ex); } } else S.draft.push({ s, key:k, from, to });
+  S.conv[s+':'+k] = to;
+}
+document.addEventListener('change', e => {
+  if (e.target.id==='clientSel') { S.client = e.target.value; S.strat = 'all'; S.panel = null; update(); }
+  if (e.target.id==='stratSel') { S.strat = e.target.value; update(); }
+  if (e.target.dataset.act==='conv') { const s = e.target.dataset.s, k = e.target.dataset.k; setConv(s, k, asmDef(s,k).conv, e.target.value); update({ strip:false }); }
+});
+document.addEventListener('input', e => {
+  if (e.target.id==='asof') { S.asOf = addDays(START, +e.target.value); document.getElementById('asofLbl').textContent = fd(S.asOf); update({ strip:false }); }
+  if (e.target.id==='draftNote') S.draftNote = e.target.value;
+});
+// Close the modal only when the backdrop itself is clicked.
+document.getElementById('modal').addEventListener('click', e => { if (e.target.classList.contains('modal')) { S.modal = null; update({ strip:false }); } }, true);
+
+update();
+</script>
