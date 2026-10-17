@@ -30,5 +30,7 @@ exclude:
   - "*~"
   # FIBO atlas: only index.html, atlas.css, atlas.js and data.js are published.
   # Build scripts and the ontology sources / CSV exports stay out of _site.
-  - fibo/build
-  - fibo/data
+  # Keep the trailing slashes: Jekyll matches excludes as path prefixes, so
+  # "fibo/data" without one would also exclude fibo/data.js.
+  - fibo/build/
+  - fibo/data/
