@@ -521,8 +521,8 @@
       renderTierCard(tier, tierCounts.get(tier) || 0),
     ).join("");
     const pane = byId("overview");
-    pane.innerHTML = `<h2>How the ${formatNumber(NODES.length)} nodes are organised</h2>
-      <p class="lede">Every subject or object in the FIBO 2026Q2 Turtle files is a node. Only about a tenth of them are concepts in the everyday sense. The rest is reference data, imported vocabulary, citations and OWL plumbing. Click any bar to browse that slice.</p>
+    pane.innerHTML = `<h2 class="mb-5">Browse the Financial Industry Business Ontology (FIBO)</h2>
+
       <div class="tier-grid">${cards}</div>
       ${renderDomainTable()}`;
 
