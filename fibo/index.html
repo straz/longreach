@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIBO Node Atlas · Longreach</title>
+  <meta name="description" content="Browse the 20,959 nodes of the FIBO 2026Q2 financial ontology by tier, concept family and domain, with class hierarchy and per-node details.">
+  <link rel="icon" href="../logo.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="atlas.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand-identity" href="https://longreach.ai/">
+    <img src="../longreach-logo.svg" alt="Longreach logo" class="brand-logo">
+    <span class="brand-name">LONG<span class="brand-bold">REACH</span></span>
+  </a>
+  <h1>FIBO Node Atlas</h1>
+  <div class="stats">
+    <span><a href="https://edmconnect.edmcouncil.org/okgspecialinterestgroup/resources-sig-link/resources-sig-link-fibo-products-download" target="_blank" rel="noopener">FIBO version: <b>2026Q2</b></a></span>
+    <span id="stats"></span>
+  </div>
+  <nav class="views" aria-label="Views">
+    <button type="button" data-view="overview" class="active">Overview</button>
+    <button type="button" data-view="browse">Browse</button>
+    <button type="button" data-view="hierarchy">Class hierarchy</button>
+  </nav>
+</header>
+
+<nav id="crumbs" class="crumbs" aria-label="Breadcrumb" hidden></nav>
+
+<main>
+  <section id="overview" class="pane"></section>
+
+  <section id="filters" class="pane" hidden></section>
+
+  <section id="results" class="pane" hidden>
+    <div class="toolbar">
+      <div class="search-box">
+        <span id="pills" class="pills"></span>
+        <input type="search" id="search" placeholder="Search" aria-label="Search nodes">
+      </div>
+      <div class="scope" role="group" aria-label="Search scope">
+        <button type="button" data-scope="narrow" title="Narrow: match names only" aria-label="Narrow search: names only"><span class="dot small"></span></button>
+        <button type="button" data-scope="broad" title="Broad: match names, labels and definitions" aria-label="Broad search: names, labels and definitions"><span class="dot large"></span></button>
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+    <div id="list"></div>
+  </section>
+
+  <section id="detail" class="pane" hidden>
+    <div class="empty">Select a node to see its details.</div>
+  </section>
+
+  <section id="hierarchy" class="pane" hidden></section>
+</main>
+
+<script src="data.js"></script>
+<script src="atlas.js"></script>
+</body>
+</html>

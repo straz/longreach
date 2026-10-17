@@ -32,7 +32,8 @@ MAX_REPORTS_PER_EMAIL = 5
 # main site. They carry no cards: skip the report, send a plain thank-you to
 # the visitor and a notification to the team.
 DEMO_CAMPAIGN = "try-us"
-DEMO_NOTIFY_EMAIL = "steve@longreach.ai"
+# The team address: notified of demo requests, Bcc'd on every report email.
+NOTIFY_EMAIL = "steve@longreach.ai"
 FROM_EMAIL = "info@longrea.ch"
 FROM_NAME = "Longreach"
 
@@ -154,7 +155,7 @@ def send_demo_request_emails(record: LeadRecord) -> dict:
             },
             {
                 "From": {"Email": FROM_EMAIL, "Name": FROM_NAME},
-                "To": [{"Email": DEMO_NOTIFY_EMAIL}],
+                "To": [{"Email": NOTIFY_EMAIL}],
                 "ReplyTo": {"Email": record.email, "Name": record.name},
                 "Subject": f"Demo request: {record.name}{subject_org}",
                 "TextPart": notify,
@@ -198,6 +199,7 @@ def send_confirmation(
         {
             "From": {"Email": FROM_EMAIL, "Name": FROM_NAME},
             "To": [{"Email": record.email, "Name": record.name}],
+            "Bcc": [{"Email": NOTIFY_EMAIL}],
             "Subject": "Your AI Risk Assessment Report",
             "TextPart": text_template.render(template_vars),
             "HTMLPart": html_template.render(template_vars),

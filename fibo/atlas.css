@@ -1,0 +1,847 @@
+/* FIBO Node Atlas
+   Layout: sticky top bar with corpus totals and view switcher; a three-pane
+   browser (filters | results | detail); overview and hierarchy as alternate
+   main panes. Colours are tokens so the page follows the viewer's theme. */
+
+:root {
+  --bg: #f7f6f2;
+  --panel: #ffffff;
+  --fg: #1e2228;
+  --muted: #646b74;
+  --line: #dcdad3;
+  --line-soft: #ebe9e3;
+  --accent: #0f5c6e;
+  --accent-soft: #dcecef;
+  /* Active state of the search-scope toggle: pale green, as on ../home.css. */
+  --toggle-on: #e3f0e3;
+  --toggle-on-ink: #2d6e2d;
+  --hover: #f0efe9;
+  --selected: #e6f0f2;
+
+  /* One colour per tier; atlas.js maps a tier key to var(--tier-<key>). */
+  --tier-concept: #0f5c6e;
+  --tier-property: #7a4a9e;
+  --tier-individual: #b3671b;
+  --tier-external-vocab: #4f7a28;
+  --tier-external-ref: #8d8a80;
+  --tier-structure: #2f5fa8;
+  --tier-machinery: #a8a399;
+
+  --font-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", Menlo, Consolas, monospace;
+  --font-brand: "Roboto Slab", Georgia, serif;
+  --brand-ink: #1a2332;
+
+  --gutter: 16px;
+  --radius: 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15191d;
+    --panel: #1c2126;
+    --fg: #e6e4de;
+    --muted: #9aa1a9;
+    --line: #343b43;
+    --line-soft: #272d34;
+    --accent: #5fb3c4;
+    --accent-soft: #15353c;
+    --toggle-on: #1e3322;
+    --toggle-on-ink: #8fbf5a;
+    --hover: #232a31;
+    --selected: #1d3238;
+    --tier-concept: #5fb3c4;
+    --tier-property: #b58fd6;
+    --tier-individual: #e09a4a;
+    --tier-external-vocab: #8fbf5a;
+    --tier-external-ref: #9a968c;
+    --tier-structure: #7ea4e0;
+    --tier-machinery: #7f7a70;
+    --brand-ink: #e6e4de;
+    color-scheme: dark;
+  }
+}
+
+/* ---------- base ---------- */
+
+* {
+  box-sizing: border-box;
+}
+
+/* Author styles below set display on panes, which would otherwise beat the
+   browser's own [hidden] rule. */
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px / 1.45 var(--font-body);
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: var(--accent);
+}
+
+h2 {
+  font: 600 20px / 1.2 var(--font-display);
+  margin: 0 0 6px;
+  text-wrap: balance;
+}
+
+h4 {
+  margin: 6px 0 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+h4 .n {
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--hover);
+}
+
+button.active {
+  background: var(--accent);
+  color: var(--panel);
+  border-color: var(--accent);
+}
+
+button:focus-visible,
+input:focus-visible,
+.row:focus-visible,
+.clickable:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+input[type="search"] {
+  font: inherit;
+  color: inherit;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  width: 100%;
+}
+
+.lede {
+  color: var(--muted);
+  max-width: 70ch;
+  margin: 0 0 18px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.mono {
+  font: 12px / 1.4 var(--font-mono);
+  word-break: break-all;
+  color: var(--muted);
+}
+
+.clickable {
+  cursor: pointer;
+}
+.clickable:hover {
+  text-decoration: underline;
+}
+
+.external {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.more {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.overflow {
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+td.num,
+th.num {
+  text-align: right;
+}
+
+/* ---------- top bar ---------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  padding: 10px var(--gutter);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  align-items: center;
+}
+
+.topbar h1 {
+  font: 600 22px / 1.1 var(--font-display);
+  margin: 0;
+  letter-spacing: -0.01em;
+  padding-left: 24px;
+  border-left: 1px solid var(--line);
+}
+
+.stats {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats b {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+/* Script-filled totals share the flex row with the static version link. */
+#stats {
+  display: contents;
+}
+
+.stats a {
+  text-decoration: none;
+}
+
+.stats a:hover {
+  text-decoration: underline;
+}
+
+.views {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+
+/* Brand lockup, matching the site navbar in ../home.css. */
+.brand-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.brand-logo {
+  height: 2rem;
+  width: auto;
+}
+
+.brand-name {
+  font-family: var(--font-brand);
+  font-size: 1.2rem;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  color: var(--brand-ink);
+}
+
+.brand-name .brand-bold {
+  font-weight: 700;
+}
+
+/* ---------- breadcrumbs ---------- */
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  padding: 8px var(--gutter) 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.crumb {
+  border: 0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--accent);
+}
+
+.crumb.current {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+.crumb.back {
+  margin-right: 10px;
+  padding-right: 10px;
+  border-right: 1px solid var(--line);
+  border-radius: 0;
+}
+
+.crumbs .sep {
+  color: var(--line);
+}
+
+/* ---------- main layout ---------- */
+
+main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  padding: 12px var(--gutter);
+  gap: 12px;
+}
+
+main > section {
+  min-width: 0;
+}
+
+.pane {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: auto;
+}
+
+/* ---------- overview ---------- */
+
+#overview {
+  flex: 1;
+  padding: 20px 24px;
+  max-width: 1100px;
+}
+
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+.tier-card {
+  border: 1px solid var(--line-soft);
+  border-left: 4px solid var(--tier-color);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tier-card h3 {
+  margin: 0;
+  font: 600 15px / 1.3 var(--font-body);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tier-card h3 span {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.tier-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.tier-card .browse-all {
+  align-self: flex-start;
+  font-size: 12px;
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 60px;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+
+.bar:hover {
+  background: var(--hover);
+}
+
+.bar .label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bar .n {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.bar .track {
+  grid-column: 1 / -1;
+  height: 4px;
+  background: var(--line-soft);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.bar .fill {
+  height: 100%;
+  background: var(--tier-color);
+}
+
+.domain-table {
+  margin-top: 24px;
+}
+
+/* ---------- browse: filters ---------- */
+
+#filters {
+  width: 270px;
+  flex: none;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.facet {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.facet button {
+  text-align: left;
+  border: 0;
+  border-radius: 3px;
+  padding: 3px 6px;
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.facet button .n {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.facet button.active {
+  background: var(--selected);
+  color: var(--fg);
+}
+
+.facet button.active::before {
+  content: "";
+  width: 3px;
+  align-self: stretch;
+  margin: -3px 4px -3px -6px;
+  background: var(--accent);
+  border-radius: 3px 0 0 3px;
+}
+
+/* ---------- browse: results ---------- */
+
+#results {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.toolbar {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* The search field: active filter pills followed by the text input, inside
+   one bordered box that looks like a single input. */
+.search-box {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 4px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.search-box:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.search-box input[type="search"] {
+  flex: 1;
+  min-width: 120px;
+  width: auto;
+  border: 0;
+  padding: 3px 6px;
+}
+
+.search-box input[type="search"]:focus-visible {
+  outline: none;
+}
+
+.pills {
+  display: contents;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+  padding: 1px 2px 1px 8px;
+  font-size: 12px;
+  background: var(--selected);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.pill .pill-key {
+  color: var(--muted);
+}
+
+.pill .pill-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pill button {
+  border: 0;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.pill button:hover {
+  color: var(--fg);
+}
+
+.scope {
+  display: flex;
+}
+
+.scope button {
+  width: 34px;
+  height: 32px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 0;
+}
+
+.scope .dot {
+  --dot: var(--muted);
+  border-radius: 50%;
+}
+
+/* A pale tint rather than the solid fill other active buttons use. */
+.scope button.active {
+  background: var(--toggle-on);
+  border-color: var(--line);
+}
+
+.scope button.active .dot {
+  --dot: var(--toggle-on-ink);
+}
+
+.scope .dot.small {
+  width: 6px;
+  height: 6px;
+  background: var(--dot);
+}
+
+/* A soft-edged blob rather than a solid disk. */
+.scope .dot.large {
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(
+    circle,
+    var(--dot) 0%,
+    var(--dot) 30%,
+    transparent 72%
+  );
+}
+
+.scope button:first-child {
+  border-radius: var(--radius) 0 0 var(--radius);
+}
+
+.scope button:last-child {
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-left: -1px;
+}
+
+.count {
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+#list {
+  overflow: auto;
+  flex: 1;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: baseline;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--line-soft);
+  cursor: pointer;
+}
+
+.row:hover {
+  background: var(--hover);
+}
+.row.selected {
+  background: var(--selected);
+}
+
+.row .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tier-color);
+  align-self: center;
+}
+
+.row .name {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row .sub,
+.row .kind {
+  color: var(--muted);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.show-more {
+  margin: 10px 12px;
+}
+
+/* ---------- browse: detail ---------- */
+
+#detail {
+  width: 420px;
+  flex: none;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#detail .empty {
+  color: var(--muted);
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.badge.tier {
+  color: var(--panel);
+  background: var(--tier-color);
+  border-color: var(--tier-color);
+}
+
+.definition {
+  font-size: 14px;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.links a,
+.links .clickable {
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.constraint {
+  font: 12.5px / 1.5 var(--font-mono);
+  padding: 6px 8px;
+  background: var(--bg);
+  border-radius: var(--radius);
+}
+
+.relations {
+  display: grid;
+  grid-template-columns: minmax(90px, auto) 1fr;
+  gap: 2px 10px;
+  font-size: 13px;
+}
+
+.relations .predicate {
+  color: var(--muted);
+  font: 12px / 1.6 var(--font-mono);
+}
+
+/* ---------- hierarchy ---------- */
+
+#hierarchy {
+  flex: 1;
+  padding: 16px 20px;
+}
+
+.tree {
+  font-size: 13.5px;
+}
+
+.tree-node {
+  padding: 2px 0 2px 16px;
+  border-left: 1px solid var(--line-soft);
+}
+
+.tree-node > .tree-head {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  cursor: pointer;
+  padding: 1px 4px 1px 16px;
+  border-radius: 3px;
+  margin-left: -16px;
+}
+
+.tree-node > .tree-head:hover {
+  background: var(--hover);
+}
+
+.tree-head .toggle {
+  width: 14px;
+  color: var(--muted);
+  font: 11px var(--font-mono);
+  display: inline-block;
+}
+
+.tree-head .label {
+  font-weight: 500;
+}
+
+.tree-head .n {
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tree-head .family {
+  color: var(--muted);
+  font-size: 12px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.tree-node.external > .tree-head .label {
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  main {
+    flex-direction: column;
+    overflow: auto;
+  }
+  #filters,
+  #detail {
+    width: auto;
+  }
+  #results {
+    min-height: 50vh;
+  }
+  .views {
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .row,
+  .bar {
+    transition: background 0.1s;
+  }
+}

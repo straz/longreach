@@ -27,3 +27,8 @@ exclude:
   - test4
   - test5
   - "*.md"
+  - "*~"
+  # FIBO atlas: only index.html, atlas.css, atlas.js and data.js are published.
+  # Build scripts and the ontology sources / CSV exports stay out of _site.
+  - fibo/build
+  - fibo/data
