@@ -521,7 +521,9 @@
       renderTierCard(tier, tierCounts.get(tier) || 0),
     ).join("");
     const pane = byId("overview");
-    pane.innerHTML = `<h2 class="mb-5">Browse the Financial Industry Business Ontology (FIBO)</h2>
+    pane.innerHTML = `
+      <img class="FIBO-cloud" src="FIBO-Cloud-graphic-scaled.png" />
+<h2 class="mb-5">Browse the Financial Industry Business Ontology (<a href="https://edmcouncil.org/frameworks/industry-models/fibo/">FIBO</a>)</h2>
 
       <div class="tier-grid">${cards}</div>
       ${renderDomainTable()}`;

@@ -348,6 +348,7 @@ main > section {
   overflow: auto;
 }
 
+
 /* ---------- overview ---------- */
 
 #overview {
@@ -356,10 +357,18 @@ main > section {
   max-width: 1100px;
 }
 
+.FIBO-cloud {
+  float: right;
+  max-width: 45%;
+  margin-bottom: 3em;
+}
+
+
 .tier-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 12px;
+  clear: both;
 }
 
 .tier-card {
